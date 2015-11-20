@@ -39,7 +39,7 @@ class _minimal_norm(object):
 
     @classmethod
     def ppf(cls, q):
-        """ Percent point function (inverse of cdf — percentiles)
+        """ Percent point function (inverse of cdf)
 
         Wikipedia: https://goo.gl/Rtxjme
 

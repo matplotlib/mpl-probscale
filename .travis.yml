@@ -1,0 +1,47 @@
+language: python
+
+matrix:
+  include:
+    - python: 2.7
+      env:
+        - COVERAGE=false
+    - python: 3.3
+      env:
+        - COVERAGE=false
+    - python: 3.4
+      env:
+        - COVERAGE=false
+    - python: 3.5
+      env:
+        - COVERAGE=true
+
+before_install:
+
+  # Here we just install Miniconda, which you shouldn't have to change.
+
+  - wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh
+  - chmod +x miniconda.sh
+  - ./miniconda.sh -b -p $HOME/miniconda
+  - export PATH="$HOME/miniconda/bin:$PATH"
+  - conda update --yes conda
+  - cp probscale/tests/matplotlibrc .
+
+install:
+
+  # We just set up a conda environment with the right Python version. This
+  # should not need changing.
+
+  - conda create --yes -n test python=$TRAVIS_PYTHON_VERSION
+  - source activate test
+  #- conda config --add channels phobson
+  - conda install --yes numpy nose scipy
+  - pip install matplotlib
+  - conda install --yes coverage docopt requests pyyaml
+  - pip install coveralls
+  - pip install .
+
+script:
+  - nosetests --with-coverage --cover-package=probscale --verbose
+
+after_success:
+  - if [ ${COVERAGE} = true ]; then coveralls; fi

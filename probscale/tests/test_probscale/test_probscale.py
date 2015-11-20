@@ -1,19 +1,12 @@
-import sys
-import os
-import subprocess
-from six import StringIO
+import matplotlib
+matplotlib.use('agg')
 
 import numpy as np
-import pandas
-
-
 import matplotlib.pyplot as plt
-
 from matplotlib.testing.decorators import image_comparison, cleanup
 
 import nose.tools as nt
 import numpy.testing as nptest
-from wqio import testing
 
 from probscale import probscale
 
