@@ -274,7 +274,7 @@ class Test__estimate_from_fit(object):
 def test_probplot_prob():
     fig, ax = plt.subplots()
     data = setup_plot_data()
-    fig = viz.probplot(data, ax=ax, xlabel='Test xlabel')
+    fig = viz.probplot(data, ax=ax, xlabel='Test xlabel', otherscale='log')
     nt.assert_true(isinstance(fig, plt.Figure))
 
 
@@ -283,7 +283,7 @@ def test_probplot_qq():
     fig, ax = plt.subplots()
     data = setup_plot_data()
     fig = viz.probplot(data, ax=ax, axtype='qq', ylabel='Test label',
-                       scatter_kws=dict(color='r'))
+                       otherscale='log', scatter_kws=dict(color='r'))
 
 
 @image_comparison(baseline_images=['test_probplot_pp'], extensions=['png'])
@@ -299,7 +299,7 @@ def test_probplot_pp():
 def test_probplot_prob_bestfit():
     fig, ax = plt.subplots()
     data = setup_plot_data()
-    fig = viz.probplot(data, ax=ax, xlabel='Test xlabel', bestfit=True)
+    fig = viz.probplot(data, ax=ax, xlabel='Test xlabel', bestfit=True, otherscale='log')
     nt.assert_true(isinstance(fig, plt.Figure))
 
 
@@ -307,7 +307,7 @@ def test_probplot_prob_bestfit():
 def test_probplot_qq_bestfit():
     fig, ax = plt.subplots()
     data = setup_plot_data()
-    fig = viz.probplot(data, ax=ax, axtype='qq', bestfit=True, ylabel='Test label')
+    fig = viz.probplot(data, ax=ax, axtype='qq', bestfit=True, ylabel='Test label', otherscale='log')
 
 
 @image_comparison(baseline_images=['test_probplot_pp_bestfit'], extensions=['png'])

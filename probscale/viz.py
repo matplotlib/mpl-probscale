@@ -43,41 +43,44 @@ def _check_ax_name(axname, argname):
     return axname
 
 
-def probplot(data, ax=None, axtype='prob', probax='x', otherscale='log',
-             xlabel=None, ylabel=None, bestfit=False,
-             scatter_kws=None, line_kws=None, return_results=False):
+def probplot(data, ax=None, axtype='prob', probax='x',
+             otherscale='linear', xlabel=None, ylabel=None,
+             bestfit=False, return_results=False,
+             scatter_kws=None, line_kws=None):
     """ Probability, percentile, and quantile plots.
 
     Parameters
     ----------
     data : array-like
         1-dimensional data to be plotted
-    ax : optional matplotlib axes object or None (default).
-        The Axes on which to plot. If None is provided, one will be
-        created.
-    axtype : string (default = 'pp')
+    ax : matplotlib axes, optional
+        The Axes on which to plot. If one is not provided, a new Axes
+        will be created.
+    axtype : string (default = 'prob')
         Type of plot to be created. Options are:
-            - 'prob': probabilty plot
-            - 'pp': percentile plot
-            - 'qq': quantile plot
-    yscale : string (default = 'log')
-        Scale for the y-axis. Use 'log' for logarithmic (default) or
-        'linear'.
-    xlabel, ylabel : string or None (default)
+          - 'prob': probabilty plot
+          - 'pp': percentile plot
+          - 'qq': quantile plot
+    probax : string, optional (default = 'x')
+        The axis ('x' or 'y') that will serve as the probability (or
+        quantile) axis.
+    otherscale : string, optional (default = 'log')
+        Scale for the other axis that is not
+    xlabel, ylabel : string, optional
         Axis labels for the plot.
     bestfit : bool, optional (default is False)
         Specifies whether a best-fit line should be added to the
         plot.
-    scatter_kws, line_kws : dictionary
-        Dictionary of keyword arguments passed directly to `pyplot.plot`
+    scatter_kws, line_kws : dictionary, optional
+        Dictionary of keyword arguments passed directly to ``ax.plot``
         when drawing the scatter points and best-fit line, respectively.
     return_results : bool (default = False)
         If True a dictionary of results of is returned along with the
         figure. Keys are:
-            q - array of quantiles
-            x, y - arrays of data passed to function
-            xhat, yhat - arrays of modeled data plotted in best-fit line
-            res - a statsmodels Result object.
+          - q: array of quantiles
+          - x, y: arrays of data passed to function
+          - xhat, yhat: arrays of modeled data plotted in best-fit line
+          - res: array of coeffcients of the best-fit line.
 
     Returns
     -------
@@ -86,21 +89,28 @@ def probplot(data, ax=None, axtype='prob', probax='x', otherscale='log',
 
     """
 
+    # check input values
     fig, ax = _check_ax_obj(ax)
-    _check_ax_name(probax, 'probax')
+    probax = _check_ax_name(probax, 'probax')
 
+    # default values for plotting options
     scatter_kws = {} if scatter_kws is None else scatter_kws.copy()
     line_kws = {} if line_kws is None else line_kws.copy()
 
+    # check axtype
     if axtype not in ['pp', 'qq', 'prob']:
         raise ValueError("invalid axtype: {}".format(axtype))
 
+    # compute the plotting positions and sort the data
     qntls, datavals = stats.probplot(data, fit=False)
+
+    # determine how the probability values should be expressed
     if axtype == 'qq':
         probvals = qntls
     else:
         probvals = stats.norm.cdf(qntls) * 100
 
+    # set up x, y, Axes for probabilities on the x
     if probax == 'x':
         x, y = probvals, datavals
         if axtype == 'prob':
@@ -112,6 +122,7 @@ def probplot(data, ax=None, axtype='prob', probax='x', otherscale='log',
         ax.set_yscale(otherscale)
         fitlogs = 'y' if otherscale == 'log' else None
 
+    # setup x, y, Axes for probabilities on the y
     elif probax == 'y':
         y, x = probvals, datavals
         if axtype == 'prob':
@@ -128,18 +139,22 @@ def probplot(data, ax=None, axtype='prob', probax='x', otherscale='log',
     marker = scatter_kws.pop('marker', 'o')
     ax.plot(x, y, linestyle=linestyle, marker=marker, **scatter_kws)
 
+    # maybe label the x-axis
     if xlabel is not None:
         ax.set_xlabel(xlabel)
 
+    # maybe label the y-axis
     if ylabel is not None:
         ax.set_ylabel(ylabel)
 
+    # maybe do a best-fit and plot
     if bestfit:
         xhat, yhat, modelres = _fit_line(x, y, fitprobs=fitprobs, fitlogs=fitlogs)
         ax.plot(xhat, yhat, **line_kws)
     else:
         xhat, yhat, modelres = (None, None, None)
 
+    # return the figure and maybe results of the best-fit
     if return_results:
         return fig, dict(q=qntls, x=x, y=y, xhat=xhat, yhat=yhat, res=modelres)
     else:
@@ -153,10 +168,10 @@ def _fit_line(x, y, xhat=None, fitprobs=None, fitlogs=None, dist=None):
     ----------
     x, y : array-like
         Independent and dependent data, respectively.
-    xhat : array-like or None, optional
-        The values at which yhat should should be estimated. If
+    xhat : array-like, optional
+        The values at which ``yhat`` should should be estimated. If
         not provided, falls back to the sorted values of ``x``.
-    fitprobs, fitlogs : str, options.
+    fitprobs, fitlogs : str, optional.
         Defines how data should be transformed. Valid values are
         'x', 'y', or 'both'. If using ``fitprobs``, variables should
         be expressed as a percentage, i.e.,
@@ -164,7 +179,7 @@ def _fit_line(x, y, xhat=None, fitprobs=None, fitlogs=None, dist=None):
         Log transform = lambda x: numpy.log(x).
         Take care to not pass the same value to both ``fitlogs`` and
         ``figprobs`` as both transforms will be applied.
-    dist : scipy.stats distribution or None, optional
+    dist : scipy.stats distribution, optional
         A fully-spec'd scipy.stats distribution such that ``dist.ppf``
         and ``dist.cdf`` can be called. If not provided, defaults to a
         minimal implementation of scipt.stats.norm.
@@ -178,35 +193,47 @@ def _fit_line(x, y, xhat=None, fitprobs=None, fitlogs=None, dist=None):
 
     """
 
-    _check_fit_arg(fitprobs, "fitprobs")
-    _check_fit_arg(fitlogs, "fitlogs")
+    fitprobs = _check_fit_arg(fitprobs, "fitprobs")
+    fitlogs = _check_fit_arg(fitlogs, "fitlogs")
 
+    # maybe set xhat to default values
     if xhat is None:
         xhat = numpy.array([numpy.min(x), numpy.max(x)])
 
+    # maybe set dist to default value
     if dist is None:
         dist = _minimal_norm
 
+    # maybe compute ppf of x
     if fitprobs in ['x', 'both']:
         x = dist.ppf(x/100.)
         xhat = dist.ppf(numpy.array(xhat)/100.)
 
+    # maybe compute ppf of y
     if fitprobs in ['y', 'both']:
         y  = dist.ppf(y/100.)
 
+    # maybe compute log of x
     if fitlogs in ['x', 'both']:
         x = numpy.log(x)
+
+    # maybe compute log of y
     if fitlogs in ['y', 'both']:
         y = numpy.log(y)
 
+    # do the best-fit
     coeffs = numpy.polyfit(x, y, 1)
 
+    # estimate y values
     yhat = _estimate_from_fit(xhat, coeffs[0], coeffs[1],
                                   xlog=fitlogs in ['x', 'both'],
                                   ylog=fitlogs in ['y', 'both'])
 
+    # maybe undo the ppf transform
     if fitprobs in ['y', 'both']:
         yhat = 100.* dist.cdf(yhat)
+
+    # maybe undo ppf transform
     if fitprobs in ['x', 'both']:
         xhat = 100.* dist.cdf(xhat)
 
@@ -214,8 +241,8 @@ def _fit_line(x, y, xhat=None, fitprobs=None, fitlogs=None, dist=None):
 
 
 def _estimate_from_fit(xdata, slope, intercept, xlog=False, ylog=False):
-    """ Estimate the dependent of a linear fit given x-data and linear
-    parameters.
+    """ Estimate the dependent variables of a linear fit given x-data
+    and linear parameters.
 
     Parameters
     ----------
