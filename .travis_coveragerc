@@ -1,0 +1,23 @@
+# .coveragerc to control coverage.py
+[run]
+source = probscale
+branch = True
+include = probscale/*.py
+omit =
+    probscale/tests/*
+
+[report]
+include = probscale/*.py
+ignore_errors = True
+omit =
+    probscale/tests/*
+
+# Regexes for lines to exclude from consideration
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    if self.debug:
+    if settings.DEBUG
+    raise AssertionError
+    raise NotImplementedError
+    if 0:
