@@ -1,4 +1,4 @@
-import numpy
+﻿import numpy
 from matplotlib import pyplot
 from matplotlib import scale
 from scipy import stats
@@ -36,7 +36,7 @@ def _check_fit_arg(arg, argname):
 
 def _check_ax_name(axname, argname):
     valid_args = ['x', 'y']
-    if axname not in valid_args:
+    if axname.lower() not in valid_args:
         msg = 'Invalid value for {} ({}). Must be on of {}.'
         raise ValueError(msg.format(argname, arg, valid_args))
 
