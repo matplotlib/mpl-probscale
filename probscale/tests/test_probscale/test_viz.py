@@ -1,4 +1,4 @@
-import matplotlib
+﻿import matplotlib
 matplotlib.use('agg')
 
 import numpy as np
@@ -24,12 +24,12 @@ def setup_plot_data():
     return data
 
 
-@cleanup
 class Test__check_ax_obj(object):
     @nt.raises(ValueError)
     def test_bad_value(self):
         viz._check_ax_obj('junk')
 
+    @cleanup
     def test_with_ax(self):
         fig, ax = plt.subplots()
         fig1, ax1 = viz._check_ax_obj(ax)
@@ -38,15 +38,16 @@ class Test__check_ax_obj(object):
         nt.assert_true(ax1 is ax)
         nt.assert_true(fig1 is fig)
 
+    @cleanup
     def test_with_None(self):
         fig1, ax1 = viz._check_ax_obj(None)
         nt.assert_true(isinstance(ax1, plt.Axes))
         nt.assert_true(isinstance(fig1, plt.Figure))
 
 
-class Test__check_fig_arg(object):
+class Test__check_fit_arg(object):
     @nt.raises(ValueError)
-    def test_bad_value(self):
+    def test_bad_fitarg(self):
         viz._check_fit_arg('junk', 'fitprobs')
 
     def test_x(self):
@@ -67,8 +68,8 @@ class Test__check_fig_arg(object):
 
 
 class Test__check_ax_name(object):
-    @nt.raises(ValueError)
-    def test_bad_value(self):
+    @nt.raises
+    def test_bad_name(self):
         viz._check_fit_arg('junk', 'axname')
 
     def test_x(self):
@@ -270,6 +271,17 @@ class Test__estimate_from_fit(object):
         )
 
 
+class Test__check_ax_type(object):
+    @nt.raises(ValueError)
+    def test_bad_value(self):
+        viz._check_ax_type("JUNK")
+
+    def test_upper(self):
+        nt.assert_equal('pp', viz._check_ax_type('PP'))
+        nt.assert_equal('qq', viz._check_ax_type('QQ'))
+        nt.assert_equal('prob', viz._check_ax_type('ProB'))
+
+
 @image_comparison(baseline_images=['test_probplot_prob'], extensions=['png'])
 def test_probplot_prob():
     fig, ax = plt.subplots()
@@ -319,3 +331,65 @@ def test_probplot_pp_bestfit():
     fig = viz.probplot(data, ax=ax, axtype='pp', otherscale='linear',
                        xlabel='test x', bestfit=True, ylabel='test y',
                        scatter_kws=scatter_kws, line_kws=line_kws)
+
+
+@image_comparison(baseline_images=['test_probplot_prob_probax_y'], extensions=['png'])
+def test_probplot_prob_probax_y():
+    fig, ax = plt.subplots()
+    data = setup_plot_data()
+    fig = viz.probplot(data, ax=ax, xlabel='Test xlabel', otherscale='log', probax='y')
+    nt.assert_true(isinstance(fig, plt.Figure))
+
+
+@image_comparison(baseline_images=['test_probplot_qq_probax_y'], extensions=['png'])
+def test_probplot_qq_probax_y():
+    fig, ax = plt.subplots()
+    data = setup_plot_data()
+    fig = viz.probplot(data, ax=ax, axtype='qq', ylabel='Test label', probax='y',
+                       otherscale='log', scatter_kws=dict(color='r'))
+
+
+@image_comparison(baseline_images=['test_probplot_pp_probax_y'], extensions=['png'])
+def test_probplot_pp_probax_y():
+    fig, ax = plt.subplots()
+    data = setup_plot_data()
+    scatter_kws = dict(color='b', linestyle='--', markeredgecolor='g', markerfacecolor='none')
+    fig = viz.probplot(data, ax=ax, axtype='pp', otherscale='linear', probax='y',
+                       xlabel='test x', ylabel='test y', scatter_kws=scatter_kws)
+
+
+@image_comparison(baseline_images=['test_probplot_prob_bestfit_probax_y'], extensions=['png'])
+def test_probplot_prob_bestfit_probax_y():
+    fig, ax = plt.subplots()
+    data = setup_plot_data()
+    fig = viz.probplot(data, ax=ax, xlabel='Test xlabel', bestfit=True, otherscale='log', probax='y')
+    nt.assert_true(isinstance(fig, plt.Figure))
+
+
+@image_comparison(baseline_images=['test_probplot_qq_bestfit_probax_y'], extensions=['png'])
+def test_probplot_qq_bestfit_probax_y():
+    fig, ax = plt.subplots()
+    data = setup_plot_data()
+    fig = viz.probplot(data, ax=ax, axtype='qq', bestfit=True, ylabel='Test label', otherscale='log', probax='y')
+
+
+@image_comparison(baseline_images=['test_probplot_pp_bestfit_probax_y'], extensions=['png'])
+def test_probplot_pp_bestfit_probax_y():
+    fig, ax = plt.subplots()
+    data = setup_plot_data()
+    scatter_kws = {'marker': 's', 'color': 'red'}
+    line_kws = {'linestyle': '--', 'linewidth': 3}
+    fig = viz.probplot(data, ax=ax, axtype='pp', otherscale='linear', probax='y',
+                       xlabel='test x', bestfit=True, ylabel='test y',
+                       scatter_kws=scatter_kws, line_kws=line_kws)
+
+
+@cleanup
+def test_probplot_test_results():
+    fig, ax = plt.subplots()
+    data = setup_plot_data()
+    fig, results = viz.probplot(data, return_results=True)
+
+    nt.assert_true(isinstance(results, dict))
+    known_keys = sorted(['q', 'x', 'y', 'xhat', 'yhat', 'res'])
+    nt.assert_list_equal(sorted(list(results.keys())), known_keys)

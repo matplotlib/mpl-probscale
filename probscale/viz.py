@@ -1,4 +1,4 @@
-import numpy
+﻿import numpy
 from matplotlib import pyplot
 from matplotlib import scale
 from scipy import stats
@@ -36,11 +36,17 @@ def _check_fit_arg(arg, argname):
 
 def _check_ax_name(axname, argname):
     valid_args = ['x', 'y']
-    if axname not in valid_args:
+    if axname.lower() not in valid_args:
         msg = 'Invalid value for {} ({}). Must be on of {}.'
         raise ValueError(msg.format(argname, arg, valid_args))
 
-    return axname
+    return axname.lower()
+
+
+def _check_ax_type(axtype):
+    if axtype.lower() not in ['pp', 'qq', 'prob']:
+        raise ValueError("invalid axtype: {}".format(axtype))
+    return axtype.lower()
 
 
 def probplot(data, ax=None, axtype='prob', probax='x',
@@ -98,8 +104,7 @@ def probplot(data, ax=None, axtype='prob', probax='x',
     line_kws = {} if line_kws is None else line_kws.copy()
 
     # check axtype
-    if axtype not in ['pp', 'qq', 'prob']:
-        raise ValueError("invalid axtype: {}".format(axtype))
+    axtype = _check_ax_type(axtype)
 
     # compute the plotting positions and sort the data
     qntls, datavals = stats.probplot(data, fit=False)
@@ -118,6 +123,8 @@ def probplot(data, ax=None, axtype='prob', probax='x',
             fitprobs = 'x'
         else:
             fitprobs = None
+            if axtype == 'pp':
+                ax.set_xlim(left=0, right=100)
 
         ax.set_yscale(otherscale)
         fitlogs = 'y' if otherscale == 'log' else None
@@ -130,6 +137,8 @@ def probplot(data, ax=None, axtype='prob', probax='x',
             fitprobs = 'y'
         else:
             fitprobs = None
+            if axtype == 'pp':
+                ax.set_ylim(bottom=0, top=100)
 
         ax.set_xscale(otherscale)
         fitlogs = 'x' if otherscale == 'log' else None

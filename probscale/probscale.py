@@ -88,25 +88,25 @@ class ProbFormatter(Formatter):
 
         """
 
+        # return a string value unaltered
+        if isinstance(x, str) or x == 0.0:
+            out = str(x)
+
         # check on the number provided
-        if x is not None and not np.isinf(x) and not np.isnan(x):
+        elif x is not None and not np.isinf(x) and not np.isnan(x):
 
             # check on the _sig_figs
             if n < 1:
                 raise ValueError("number of sig figs (n) must be greater than zero")
 
-            # return a string value unaltered
-            if isinstance(x, str):
-                out = x
-
             elif forceint:
                 out = '{:,.0f}'.format(x)
 
             # logic to do all of the rounding
-            elif x != 0.0:
+            else:
                 order = np.floor(np.log10(np.abs(x)))
 
-                if -1.0 * expthresh <= order <= expthresh:
+                if (-1.0 * expthresh <= order <= expthresh):
                     decimal_places = int(n - 1 - order)
 
                     if decimal_places <= 0:
@@ -120,9 +120,6 @@ class ProbFormatter(Formatter):
                     decimal_places = n - 1
                     fmt = '{0:.%de}' % decimal_places
                     out = fmt.format(x)
-
-            else:
-                out = str(round(x, n))
 
         # with NAs and INFs, just return 'NA'
         else:

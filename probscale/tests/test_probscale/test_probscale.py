@@ -81,6 +81,16 @@ class Mixin_ProbFormatter_sig_figs(object):
         nt.assert_equal(self.fmt._sig_figs(self.x, 3), self.known_3)
         nt.assert_equal(self.fmt._sig_figs(self.x, 4), self.known_4)
 
+    def test_string(self):
+        nt.assert_equal(self.fmt._sig_figs('1.23', 3), '1.23')
+
+    def test_na_inf(self):
+        nt.assert_equal(self.fmt._sig_figs(np.nan, 3), 'NA')
+        nt.assert_equal(self.fmt._sig_figs(np.inf, 3), 'NA')
+
+    def test_zero(self):
+        nt.assert_equal(self.fmt._sig_figs(0, 3), '0')
+
     def test_trailing_zeros(self):
         nt.assert_equal(self.fmt._sig_figs(self.x, 8), self.known_8)
 
