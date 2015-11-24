@@ -384,6 +384,7 @@ def test_probplot_pp_bestfit_probax_y():
                        scatter_kws=scatter_kws, line_kws=line_kws)
 
 
+@cleanup
 def test_probplot_test_results():
     fig, ax = plt.subplots()
     data = setup_plot_data()
