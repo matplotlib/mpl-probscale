@@ -40,7 +40,13 @@ def _check_ax_name(axname, argname):
         msg = 'Invalid value for {} ({}). Must be on of {}.'
         raise ValueError(msg.format(argname, arg, valid_args))
 
-    return axname
+    return axname.lower()
+
+
+def _check_ax_type(axtype):
+    if axtype.lower() not in ['pp', 'qq', 'prob']:
+        raise ValueError("invalid axtype: {}".format(axtype))
+    return axtype.lower()
 
 
 def probplot(data, ax=None, axtype='prob', probax='x',
@@ -98,8 +104,7 @@ def probplot(data, ax=None, axtype='prob', probax='x',
     line_kws = {} if line_kws is None else line_kws.copy()
 
     # check axtype
-    if axtype not in ['pp', 'qq', 'prob']:
-        raise ValueError("invalid axtype: {}".format(axtype))
+    axtype = _check_ax_type(axtype)
 
     # compute the plotting positions and sort the data
     qntls, datavals = stats.probplot(data, fit=False)

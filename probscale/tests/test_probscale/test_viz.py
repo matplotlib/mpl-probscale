@@ -270,6 +270,17 @@ class Test__estimate_from_fit(object):
         )
 
 
+class Test__check_ax_type(object):
+    @nt.raises(ValueError)
+    def test_bad_value(self):
+        viz._check_ax_type("JUNK")
+
+    def test_upper(self):
+        nt.assert_equal('pp', viz._check_ax_type('PP'))
+        nt.assert_equal('qq', viz._check_ax_type('QQ'))
+        nt.assert_equal('prob', viz._check_ax_type('ProB'))
+
+
 @image_comparison(baseline_images=['test_probplot_prob'], extensions=['png'])
 def test_probplot_prob():
     fig, ax = plt.subplots()
