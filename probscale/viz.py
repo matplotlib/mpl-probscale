@@ -118,6 +118,8 @@ def probplot(data, ax=None, axtype='prob', probax='x',
             fitprobs = 'x'
         else:
             fitprobs = None
+            if axtype == 'pp':
+                ax.set_xlim(left=0, right=100)
 
         ax.set_yscale(otherscale)
         fitlogs = 'y' if otherscale == 'log' else None
@@ -130,6 +132,8 @@ def probplot(data, ax=None, axtype='prob', probax='x',
             fitprobs = 'y'
         else:
             fitprobs = None
+            if axtype == 'pp':
+                ax.set_ylim(bottom=0, top=100)
 
         ax.set_xscale(otherscale)
         fitlogs = 'x' if otherscale == 'log' else None
