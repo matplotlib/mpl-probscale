@@ -7,6 +7,7 @@ mpl-probscale: Real probability scales for matplotlib
 .. image:: https://coveralls.io/repos/phobson/mpl-probscale/badge.svg?branch=master&service=github
   :target: https://coveralls.io/github/phobson/mpl-probscale?branch=master
 
+https://github.com/phobson/mpl-probscale
 
 Simply importing ``probscale`` let's you use probability scales in your matplotlib figures:
 
