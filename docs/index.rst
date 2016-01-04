@@ -21,28 +21,40 @@ Simply importing ``probscale`` lets you use probability scales in your matplotli
 
     import matplotlib.pyplot as plt
     import probscale
+    import seaborn
+    clear_bkgd = {'axes.facecolor':'none', 'figure.facecolor':'none'}
+    seaborn.set(style='ticks', context='notebook', rc=clear_bkgd)
 
-    plt.style.use('ggplot')
     fig, ax = plt.subplots(figsize=(8, 4))
     ax.set_ylim(1e-2, 1e2)
     ax.set_yscale('log')
 
     ax.set_xlim(0.5, 99.5)
     ax.set_xscale('prob')
+    seaborn.despine(fig=fig)
 
 
 .. image:: /img/example.png
 
 
-API References
-==============
+Tutorial
+--------
 
 .. toctree::
    :maxdepth: 2
 
-   viz.rst
+   tutorial/getting_started.rst
+
+API References
+--------------
+
+.. toctree::
+   :maxdepth: 2
 
    probscale.rst
+   viz.rst
+
+
 
 
 Indices and tables

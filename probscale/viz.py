@@ -64,9 +64,9 @@ def probplot(data, ax=None, axtype='prob', probax='x',
         will be created.
     axtype : string (default = 'prob')
         Type of plot to be created. Options are:
-          - 'prob': probabilty plot
-          - 'pp': percentile plot
-          - 'qq': quantile plot
+           - 'prob': probabilty plot
+           - 'pp': percentile plot
+           - 'qq': quantile plot
     probax : string, optional (default = 'x')
         The axis ('x' or 'y') that will serve as the probability (or
         quantile) axis.
@@ -82,16 +82,19 @@ def probplot(data, ax=None, axtype='prob', probax='x',
         when drawing the scatter points and best-fit line, respectively.
     return_results : bool (default = False)
         If True a dictionary of results of is returned along with the
-        figure. Keys are:
-          - q: array of quantiles
-          - x, y: arrays of data passed to function
-          - xhat, yhat: arrays of modeled data plotted in best-fit line
-          - res: array of coeffcients of the best-fit line.
+        figure.
 
     Returns
     -------
     fig : matplotlib.Figure
-    result : dictionary of linear fit results.
+        The figure on which the plot was drawn.
+    result : dictionary of linear fit results, optional
+        Keys are:
+           - q: array of quantiles
+           - x, y: arrays of data passed to function
+           - xhat, yhat: arrays of modeled data plotted in best-fit line
+           - res: array of coeffcients of the best-fit line.
+
 
     """
 
