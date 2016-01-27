@@ -73,7 +73,7 @@ class Test__minimal_norm(object):
 
 
 class Mixin_ProbFormatter_sig_figs(object):
-    fmt = probscale.ProbFormatter()
+    fmt = probscale.PctFormatter()
     def teardown(self):
         pass
 
@@ -110,6 +110,7 @@ class Mixin_ProbFormatter_sig_figs(object):
 
     def test__call__(self):
         nt.assert_equal(self.fmt(0.0301), '0.03')
+        nt.assert_equal(self.fmt(0.2), '0.2')
         nt.assert_equal(self.fmt(0.1), '0.1')
         nt.assert_equal(self.fmt(10), '10')
         nt.assert_equal(self.fmt(5), '5')
@@ -181,7 +182,7 @@ class Test_ProbTransform(Mixin_Transform):
         self.known_tras_na = -2.569150498
 
 
-class Test_InvertedProbTransform(Mixin_Transform):
+class Test_QuantileTransform(Mixin_Transform):
     def setup(self):
-        self.trans = probscale.InvertedProbTransform(probscale._minimal_norm)
+        self.trans = probscale.QuantileTransform(probscale._minimal_norm)
         self.known_tras_na = 69.1464492

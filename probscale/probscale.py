@@ -7,8 +7,27 @@ from matplotlib.ticker import (
     NullLocator,
     Formatter,
     NullFormatter,
-    FuncFormatter
+    FuncFormatter,
 )
+
+
+def _mask_non_prop(a):
+    """
+    Return a Numpy array where all values outside ]0, 1[ are
+    replaced with NaNs. If all values are inside ]0, 1[, the original
+    array is returned.
+    """
+    mask = (a <= 0.0) | (a >= 1.0)
+    if mask.any():
+        return np.where(mask, np.nan, a)
+    return a
+
+
+def _clip_non_positives(a):
+    a = np.array(a, float)
+    a[a <= 0.0] = 1e-300
+    a[a >= 1.0] = 1 - 1e-300
+    return a
 
 
 class _minimal_norm(object):
@@ -44,7 +63,6 @@ class _minimal_norm(object):
         Wikipedia: https://goo.gl/Rtxjme
 
         """
-
         return np.sqrt(2) * cls._approx_inv_erf(2*q - 1)
 
     @classmethod
@@ -57,7 +75,7 @@ class _minimal_norm(object):
         return 0.5 * (1 + cls._approx_erf(x/np.sqrt(2)))
 
 
-class ProbFormatter(Formatter):
+class _FormatterMixin(Formatter):
     @classmethod
     def _sig_figs(cls, x, n, expthresh=5, forceint=False):
         """ Formats a number with the correct number of sig figs.
@@ -128,49 +146,67 @@ class ProbFormatter(Formatter):
         return out
 
     def __call__(self, x, pos=None):
-        if x < 10:
+        if x < (10 / self.factor):
             out = self._sig_figs(x, 1)
-        elif x <= 99:
+        elif x <= (99 / self.factor):
             out =  self._sig_figs(x, 2)
         else:
-            order = np.ceil(np.round(np.abs(np.log10(100 - x)), 6))
-            out = self._sig_figs(x, order + 2)
+            order = np.ceil(np.round(np.abs(np.log10(self.top - x)), 6))
+            out = self._sig_figs(x, order + self.offset)
 
         return '{}'.format(out)
 
 
-class ProbTransform(Transform):
+class PctFormatter(_FormatterMixin):
+    factor = 1.0
+    offset = 2
+    top = 100
+
+
+class ProbFormatter(_FormatterMixin):
+    factor = 100.0
+    offset = 0
+    top = 1
+
+
+class _ProbTransformMixin(Transform):
     input_dims = 1
     output_dims = 1
     is_separable = True
     has_inverse = True
 
-    def __init__(self, dist):
+    def __init__(self, dist, as_pct=True, nonpos='mask'):
         Transform.__init__(self)
         self.dist = dist
+        if as_pct:
+            self.factor = 100.0
+        else:
+            self.factor = 1.0
 
-    def transform_non_affine(self, a):
-        return self.dist.ppf(a / 100.)
+        if nonpos == 'mask':
+            self._handle_nonpos = _mask_non_positives
+        elif nonpos == 'clip':
+            self._handle_nonpos = _clip_non_positives
+        else:
+            raise ValueError("`nonpos` muse be either 'mask' or 'clip'")
 
-    def inverted(self):
-        return InvertedProbTransform(self.dist)
 
-
-class InvertedProbTransform(Transform):
-    input_dims = 1
-    output_dims = 1
-    is_separable = True
-    has_inverse = True
-
-    def __init__(self, dist):
-        self.dist = dist
-        Transform.__init__(self)
-
-    def transform_non_affine(self, a):
-        return self.dist.cdf(a) * 100.
+class ProbTransform(_ProbTransformMixin):
+    def transform_non_affine(self, prob):
+        q = self.dist.ppf(prob / self.factor)
+        return q
 
     def inverted(self):
-        return ProbTransform(self.dist)
+        return QuantileTransform(self.dist, as_pct=self.as_pct, nonpos=self.nonpos)
+
+
+class QuantileTransform(_ProbTransformMixin):
+    def transform_non_affine(self, q):
+        prob = self.dist.cdf(q) * self.factor
+        return prob
+
+    def inverted(self):
+        return ProbTransform(self.dist, as_pct=self.as_pct, nonpos=self.nonpos)
 
 
 class ProbScale(ScaleBase):
@@ -199,13 +235,19 @@ class ProbScale(ScaleBase):
 
     def __init__(self, axis, **kwargs):
         self.dist = kwargs.pop('dist', _minimal_norm)
-        self._transform = ProbTransform(self.dist)
+        self.as_pct = kwargs.pop('as_pct', True)
+        self.nonpos = kwargs.pop('nonpos', 'mask')
+        self._transform = ProbTransform(self.dist, as_pct=self.as_pct)
 
     @classmethod
-    def _get_probs(cls, nobs):
+    def _get_probs(cls, nobs, as_pct):
         """ Returns the x-axis labels for a probability plot based on
         the number of observations (`nobs`).
         """
+        if as_pct:
+            factor = 1.0
+        else:
+            factor = 100.0
 
         order = int(np.floor(np.log10(nobs)))
         base_probs = np.array([10, 20, 30, 40, 50, 60, 70, 80, 90])
@@ -219,19 +261,23 @@ class ProbScale(ScaleBase):
                 lower_fringe = np.array([1])
                 upper_fringe = np.array([9])
 
-            new_lower = lower_fringe/10**(n)
-            new_upper = upper_fringe/10**(n) + axis_probs.max()
+            new_lower = lower_fringe / 10**(n)
+            new_upper = upper_fringe / 10**(n) + axis_probs.max()
             axis_probs = np.hstack([new_lower, axis_probs, new_upper])
-
-        return axis_probs
+        locs = axis_probs / factor
+        return locs
 
     def set_default_locators_and_formatters(self, axis):
         """
         Set the locators and formatters to specialized versions for
         log scaling.
         """
-        axis.set_major_locator(FixedLocator(self._get_probs(1e10)))
-        axis.set_major_formatter(FuncFormatter(ProbFormatter()))
+
+        axis.set_major_locator(FixedLocator(self._get_probs(1e8, self.as_pct)))
+        if self.as_pct:
+            axis.set_major_formatter(FuncFormatter(PctFormatter()))
+        else:
+            axis.set_major_formatter(FuncFormatter(ProbFormatter()))
         axis.set_minor_locator(NullLocator())
         axis.set_minor_formatter(NullFormatter())
 
