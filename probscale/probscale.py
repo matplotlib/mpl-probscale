@@ -205,6 +205,16 @@ class QuantileTransform(_ProbTransformMixin):
         prob = self.dist.cdf(q) * self.factor
         return prob
 
+class InvertedProbTransform(_ProbTransformMixin):
+    def transform_non_affine(self, a):
+        return self.dist.cdf(a) * self.factor
+
+
+class InvertedProbTransform(_ProbTransformMixin):
+    def transform_non_affine(self, q):
+        prob = self.dist.cdf(q) * self.factor
+        return prob
+
     def inverted(self):
         return ProbTransform(self.dist, as_pct=self.as_pct, nonpos=self.nonpos)
 
