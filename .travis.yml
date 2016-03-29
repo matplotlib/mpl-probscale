@@ -34,7 +34,7 @@ install:
   - conda create --yes -n test python=$TRAVIS_PYTHON_VERSION
   - source activate test
   #- conda config --add channels phobson
-  - conda install --yes numpy nose scipy matplotlib=1.4 coverage docopt requests pyyaml
+  - conda install --yes numpy nose scipy matplotlib coverage docopt requests pyyaml
   - pip install coveralls
   - pip install .
 
