@@ -136,7 +136,8 @@ def probplot(data, ax=None, axtype='prob', probax='x',
 
 
 def _fit_line(x, y, xhat=None, fitprobs=None, fitlogs=None, dist=None):
-    """ Fits a line to x-y data in various forms (raw, log, prob scales)
+    """
+    Fits a line to x-y data in various forms (linear, log, prob scales).
 
     Parameters
     ----------

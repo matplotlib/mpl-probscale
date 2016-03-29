@@ -11,7 +11,7 @@ from matplotlib.ticker import (
 )
 
 
-def _mask_non_prop(a):
+def _mask_non_positives(a):
     """
     Return a Numpy array where all values outside ]0, 1[ are
     replaced with NaNs. If all values are inside ]0, 1[, the original
