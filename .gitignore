@@ -1,7 +1,6 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
-result_images
 
 # C extensions
 *.so
@@ -43,6 +42,8 @@ htmlcov/
 nosetests.xml
 coverage.xml
 *,cover
+.noseids
+result_images
 
 # Translations
 *.mo
@@ -59,3 +60,8 @@ docs/tutorial/*_files/
 
 # PyBuilder
 target/
+
+# VS
+.vs
+*.pyproj
+*.sln
