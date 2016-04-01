@@ -3,50 +3,12 @@ from matplotlib import pyplot
 from matplotlib import scale
 from scipy import stats
 
-from .probscale import ProbScale, _minimal_norm
+from .probscale import ProbScale
+from .probscale import _minimal_norm
+from . import validate
 
 
 scale.register_scale(ProbScale)
-
-
-def _check_ax_obj(ax):
-    """ Checks if a value if an Axes. If None, a new one is created.
-
-    """
-
-    if ax is None:
-        fig, ax = pyplot.subplots()
-    elif isinstance(ax, pyplot.Axes):
-        fig = ax.figure
-    else:
-        msg = "`ax` must be a matplotlib Axes instance or None"
-        raise ValueError(msg)
-
-    return fig, ax
-
-
-def _check_fit_arg(arg, argname):
-    valid_args = ['x', 'y', 'both', None]
-    if arg not in valid_args:
-        msg = 'Invalid value for {} ({}). Must be on of {}.'
-        raise ValueError(msg.format(argname, arg, valid_args))
-
-    return arg
-
-
-def _check_ax_name(axname, argname):
-    valid_args = ['x', 'y']
-    if axname.lower() not in valid_args:
-        msg = 'Invalid value for {} ({}). Must be on of {}.'
-        raise ValueError(msg.format(argname, arg, valid_args))
-
-    return axname.lower()
-
-
-def _check_ax_type(axtype):
-    if axtype.lower() not in ['pp', 'qq', 'prob']:
-        raise ValueError("invalid axtype: {}".format(axtype))
-    return axtype.lower()
 
 
 def probplot(data, ax=None, axtype='prob', probax='x',
@@ -99,15 +61,15 @@ def probplot(data, ax=None, axtype='prob', probax='x',
     """
 
     # check input values
-    fig, ax = _check_ax_obj(ax)
-    probax = _check_ax_name(probax, 'probax')
+    fig, ax = validate.axes_object(ax)
+    probax = validate.axis_name(probax, 'x')
 
     # default values for plotting options
     scatter_kws = {} if scatter_kws is None else scatter_kws.copy()
     line_kws = {} if line_kws is None else line_kws.copy()
 
     # check axtype
-    axtype = _check_ax_type(axtype)
+    axtype = validate.axis_type(axtype)
 
     # compute the plotting positions and sort the data
     qntls, datavals = stats.probplot(data, fit=False)
@@ -205,8 +167,8 @@ def _fit_line(x, y, xhat=None, fitprobs=None, fitlogs=None, dist=None):
 
     """
 
-    fitprobs = _check_fit_arg(fitprobs, "fitprobs")
-    fitlogs = _check_fit_arg(fitlogs, "fitlogs")
+    fitprobs = validate.fit_argument(fitprobs, "fitprobs")
+    fitlogs = validate.fit_argument(fitlogs, "fitlogs")
 
     # maybe set xhat to default values
     if xhat is None:
