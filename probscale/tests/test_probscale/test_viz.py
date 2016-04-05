@@ -24,61 +24,6 @@ def setup_plot_data():
     return data
 
 
-class Test__check_ax_obj(object):
-    @nt.raises(ValueError)
-    def test_bad_value(self):
-        viz._check_ax_obj('junk')
-
-    @cleanup
-    def test_with_ax(self):
-        fig, ax = plt.subplots()
-        fig1, ax1 = viz._check_ax_obj(ax)
-        nt.assert_true(isinstance(ax1, plt.Axes))
-        nt.assert_true(isinstance(fig1, plt.Figure))
-        nt.assert_true(ax1 is ax)
-        nt.assert_true(fig1 is fig)
-
-    @cleanup
-    def test_with_None(self):
-        fig1, ax1 = viz._check_ax_obj(None)
-        nt.assert_true(isinstance(ax1, plt.Axes))
-        nt.assert_true(isinstance(fig1, plt.Figure))
-
-
-class Test__check_fit_arg(object):
-    @nt.raises(ValueError)
-    def test_bad_fitarg(self):
-        viz._check_fit_arg('junk', 'fitprobs')
-
-    def test_x(self):
-        nt.assert_equal('x', viz._check_fit_arg('x', 'fitprobs'))
-        nt.assert_equal('x', viz._check_fit_arg('x', 'fitlogs'))
-
-    def test_y(self):
-        nt.assert_equal('y', viz._check_fit_arg('y', 'fitprobs'))
-        nt.assert_equal('y', viz._check_fit_arg('y', 'fitlogs'))
-
-    def test_both(self):
-        nt.assert_equal('both', viz._check_fit_arg('both', 'fitprobs'))
-        nt.assert_equal('both', viz._check_fit_arg('both', 'fitlogs'))
-
-    def test_None(self):
-        nt.assert_true(viz._check_fit_arg(None, 'fitprobs') is None)
-        nt.assert_true(viz._check_fit_arg(None, 'fitlogs') is None)
-
-
-class Test__check_ax_name(object):
-    @nt.raises
-    def test_bad_name(self):
-        viz._check_fit_arg('junk', 'axname')
-
-    def test_x(self):
-        nt.assert_equal('x', viz._check_fit_arg('x', 'axname'))
-
-    def test_y(self):
-        nt.assert_equal('y', viz._check_fit_arg('y', 'axname'))
-
-
 class Test__fit_line(object):
     def setup(self):
         self.data = np.array([
@@ -269,17 +214,6 @@ class Test__estimate_from_fit(object):
             np.zeros(self.x.shape[0]),
             decimal=5
         )
-
-
-class Test__check_ax_type(object):
-    @nt.raises(ValueError)
-    def test_bad_value(self):
-        viz._check_ax_type("JUNK")
-
-    def test_upper(self):
-        nt.assert_equal('pp', viz._check_ax_type('PP'))
-        nt.assert_equal('qq', viz._check_ax_type('QQ'))
-        nt.assert_equal('prob', viz._check_ax_type('ProB'))
 
 
 @image_comparison(baseline_images=['test_probplot_prob'], extensions=['png'])

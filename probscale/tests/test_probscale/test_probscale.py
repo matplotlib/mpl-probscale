@@ -1,10 +1,11 @@
-import matplotlib
-matplotlib.use('agg')
+import sys
+PYTHON27 = sys.version_info.major == 2
 
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.testing.decorators import image_comparison, cleanup
+from scipy import stats
 
+from matplotlib.testing.decorators import image_comparison, cleanup
 import nose.tools as nt
 import numpy.testing as nptest
 
@@ -73,7 +74,7 @@ class Test__minimal_norm(object):
 
 
 class Mixin_ProbFormatter_sig_figs(object):
-    fmt = probscale.ProbFormatter()
+    fmt = probscale.PctFormatter()
     def teardown(self):
         pass
 
@@ -110,6 +111,7 @@ class Mixin_ProbFormatter_sig_figs(object):
 
     def test__call__(self):
         nt.assert_equal(self.fmt(0.0301), '0.03')
+        nt.assert_equal(self.fmt(0.2), '0.2')
         nt.assert_equal(self.fmt(0.1), '0.1')
         nt.assert_equal(self.fmt(10), '10')
         nt.assert_equal(self.fmt(5), '5')
@@ -181,7 +183,33 @@ class Test_ProbTransform(Mixin_Transform):
         self.known_tras_na = -2.569150498
 
 
-class Test_InvertedProbTransform(Mixin_Transform):
+class Test_QuantileTransform(Mixin_Transform):
     def setup(self):
-        self.trans = probscale.InvertedProbTransform(probscale._minimal_norm)
+        self.trans = probscale.QuantileTransform(probscale._minimal_norm)
         self.known_tras_na = 69.1464492
+
+
+@image_comparison(baseline_images=['test_the_scale_default'], extensions=['png'])
+@nptest.dec.skipif(PYTHON27)
+def test_the_scale_default():
+    fig, ax = plt.subplots(figsize=(4, 8))
+    ax.set_yscale('prob')
+    ax.set_ylim(0.01, 99.99)
+    fig.tight_layout()
+
+
+@image_comparison(baseline_images=['test_the_scale_not_as_pct'], extensions=['png'])
+def test_the_scale_not_as_pct():
+    fig, ax = plt.subplots(figsize=(4, 8))
+    ax.set_yscale('prob', as_pct=False)
+    ax.set_ylim(0.02, 0.98)
+
+
+@image_comparison(baseline_images=['test_the_scale_beta'], extensions=['png'])
+def test_the_scale_beta():
+    fig, ax = plt.subplots(figsize=(4, 8))
+    ax.set_yscale('prob', as_pct=True, dist=stats.beta(3, 2))
+    ax.set_ylim(1, 99)
+    fig.tight_layout()
+
+
