@@ -6,6 +6,7 @@ import nose.tools as nt
 from probscale.probscale import _minimal_norm
 from probscale import transforms
 
+
 class Mixin_Transform(object):
     known_input_dims = 1
     known_output_dims = 1
@@ -50,4 +51,3 @@ class Test_QuantileTransform(Mixin_Transform):
     def setup(self):
         self.trans = transforms.QuantileTransform(_minimal_norm)
         self.known_tras_na = 69.1464492
-

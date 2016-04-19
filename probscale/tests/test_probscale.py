@@ -12,6 +12,7 @@ import numpy.testing as nptest
 import probscale
 from probscale.probscale import _minimal_norm
 
+
 class Test__minimal_norm(object):
     def setup(self):
         self.mn = _minimal_norm()
@@ -71,8 +72,6 @@ class Test__minimal_norm(object):
             self.known_cdf,
             decimal=3
         )
-
-
 
 
 @image_comparison(baseline_images=['test_the_scale_default'], extensions=['png'])
