@@ -15,6 +15,15 @@ mpl-probscale: Real probability scales for matplotlib
 
 https://github.com/phobson/mpl-probscale
 
+Installation
+------------
+
+``conda install mpl-probscale --channel=phobson``
+
+
+Quickstart
+----------
+
 Simply importing ``probscale`` lets you use probability scales in your matplotlib figures:
 
 .. code-block:: python
