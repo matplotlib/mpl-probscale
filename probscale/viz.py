@@ -181,17 +181,18 @@ def _fit_line(x, y, xhat=None, fitprobs=None, fitlogs=None, dist=None):
         Log transform = lambda x: numpy.log(x).
         Take care to not pass the same value to both ``fitlogs`` and
         ``figprobs`` as both transforms will be applied.
-    dist : scipy.stats distribution, optional
-        A fully-spec'd scipy.stats distribution such that ``dist.ppf``
-        and ``dist.cdf`` can be called. If not provided, defaults to a
-        minimal implementation of scipt.stats.norm.
+    dist : distribution, optional
+        A fully-spec'd scipy.stats distribution-like object
+        such that ``dist.ppf`` and ``dist.cdf`` can be called. If not
+        provided, defaults to a minimal implementation of
+        scipt.stats.norm.
 
     Returns
     -------
     xhat, yhat : numpy arrays
         Linear model estimates of ``x`` and ``y``.
     results : a statmodels result object
-        The object returned by statsmodels.OLS.fit()
+        The object returned by numpy.polyfit
 
     """
 

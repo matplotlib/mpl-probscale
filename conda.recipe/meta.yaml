@@ -17,13 +17,11 @@ requirements:
     - python
     - numpy
     - matplotlib
-    - scipy
 
   run:
     - python
     - numpy
     - matplotlib
-    - scipy
 
 test:
   imports:
@@ -34,6 +32,7 @@ test:
 
   requires:
     - nose
+    - scipy
 
 about:
   home: http://phobson.github.io/mpl-probscale/

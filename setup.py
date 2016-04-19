@@ -28,7 +28,7 @@ CLASSIFIERS = [
     'Programming Language :: Python :: 3.3',
     'Programming Language :: Python :: 3.4',
 ]
-INSTALL_REQUIRES = ['numpy', 'scipy', 'matplotlib']
+INSTALL_REQUIRES = ['numpy', 'matplotlib']
 PACKAGE_DATA = {
     'probscale.tests.test_probscale.baseline_images.test_probscale.test_viz': ['*png'],
 }

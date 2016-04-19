@@ -3,7 +3,11 @@ PYTHON27 = sys.version_info.major == 2
 
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy import stats
+
+try:
+    from scipy import stats
+except:
+    stats = None
 
 from matplotlib.testing.decorators import image_comparison, cleanup
 import nose.tools as nt
@@ -91,6 +95,7 @@ def test_the_scale_not_as_pct():
 
 
 @image_comparison(baseline_images=['test_the_scale_beta'], extensions=['png'])
+@nptest.dec.skipif(stats is None)
 def test_the_scale_beta():
     fig, ax = plt.subplots(figsize=(4, 8))
     ax.set_yscale('prob', as_pct=True, dist=stats.beta(3, 2))
