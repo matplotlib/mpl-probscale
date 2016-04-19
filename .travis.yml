@@ -10,6 +10,9 @@ matrix:
         - COVERAGE=false
     - python: 3.5
       env:
+        - COVERAGE=false
+    - python: 3.5
+      env:
         - COVERAGE=true
 
 before_install:
@@ -30,6 +33,7 @@ install:
   - conda create --yes -n test python=$TRAVIS_PYTHON_VERSION
   - source activate test
   - conda install --yes numpy nose matplotlib coverage docopt requests pyyaml
+  - if [ ${COVERAGE} = true ]; then conda install scipy --yes; fi
   - pip install coveralls
   - pip install .
 
