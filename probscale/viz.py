@@ -1,14 +1,9 @@
 ﻿import numpy
 from matplotlib import pyplot
-from matplotlib import scale
 from scipy import stats
 
-from .probscale import ProbScale
 from .probscale import _minimal_norm
 from . import validate
-
-
-scale.register_scale(ProbScale)
 
 
 def probplot(data, ax=None, axtype='prob', probax='x',
