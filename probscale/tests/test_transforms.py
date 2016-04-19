@@ -46,8 +46,20 @@ class Test_ProbTransform(Mixin_Transform):
         self.trans = transforms.ProbTransform(_minimal_norm)
         self.known_tras_na = -2.569150498
 
+    def test_inverted(self):
+        inv_trans = self.trans.inverted()
+        nt.assert_equal(self.trans.dist, inv_trans.dist)
+        nt.assert_equal(self.trans.factor, inv_trans.factor)
+        nt.assert_equal(self.trans.nonpos, inv_trans.nonpos)
+
 
 class Test_QuantileTransform(Mixin_Transform):
     def setup(self):
         self.trans = transforms.QuantileTransform(_minimal_norm)
         self.known_tras_na = 69.1464492
+
+    def test_inverted(self):
+        inv_trans = self.trans.inverted()
+        nt.assert_equal(self.trans.dist, inv_trans.dist)
+        nt.assert_equal(self.trans.factor, inv_trans.factor)
+        nt.assert_equal(self.trans.nonpos, inv_trans.nonpos)

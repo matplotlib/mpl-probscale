@@ -35,14 +35,16 @@ class _ProbTransformMixin(Transform):
     def __init__(self, dist, as_pct=True, nonpos='mask'):
         Transform.__init__(self)
         self.dist = dist
-        if as_pct:
+        self.as_pct = as_pct
+        self.nonpos = nonpos
+        if self.as_pct:
             self.factor = 100.0
         else:
             self.factor = 1.0
 
-        if nonpos == 'mask':
+        if self.nonpos == 'mask':
             self._handle_nonpos = _mask_non_positives
-        elif nonpos == 'clip':
+        elif self.nonpos == 'clip':
             self._handle_nonpos = _clip_non_positives
         else:
             raise ValueError("`nonpos` muse be either 'mask' or 'clip'")
