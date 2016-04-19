@@ -3,8 +3,8 @@ matplotlib.use('agg')
 
 import nose.tools as nt
 
-from probscale import probscale
-
+from probscale.probscale import _minimal_norm
+from probscale import transforms
 
 class Mixin_Transform(object):
     known_input_dims = 1
@@ -30,7 +30,7 @@ class Mixin_Transform(object):
 
     def test_dist(self):
         nt.assert_true(hasattr(self.trans, 'dist'))
-        nt.assert_equal(self.trans.dist, probscale._minimal_norm)
+        nt.assert_equal(self.trans.dist, _minimal_norm)
 
     def test_transform_non_affine(self):
         nt.assert_true(hasattr(self.trans, 'transform_non_affine'))
@@ -42,11 +42,12 @@ class Mixin_Transform(object):
 
 class Test_ProbTransform(Mixin_Transform):
     def setup(self):
-        self.trans = probscale.ProbTransform(probscale._minimal_norm)
+        self.trans = transforms.ProbTransform(_minimal_norm)
         self.known_tras_na = -2.569150498
 
 
-class Test_InvertedProbTransform(Mixin_Transform):
+class Test_QuantileTransform(Mixin_Transform):
     def setup(self):
-        self.trans = probscale.InvertedProbTransform(probscale._minimal_norm)
+        self.trans = transforms.QuantileTransform(_minimal_norm)
         self.known_tras_na = 69.1464492
+
