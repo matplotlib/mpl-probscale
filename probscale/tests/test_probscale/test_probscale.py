@@ -73,8 +73,7 @@ class Test__minimal_norm(object):
         )
 
 
-class Mixin_ProbFormatter_sig_figs(object):
-    fmt = probscale.PctFormatter()
+class Mixin_Check_Formatter_sig_figs(object):
     def teardown(self):
         pass
 
@@ -109,6 +108,9 @@ class Mixin_ProbFormatter_sig_figs(object):
             self.known_int
         )
 
+
+class Mixin_Check_PctFormatter_sig_figs(Mixin_Check_Formatter_sig_figs):
+    fmt = probscale.PctFormatter()
     def test__call__(self):
         nt.assert_equal(self.fmt(0.0301), '0.03')
         nt.assert_equal(self.fmt(0.2), '0.2')
@@ -121,7 +123,20 @@ class Mixin_ProbFormatter_sig_figs(object):
         nt.assert_equal(self.fmt(99.99), '99.99')
 
 
-class Test_ProbFormatter_sig_figs_gt1(Mixin_ProbFormatter_sig_figs):
+class Mixin_Check_ProbFormatter_sig_figs(Mixin_Check_Formatter_sig_figs):
+    fmt = probscale.ProbFormatter()
+    def test__call__(self):
+        nt.assert_equal(self.fmt(0.000301), '0.0003')
+        nt.assert_equal(self.fmt(0.001), '0.001')
+        nt.assert_equal(self.fmt(0.10), '0.10')
+        nt.assert_equal(self.fmt(0.05), '0.05')
+        nt.assert_equal(self.fmt(0.50), '0.50')
+        nt.assert_equal(self.fmt(0.99), '0.99')
+        nt.assert_equal(self.fmt(0.991), '0.991')
+        nt.assert_equal(self.fmt(0.9999), '0.9999')
+
+
+class Test_PctFormatter_sig_figs_gt1(Mixin_Check_PctFormatter_sig_figs):
     def setup(self):
         self.x = 1234.56
         self.known_3 = '1,230'
@@ -132,7 +147,7 @@ class Test_ProbFormatter_sig_figs_gt1(Mixin_ProbFormatter_sig_figs):
         self.factor = 10**5
 
 
-class Test_ProbFormatter_sig_figs_lt1(Mixin_ProbFormatter_sig_figs):
+class Test_PctFormatter_sig_figs_lt1(Mixin_Check_PctFormatter_sig_figs):
     def setup(self):
         self.x = 0.123456
         self.known_3 = '0.123'
@@ -213,3 +228,12 @@ def test_the_scale_beta():
     fig.tight_layout()
 
 
+class Test_ProbFormatter_sig_figs(Mixin_Check_ProbFormatter_sig_figs):
+    def setup(self):
+        self.x = 0.123456
+        self.known_3 = '0.123'
+        self.known_4 = '0.1235'
+        self.known_8 = '0.12345600'
+        self.known_exp3 = '1.23e-07'
+        self.known_int = '0'
+        self.factor = 10**-6
