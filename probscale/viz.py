@@ -1,6 +1,5 @@
 ﻿import numpy
 from matplotlib import pyplot
-from scipy import stats
 
 from .probscale import _minimal_norm
 from . import validate
@@ -67,13 +66,14 @@ def probplot(data, ax=None, axtype='prob', probax='x',
     axtype = validate.axis_type(axtype)
 
     # compute the plotting positions and sort the data
-    qntls, datavals = stats.probplot(data, fit=False)
+    probs, datavals = _plot_pos(data)
+    qntls = _minimal_norm.ppf(probs)
 
     # determine how the probability values should be expressed
     if axtype == 'qq':
         probvals = qntls
     else:
-        probvals = stats.norm.cdf(qntls) * 100
+        probvals = probs * 100
 
     # set up x, y, Axes for probabilities on the x
     if probax == 'x':
@@ -128,6 +128,38 @@ def probplot(data, ax=None, axtype='prob', probax='x',
         return fig, dict(q=qntls, x=x, y=y, xhat=xhat, yhat=yhat, res=modelres)
     else:
         return fig
+
+
+def _plot_pos(data, postype='cunnane', alpha=None, beta=None):
+    pos_params = {
+        'type 4':  (0, 1),
+        'type 5':  (0.5, 0.5),
+        'type 6':  (0, 0),
+        'type 7':  (1, 1),
+        'type 8':  (1/3., 1/3.),
+        'type 9':  (3/8., 3/8.),
+        'weibull': (0, 0),
+        'median':  (0.3175, 0.3175),
+        'apl':  (0.35, 0.35),
+        'pwm':  (0.35, 0.35),
+        'blom':  (0.375, 0.375),
+        'hazen':  (0.5, 0.5),
+        'cunnane':  (0.4, 0.4),
+        'gringorten':  (0.44, 0.44), # Gumble
+    }
+
+    if alpha is None and beta is None:
+        alpha, beta = pos_params.get(postype.lower(), pos_params['cunnane'])
+
+    data = numpy.asarray(data, dtype=float).flatten()
+    n = data.shape[0]
+    pos = numpy.empty_like(data)
+    pos[n:] = 0
+
+    sorted_index = data.argsort()
+    pos[sorted_index[:n]] = (numpy.arange(1, n+1) - alpha) / (n + 1.0 - alpha - beta)
+
+    return pos[sorted_index], data[sorted_index]
 
 
 def _fit_line(x, y, xhat=None, fitprobs=None, fitlogs=None, dist=None):
