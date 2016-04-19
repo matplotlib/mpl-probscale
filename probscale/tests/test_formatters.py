@@ -1,11 +1,5 @@
-import sys
-PYTHON27 = sys.version_info.major == 2
+import numpy
 
-import numpy as np
-import matplotlib.pyplot as plt
-from scipy import stats
-
-from matplotlib.testing.decorators import image_comparison, cleanup
 import nose.tools as nt
 import numpy.testing as nptest
 
@@ -24,8 +18,8 @@ class Mixin_Check_Formatter_sig_figs(object):
         nt.assert_equal(self.fmt._sig_figs('1.23', 3), '1.23')
 
     def test_na_inf(self):
-        nt.assert_equal(self.fmt._sig_figs(np.nan, 3), 'NA')
-        nt.assert_equal(self.fmt._sig_figs(np.inf, 3), 'NA')
+        nt.assert_equal(self.fmt._sig_figs(numpy.nan, 3), 'NA')
+        nt.assert_equal(self.fmt._sig_figs(numpy.inf, 3), 'NA')
 
     def test_zero(self):
         nt.assert_equal(self.fmt._sig_figs(0, 3), '0')
