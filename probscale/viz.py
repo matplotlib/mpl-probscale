@@ -5,10 +5,10 @@ from .probscale import _minimal_norm
 from . import validate
 
 
-def probplot(data, ax=None, axtype='prob', probax='x',
-             otherscale='linear', xlabel=None, ylabel=None,
-             bestfit=False, return_results=False,
-             scatter_kws=None, line_kws=None, pp_kws=None):
+def probplot(data, ax=None, color=None, label=None, axtype='prob',
+             probax='x', otherscale='linear', xlabel=None, ylabel=None,
+             bestfit=False, return_results=False, scatter_kws=None,
+             line_kws=None, pp_kws=None):
     """ Probability, percentile, and quantile plots.
 
     Parameters
@@ -18,6 +18,12 @@ def probplot(data, ax=None, axtype='prob', probax='x',
     ax : matplotlib axes, optional
         The Axes on which to plot. If one is not provided, a new Axes
         will be created.
+    color : valid matplotlib color specification, optional
+        If provided, this value will be added to the ``scatter_kws``
+        and ``line_kws`` dictionary under the "color" key.
+    label : string, optional
+        If provided, this legend label is applied to the scatter series
+        of the probability plot.
     axtype : string (default = 'prob')
         Type of plot to be created. Options are:
            - 'prob': probabilty plot
@@ -68,6 +74,13 @@ def probplot(data, ax=None, axtype='prob', probax='x',
     scatter_kws = validate.other_options(scatter_kws)
     line_kws = validate.other_options(line_kws)
     pp_kws = validate.other_options(pp_kws)
+
+    if color is not None:
+        scatter_kws['color'] = color
+        line_kws['color'] = color
+
+    if label is not None:
+        scatter_kws['label'] = label
 
     # check axtype
     axtype = validate.axis_type(axtype)
@@ -143,7 +156,7 @@ def plot_pos(data, postype=None, alpha=None, beta=None):
     Compute the plotting positions for a dataset. Heavily borrows from
     ``scipy.stats.mstats.plotting_positions``.
 
-    A plottiting position is defined as: ``i-alpha)/(n+1-alpha-beta)``
+    A plottiting position is defined as: ``(i-alpha)/(n+1-alpha-beta)``
     where:
 
         - ``i`` is the rank order
@@ -153,25 +166,31 @@ def plot_pos(data, postype=None, alpha=None, beta=None):
 
     The values of ``alpha`` and ``beta`` can be explicitly set. Typical
     values can also be access via the ``postype`` parameter. Available
-    ``postype`` values are:
+    ``postype`` values (alpha, beta) are:
 
-        - "type 4" : (0, 1), linear interpolation of the empirical CDF
-        - "type 5" pr "hazen": (0.5, 0.5), piece-wise linear
-           interpolation.
-        - "type 6" or "weibull" : (0, 0) Weibull plotting positions,
-          Unbiased exceedance probability for all distributions. This is
-          the default value.
-        - "type 7" : (1, 1), the default values in R
-        - "type 8" : (1/3, 1/3)
-        - "type 9" or "blom" : approximately unbiased positions if the
-          data are normall distributed.
-        - "median" : (0.3175, 0.3175), Median exceedance probabilities
-          for all distributions (used in ``scipy.stats.probplot``)
-        - "apl" or "pwm" : (0.35, 0.35), used with probability-weighted
-          moments.
-        - "cunnane" : (0.4, 0.4), nearly unbiased quantiles for normally
-          distributed data.
-        - "gringorten" : (0.44, 0.44), used for Gumble distributions.
+        "type 4" : (0, 1)
+            Linear interpolation of the empirical CDF.
+        "type 5" or "hazen" : (0.5, 0.5)
+            Piecewise linear interpolation.
+        "type 6" or "weibull" : (0, 0)
+            Weibull plotting positions. Unbiased exceedance probability
+            for all distributions. This is will be the default value.
+        "type 7" : (1, 1)
+            The default values in R.
+        "type 8" : (1/3, 1/3)
+            Approximately median-unbiased.
+        "type 9" or "blom" : (0.375, 0.375)
+            Approximately unbiased positions if the data are normally
+            distributed.
+        "median" : (0.3175, 0.3175)
+            Median exceedance probabilities for all distributions
+            (used in ``scipy.stats.probplot``).
+        "apl" or "pwm" : (0.35, 0.35)
+            Used with probability-weighted moments.
+        "cunnane" : (0.4, 0.4)
+            Nearly unbiased quantiles for normally distributed data.
+        "gringorten" : (0.44, 0.44)
+            Used for Gumble distributions.
 
     Parameters
     ----------
@@ -181,6 +200,13 @@ def plot_pos(data, postype=None, alpha=None, beta=None):
     alpha, beta : float, optional
         Custom plotting position parameters is the options available
         through the `postype` parameter are insufficient.
+
+    Returns
+    -------
+    plot_pos : numpy.array
+        The computed plotting positions, sorted.
+    data_sorted : numpy.array
+        The original data values, sorted.
 
     References
     ----------
