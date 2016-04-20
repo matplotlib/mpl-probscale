@@ -1,10 +1,26 @@
+import numpy
 import matplotlib
 matplotlib.use('agg')
 
 import nose.tools as nt
+import numpy.testing as nptest
 
 from probscale.probscale import _minimal_norm
 from probscale import transforms
+
+
+def test__mask_out_of_bounds():
+    x = [-0.1, 0, 0.1, 0.5, 0.9, 1.0, 1.1]
+    known = numpy.array([numpy.nan, numpy.nan, 0.1, 0.5, 0.9, numpy.nan, numpy.nan])
+    result = transforms._mask_out_of_bounds(x)
+    nptest.assert_array_almost_equal(result, known)
+
+
+def test__clip_out_of_bounds():
+    x = [-0.1, 0, 0.1, 0.5, 0.9, 1.0, 1.1]
+    known = numpy.array([0.0, 0.0, 0.1, 0.5, 0.9, 1.0, 1.0])
+    result = transforms._clip_out_of_bounds(x)
+    nptest.assert_array_almost_equal(result, known)
 
 
 class Mixin_Transform(object):
@@ -35,16 +51,27 @@ class Mixin_Transform(object):
 
     def test_transform_non_affine(self):
         nt.assert_true(hasattr(self.trans, 'transform_non_affine'))
-        nt.assert_almost_equal(self.trans.transform_non_affine(0.5), self.known_tras_na)
+        nptest.assert_almost_equal(self.trans.transform_non_affine([0.5]), self.known_tras_na)
 
     def test_inverted(self):
         nt.assert_true(hasattr(self.trans, 'inverted'))
 
+    @nt.raises(ValueError)
+    def test_bad_non_pos(self):
+        self._trans(_minimal_norm, nonpos='junk')
+
+    # def test_non_pos_default(self):
+    #     x = [-0.1, 0, 0.1, 0.5, 0.99, 1, 1.1]
+
+    def test_non_pos_clip(self):
+        self._trans(_minimal_norm, nonpos='clip')
+
 
 class Test_ProbTransform(Mixin_Transform):
     def setup(self):
+        self._trans = transforms.ProbTransform
         self.trans = transforms.ProbTransform(_minimal_norm)
-        self.known_tras_na = -2.569150498
+        self.known_tras_na = [-2.569150498]
 
     def test_inverted(self):
         inv_trans = self.trans.inverted()
@@ -55,8 +82,9 @@ class Test_ProbTransform(Mixin_Transform):
 
 class Test_QuantileTransform(Mixin_Transform):
     def setup(self):
+        self._trans = transforms.QuantileTransform
         self.trans = transforms.QuantileTransform(_minimal_norm)
-        self.known_tras_na = 69.1464492
+        self.known_tras_na = [69.1464492]
 
     def test_inverted(self):
         inv_trans = self.trans.inverted()
