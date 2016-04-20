@@ -39,3 +39,7 @@ def axis_type(axtype):
     if axtype.lower() not in ['pp', 'qq', 'prob']:
         raise ValueError("invalid axtype: {}".format(axtype))
     return axtype.lower()
+
+
+def other_options(options):
+    return dict() if options is None else options.copy()
