@@ -1,10 +1,10 @@
 package:
   name: mpl-probscale
-  version: v0.1.0
+  version: 0.1.1
 
 source:
   git_url: https://github.com/phobson/mpl-probscale.git
-  git_tag: v0.1.0
+  git_tag: v0.1.1
 #  patches:
    # List any patch files here
    # - fix.patch
