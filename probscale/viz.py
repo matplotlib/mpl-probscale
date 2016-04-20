@@ -1,15 +1,14 @@
 ﻿import numpy
 from matplotlib import pyplot
-from scipy import stats
 
 from .probscale import _minimal_norm
 from . import validate
 
 
-def probplot(data, ax=None, axtype='prob', probax='x',
-             otherscale='linear', xlabel=None, ylabel=None,
-             bestfit=False, return_results=False,
-             scatter_kws=None, line_kws=None):
+def probplot(data, ax=None, color=None, label=None, axtype='prob',
+             probax='x', otherscale='linear', xlabel=None, ylabel=None,
+             bestfit=False, return_results=False, scatter_kws=None,
+             line_kws=None, pp_kws=None):
     """ Probability, percentile, and quantile plots.
 
     Parameters
@@ -19,6 +18,12 @@ def probplot(data, ax=None, axtype='prob', probax='x',
     ax : matplotlib axes, optional
         The Axes on which to plot. If one is not provided, a new Axes
         will be created.
+    color : valid matplotlib color specification, optional
+        If provided, this value will be added to the ``scatter_kws``
+        and ``line_kws`` dictionary under the "color" key.
+    label : string, optional
+        If provided, this legend label is applied to the scatter series
+        of the probability plot.
     axtype : string (default = 'prob')
         Type of plot to be created. Options are:
            - 'prob': probabilty plot
@@ -37,6 +42,9 @@ def probplot(data, ax=None, axtype='prob', probax='x',
     scatter_kws, line_kws : dictionary, optional
         Dictionary of keyword arguments passed directly to ``ax.plot``
         when drawing the scatter points and best-fit line, respectively.
+    pp_kws : dictionary, optional
+        Dictionary of keyword arguments passed directly to
+        ``viz.plot_pos``.
     return_results : bool (default = False)
         If True a dictionary of results of is returned along with the
         figure.
@@ -47,11 +55,17 @@ def probplot(data, ax=None, axtype='prob', probax='x',
         The figure on which the plot was drawn.
     result : dictionary of linear fit results, optional
         Keys are:
-           - q: array of quantiles
-           - x, y: arrays of data passed to function
-           - xhat, yhat: arrays of modeled data plotted in best-fit line
-           - res: array of coeffcients of the best-fit line.
+           - q : array of quantiles
+           - x, y : arrays of data passed to function
+           - xhat, yhat : arrays of modeled data plotted in best-fit line
+           - res : array of coeffcients of the best-fit line.
 
+    See also
+    --------
+    viz.plot_pos
+    numpy.polyfit
+    scipy.stats.probplot
+    scipy.stats.mstats.plotting_positions
 
     """
 
@@ -60,20 +74,29 @@ def probplot(data, ax=None, axtype='prob', probax='x',
     probax = validate.axis_name(probax, 'x')
 
     # default values for plotting options
-    scatter_kws = {} if scatter_kws is None else scatter_kws.copy()
-    line_kws = {} if line_kws is None else line_kws.copy()
+    scatter_kws = validate.other_options(scatter_kws)
+    line_kws = validate.other_options(line_kws)
+    pp_kws = validate.other_options(pp_kws)
+
+    if color is not None:
+        scatter_kws['color'] = color
+        line_kws['color'] = color
+
+    if label is not None:
+        scatter_kws['label'] = label
 
     # check axtype
     axtype = validate.axis_type(axtype)
 
     # compute the plotting positions and sort the data
-    qntls, datavals = stats.probplot(data, fit=False)
+    probs, datavals = plot_pos(data, **pp_kws)
+    qntls = _minimal_norm.ppf(probs)
 
     # determine how the probability values should be expressed
     if axtype == 'qq':
         probvals = qntls
     else:
-        probvals = stats.norm.cdf(qntls) * 100
+        probvals = probs * 100
 
     # set up x, y, Axes for probabilities on the x
     if probax == 'x':
@@ -125,9 +148,107 @@ def probplot(data, ax=None, axtype='prob', probax='x',
 
     # return the figure and maybe results of the best-fit
     if return_results:
-        return fig, dict(q=qntls, x=x, y=y, xhat=xhat, yhat=yhat, res=modelres)
+        results = dict(q=qntls, x=x, y=y, xhat=xhat, yhat=yhat, res=modelres)
+        return fig, results
     else:
         return fig
+
+
+def plot_pos(data, postype=None, alpha=None, beta=None):
+    """
+    Compute the plotting positions for a dataset. Heavily borrows from
+    ``scipy.stats.mstats.plotting_positions``.
+
+    A plottiting position is defined as: ``(i-alpha)/(n+1-alpha-beta)``
+    where:
+
+        - ``i`` is the rank order
+        - ``n`` is the size of the dataset
+        - ``alpha`` and ``beta`` are parameters used to adjust the
+          positions.
+
+    The values of ``alpha`` and ``beta`` can be explicitly set. Typical
+    values can also be access via the ``postype`` parameter. Available
+    ``postype`` values (alpha, beta) are:
+
+        "type 4" : (0, 1)
+            Linear interpolation of the empirical CDF.
+        "type 5" or "hazen" : (0.5, 0.5)
+            Piecewise linear interpolation.
+        "type 6" or "weibull" : (0, 0)
+            Weibull plotting positions. Unbiased exceedance probability
+            for all distributions. This is will be the default value.
+        "type 7" : (1, 1)
+            The default values in R.
+        "type 8" : (1/3, 1/3)
+            Approximately median-unbiased.
+        "type 9" or "blom" : (0.375, 0.375)
+            Approximately unbiased positions if the data are normally
+            distributed.
+        "median" : (0.3175, 0.3175)
+            Median exceedance probabilities for all distributions
+            (used in ``scipy.stats.probplot``).
+        "apl" or "pwm" : (0.35, 0.35)
+            Used with probability-weighted moments.
+        "cunnane" : (0.4, 0.4)
+            Nearly unbiased quantiles for normally distributed data.
+        "gringorten" : (0.44, 0.44)
+            Used for Gumble distributions.
+
+    Parameters
+    ----------
+    data : array-like
+        The values whose plotting positions need to be computed.
+    postype : string, optional (default: "cunnane")
+    alpha, beta : float, optional
+        Custom plotting position parameters is the options available
+        through the `postype` parameter are insufficient.
+
+    Returns
+    -------
+    plot_pos : numpy.array
+        The computed plotting positions, sorted.
+    data_sorted : numpy.array
+        The original data values, sorted.
+
+    References
+    ----------
+    http://artax.karlin.mff.cuni.cz/r-help/library/lmomco/html/pp.html
+    http://astrostatistics.psu.edu/su07/R/html/stats/html/quantile.html
+    http://docs.scipy.org/doc/scipy-0.17.0/reference/generated/scipy.stats.probplot.html
+    http://docs.scipy.org/doc/scipy-0.17.0/reference/generated/scipy.stats.mstats.plotting_positions.html
+
+    """
+
+    pos_params = {
+        'type 4': (0, 1),
+        'type 5': (0.5, 0.5),
+        'type 6': (0, 0),
+        'type 7': (1, 1),
+        'type 8': (1/3., 1/3.),
+        'type 9': (0.375, 0.375),
+        'weibull': (0, 0),
+        'median': (0.3175, 0.3175),
+        'apl': (0.35, 0.35),
+        'pwm': (0.35, 0.35),
+        'blom': (0.375, 0.375),
+        'hazen': (0.5, 0.5),
+        'cunnane': (0.4, 0.4),
+        'gringorten': (0.44, 0.44), # Gumble
+    }
+    postype = 'cunnane' if postype is None else postype
+    if alpha is None and beta is None:
+        alpha, beta = pos_params[postype.lower()]
+
+    data = numpy.asarray(data, dtype=float).flatten()
+    n = data.shape[0]
+    pos = numpy.empty_like(data)
+    pos[n:] = 0
+
+    sorted_index = data.argsort()
+    pos[sorted_index[:n]] = (numpy.arange(1, n+1) - alpha) / (n + 1.0 - alpha - beta)
+
+    return pos[sorted_index], data[sorted_index]
 
 
 def _fit_line(x, y, xhat=None, fitprobs=None, fitlogs=None, dist=None):
@@ -149,17 +270,18 @@ def _fit_line(x, y, xhat=None, fitprobs=None, fitlogs=None, dist=None):
         Log transform = lambda x: numpy.log(x).
         Take care to not pass the same value to both ``fitlogs`` and
         ``figprobs`` as both transforms will be applied.
-    dist : scipy.stats distribution, optional
-        A fully-spec'd scipy.stats distribution such that ``dist.ppf``
-        and ``dist.cdf`` can be called. If not provided, defaults to a
-        minimal implementation of scipt.stats.norm.
+    dist : distribution, optional
+        A fully-spec'd scipy.stats distribution-like object
+        such that ``dist.ppf`` and ``dist.cdf`` can be called. If not
+        provided, defaults to a minimal implementation of
+        scipt.stats.norm.
 
     Returns
     -------
     xhat, yhat : numpy arrays
         Linear model estimates of ``x`` and ``y``.
     results : a statmodels result object
-        The object returned by statsmodels.OLS.fit()
+        The object returned by numpy.polyfit
 
     """
 

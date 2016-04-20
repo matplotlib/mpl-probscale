@@ -70,3 +70,12 @@ class Test_axis_type(object):
         nt.assert_equal('pp', validate.axis_type('PP'))
         nt.assert_equal('qq', validate.axis_type('QQ'))
         nt.assert_equal('prob', validate.axis_type('ProB'))
+
+
+class Test_other_options(object):
+    def test_None(self):
+        nt.assert_dict_equal(validate.other_options(None), {})
+
+    def test_dict(self):
+        x = {'a': 1, 'b': 'test'}
+        nt.assert_dict_equal(validate.other_options(x), x)

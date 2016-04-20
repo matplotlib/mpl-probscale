@@ -10,14 +10,14 @@ from setuptools import setup, find_packages
 DESCRIPTION = "mpl-probscale: Probabily scales for matplotlib"
 LONG_DESCRIPTION = DESCRIPTION
 NAME = "probscale"
-VERSION = "0.1.0"
+VERSION = "0.1.1"
 AUTHOR = "Paul Hobson (Geosyntec Consultants)"
 AUTHOR_EMAIL = "phobson@geosyntec.com"
 URL = "https://github.com/phobson/mpl-probscale"
 DOWNLOAD_URL = "https://github.com/phobson/mpl-probscale/archive/master.zip"
 LICENSE = "BSD 3-clause"
 PACKAGES = find_packages()
-PLATFORMS = "Python 2.7, 3.3 and later."
+PLATFORMS = "Python 2.7, 3.4 and later."
 CLASSIFIERS = [
     "License :: OSI Approved :: BSD License",
     "Operating System :: OS Independent",
@@ -25,12 +25,13 @@ CLASSIFIERS = [
     "Intended Audience :: Science/Research",
     "Topic :: Software Development :: Libraries :: Python Modules",
     'Programming Language :: Python :: 2.7',
-    'Programming Language :: Python :: 3.3',
     'Programming Language :: Python :: 3.4',
+    'Programming Language :: Python :: 3.5',
 ]
-INSTALL_REQUIRES = ['numpy', 'scipy', 'matplotlib']
+INSTALL_REQUIRES = ['numpy', 'matplotlib']
 PACKAGE_DATA = {
-    'probscale.tests.test_probscale.baseline_images.test_probscale.test_viz': ['*png'],
+    'probscale.tests.baseline_images.test_viz': ['*png'],
+    'probscale.tests.baseline_images.test_probscale': ['*png'],
 }
 
 setup(
@@ -49,4 +50,5 @@ setup(
     platforms=PLATFORMS,
     classifiers=CLASSIFIERS,
     install_requires=INSTALL_REQUIRES,
+    zip_safe=False,
 )

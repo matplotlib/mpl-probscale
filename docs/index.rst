@@ -54,17 +54,27 @@ Tutorial
 
    tutorial/getting_started.rst
 
+Testing
+-------
+
+It's easiest to run the tests from an interactive python session:
+
+.. code-block:: python
+
+    import matplotlib
+    matplotlib.use('agg')
+    import probscale
+    probscale.test()
+
+
 API References
 --------------
 
 .. toctree::
    :maxdepth: 2
 
-   probscale.rst
    viz.rst
-
-
-
+   probscale.rst
 
 Indices and tables
 ==================
@@ -72,4 +82,3 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-

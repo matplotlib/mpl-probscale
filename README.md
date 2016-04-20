@@ -32,3 +32,15 @@ seaborn.despine(fig=fig)
 ```
 
 ![Alt text](docs/img/example.png "Example axes")
+
+## Testing
+
+Testing is generally done via the ``nose`` and ``numpy.testing`` modules.
+The best way to run the tests is in an interactive python session:
+
+```python
+import matplotlib
+matplotib.use('agg')
+import probscale
+probscale.test()
+```

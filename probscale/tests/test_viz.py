@@ -1,20 +1,18 @@
-﻿import matplotlib
+﻿import numpy
+import matplotlib
 matplotlib.use('agg')
-
-import numpy as np
 import matplotlib.pyplot as plt
-from scipy import stats
 
 import nose.tools as nt
 import numpy.testing as nptest
 from matplotlib.testing.decorators import image_comparison, cleanup
 
 from probscale import viz
-
+from probscale.probscale import _minimal_norm
 
 @nt.nottest
 def setup_plot_data():
-    data = np.array([
+    data = numpy.array([
          3.113,   3.606,   4.046,   4.046,   4.710,   6.140,   6.978,
          2.000,   4.200,   4.620,   5.570,   5.660,   5.860,   6.650,
          6.780,   6.790,   7.500,   7.500,   7.500,   8.630,   8.710,
@@ -26,7 +24,7 @@ def setup_plot_data():
 
 class Test__fit_line(object):
     def setup(self):
-        self.data = np.array([
+        self.data = numpy.array([
             2.00,   4.0 ,   4.62,   5.00,   5.00,   5.50,   5.57,   5.66,
             5.75,   5.86,   6.65,   6.78,   6.79,   7.50,   7.50,   7.50,
             8.63,   8.71,   8.99,   9.50,   9.50,   9.85,  10.82,  11.00,
@@ -34,7 +32,7 @@ class Test__fit_line(object):
            19.64,  20.18,  22.97
         ])
 
-        self.zscores = np.array([
+        self.zscores = numpy.array([
             -2.06188401, -1.66883254, -1.4335397 , -1.25837339, -1.11509471,
             -0.99166098, -0.8817426 , -0.78156696, -0.68868392, -0.60139747,
             -0.51847288, -0.4389725 , -0.36215721, -0.28742406, -0.21426459,
@@ -44,9 +42,9 @@ class Test__fit_line(object):
              1.11509471,  1.25837339,  1.43353970,  1.66883254,  2.06188401
         ])
 
-        self.probs = stats.norm.cdf(self.zscores) * 100.
+        self.probs = _minimal_norm.cdf(self.zscores) * 100.
 
-        self.y = np.array([
+        self.y = numpy.array([
             0.07323274,  0.12319301,  0.16771455,  0.1779695 ,  0.21840761,
             0.25757016,  0.2740265 ,  0.40868106,  0.44872637,  0.5367353 ,
             0.55169933,  0.56211726,  0.62375442,  0.66631353,  0.68454978,
@@ -56,18 +54,18 @@ class Test__fit_line(object):
             3.23039631,  4.23953492,  4.25892247,  4.5834766 ,  6.53100725
         ])
 
-        self.known_y_linlin = np.array([-0.896506, 21.12622])
-        self.known_y_linlog = np.array([2.801908, 27.649589])
-        self.known_y_linprob = np.array([8.491444, 98.528266])
-        self.known_y_loglin = np.array([-2.57620461, 1.66767934])
-        self.known_y_loglog = np.array([ 0.0468154, 5.73261406])
-        self.known_y_logprob = np.array([0.492579, 95.233708])
-        self.known_y_problin = np.array([-0.887084, 21.116798])
-        self.known_y_problog = np.array([2.804758, 27.621489])
-        self.known_y_probprob = np.array([1.96093902, 98.03906098])
+        self.known_y_linlin = numpy.array([-0.896506, 21.12622])
+        self.known_y_linlog = numpy.array([2.801908, 27.649589])
+        self.known_y_linprob = numpy.array([8.47617988, 98.53407669])
+        self.known_y_loglin = numpy.array([-2.57620461, 1.66767934])
+        self.known_y_loglog = numpy.array([0.0468154, 5.73261406])
+        self.known_y_logprob = numpy.array([0.489822, 95.246099])
+        self.known_y_problin = numpy.array([-0.896506, 21.12622])
+        self.known_y_problog = numpy.array([2.801908, 27.649589])
+        self.known_y_probprob = numpy.array([1.944938, 98.055062])
 
         self.custom_xhat = [-2, -1, 0, 1, 2]
-        self.known_custom_yhat = np.array([-0.56601826, 4.77441944, 10.11485714,
+        self.known_custom_yhat = numpy.array([-0.56601826, 4.77441944, 10.11485714,
                                            15.45529485, 20.79573255])
 
     def test_xlinear_ylinear(self):
@@ -75,66 +73,75 @@ class Test__fit_line(object):
         x, y = self.zscores, self.data
         x_, y_, res = viz._fit_line(x, y, **scales)
         nptest.assert_array_almost_equal(y_, self.known_y_linlin)
-        nt.assert_true(isinstance(res, np.ndarray))
+        nt.assert_true(isinstance(res, numpy.ndarray))
 
     def test_xlinear_ylog(self):
         scales = {'fitlogs': 'y', 'fitprobs': None}
         x, y = self.zscores, self.data
         x_, y_, res = viz._fit_line(x, y, **scales)
         nptest.assert_array_almost_equal(y_, self.known_y_linlog)
-        nt.assert_true(isinstance(res, np.ndarray))
+        nt.assert_true(isinstance(res, numpy.ndarray))
 
     def test_xlinear_yprob(self):
         scales = {'fitlogs': None, 'fitprobs': 'y'}
         x, y = self.data, self.probs
         x_, y_, res = viz._fit_line(x, y, **scales)
         nptest.assert_array_almost_equal(y_, self.known_y_linprob)
-        nt.assert_true(isinstance(res, np.ndarray))
+        nt.assert_true(isinstance(res, numpy.ndarray))
 
     def test_xlog_ylinear(self):
         scales = {'fitlogs': 'x', 'fitprobs': None}
         x, y = self.data, self.zscores
         x_, y_, res = viz._fit_line(x, y, **scales)
         nptest.assert_array_almost_equal(y_, self.known_y_loglin)
-        nt.assert_true(isinstance(res, np.ndarray))
+        nt.assert_true(isinstance(res, numpy.ndarray))
 
     def test_xlog_ylog(self):
         scales = {'fitlogs': 'both', 'fitprobs': None}
         x, y = self.data, self.y
         x_, y_, res = viz._fit_line(x, y, **scales)
         nptest.assert_array_almost_equal(y_, self.known_y_loglog)
-        nt.assert_true(isinstance(res, np.ndarray))
+        nt.assert_true(isinstance(res, numpy.ndarray))
 
     def test_xlog_yprob(self):
         scales = {'fitlogs': 'x', 'fitprobs': 'y'}
         x, y = self.data, self.probs
         x_, y_, res = viz._fit_line(x, y, **scales)
         nptest.assert_array_almost_equal(y_, self.known_y_logprob)
-        nt.assert_true(isinstance(res, np.ndarray))
+        nt.assert_true(isinstance(res, numpy.ndarray))
 
     def test_xprob_ylinear(self):
         scales = {'fitlogs': None, 'fitprobs': 'x'}
         x, y = self.probs, self.data
         x_, y_, res = viz._fit_line(x, y, **scales)
         nptest.assert_array_almost_equal(y_, self.known_y_problin)
-        nt.assert_true(isinstance(res, np.ndarray))
+        nt.assert_true(isinstance(res, numpy.ndarray))
 
     def test_xprob_ylog(self):
         scales = {'fitlogs': 'y', 'fitprobs': 'x'}
         x, y = self.probs, self.data
         x_, y_, res = viz._fit_line(x, y, **scales)
         nptest.assert_array_almost_equal(y_, self.known_y_problog)
-        nt.assert_true(isinstance(res, np.ndarray))
+        nt.assert_true(isinstance(res, numpy.ndarray))
 
     def test_xprob_yprob(self):
-        z2, _y = stats.probplot(self.y, fit=False)
-        p2 = stats.norm.cdf(z2) * 100
+        p2 = numpy.array([
+             1.94493789,   4.7424475 ,   7.57359631,  10.40452018,
+            13.23476893,  16.06435006,  18.89337556,  21.72197005,
+            24.55024455,  27.37829018,  30.20617837,  33.03396313,
+            35.86168383,  38.68936789,  41.51703325,  44.34469064,
+            47.17234553,  50.        ,  52.82765447,  55.65530936,
+            58.48296675,  61.31063211,  64.13831617,  66.96603687,
+            69.79382163,  72.62170982,  75.44975545,  78.27802995,
+            81.10662444,  83.93564994,  86.76523107,  89.59547982,
+            92.42640369,  95.2575525 ,  98.05506211
+        ])
 
         scales = {'fitlogs': None, 'fitprobs': 'both'}
         x, y = self.probs, p2,
         x_, y_, res = viz._fit_line(x, y, **scales)
         nptest.assert_array_almost_equal(y_, self.known_y_probprob)
-        nt.assert_true(isinstance(res, np.ndarray))
+        nt.assert_true(isinstance(res, numpy.ndarray))
 
     @nt.raises(ValueError)
     def test_bad_fitlogs(self):
@@ -154,25 +161,25 @@ class Test__fit_line(object):
 
 class Test__estimate_from_fit(object):
     def setup(self):
-        self.x = np.arange(1, 11, 0.5)
+        self.x = numpy.arange(1, 11, 0.5)
         self.slope = 2
         self.intercept = 3.5
 
-        self.known_ylinlin = np.array([
+        self.known_ylinlin = numpy.array([
              5.5,   6.5,   7.5,   8.5,   9.5,  10.5,  11.5,  12.5,  13.5,
             14.5,  15.5,  16.5,  17.5,  18.5,  19.5,  20.5,  21.5,  22.5,
             23.5,  24.5
         ])
 
 
-        self.known_yloglin = np.array([
+        self.known_yloglin = numpy.array([
             3.5       ,  4.31093022,  4.88629436,  5.33258146,  5.69722458,
             6.00552594,  6.27258872,  6.50815479,  6.71887582,  6.90949618,
             7.08351894,  7.24360435,  7.3918203 ,  7.52980604,  7.65888308,
             7.78013233,  7.89444915,  8.0025836 ,  8.10517019,  8.20275051
         ])
 
-        self.known_yloglog = np.array([
+        self.known_yloglog = numpy.array([
               33.11545196,    74.50976691,   132.46180783,   206.97157474,
              298.03906763,   405.66428649,   529.84723134,   670.58790216,
              827.88629897,  1001.74242175,  1192.15627051,  1399.12784525,
@@ -180,7 +187,7 @@ class Test__estimate_from_fit(object):
             2682.35160865,  2988.66953927,  3311.54519587,  3650.97857845
         ])
 
-        self.known_ylinlog = np.array([
+        self.known_ylinlog = numpy.array([
              2.44691932e+02,   6.65141633e+02,   1.80804241e+03,
              4.91476884e+03,   1.33597268e+04,   3.63155027e+04,
              9.87157710e+04,   2.68337287e+05,   7.29416370e+05,
@@ -208,12 +215,153 @@ class Test__estimate_from_fit(object):
     def test_linlog(self):
         ylinlog = viz._estimate_from_fit(self.x, self.slope, self.intercept,
                                               xlog=False, ylog=True)
-        percent_diff = np.abs(ylinlog - self.known_ylinlog) / self.known_ylinlog
+        percent_diff = numpy.abs(ylinlog - self.known_ylinlog) / self.known_ylinlog
         nptest.assert_array_almost_equal(
             percent_diff,
-            np.zeros(self.x.shape[0]),
+            numpy.zeros(self.x.shape[0]),
             decimal=5
         )
+
+
+class Test_plot_pos(object):
+    def setup(self):
+        self.data = numpy.arange(16)
+
+        self.known_type4 = numpy.array([
+            0.0625,  0.125 ,  0.1875,  0.25  ,  0.3125,  0.375 ,  0.4375,
+            0.5   ,  0.5625,  0.625 ,  0.6875,  0.75  ,  0.8125,  0.875 ,
+            0.9375,  1.
+        ])
+
+        self.known_type5 = numpy.array([
+            0.03125,  0.09375,  0.15625,  0.21875,  0.28125,  0.34375,
+            0.40625,  0.46875,  0.53125,  0.59375,  0.65625,  0.71875,
+            0.78125,  0.84375,  0.90625,  0.96875
+        ])
+
+        self.known_type6 = numpy.array([
+            0.05882353,  0.11764706,  0.17647059,  0.23529412,  0.29411765,
+            0.35294118,  0.41176471,  0.47058824,  0.52941176,  0.58823529,
+            0.64705882,  0.70588235,  0.76470588,  0.82352941,  0.88235294,
+            0.94117647
+        ])
+
+        self.known_type7 = numpy.array([
+            0.        ,  0.06666667,  0.13333333,  0.2       ,  0.26666667,
+            0.33333333,  0.4       ,  0.46666667,  0.53333333,  0.6       ,
+            0.66666667,  0.73333333,  0.8       ,  0.86666667,  0.93333333,
+            1.
+        ])
+
+        self.known_type8 = numpy.array([
+            0.04081633,  0.10204082,  0.16326531,  0.2244898 ,  0.28571429,
+            0.34693878,  0.40816327,  0.46938776,  0.53061224,  0.59183673,
+            0.65306122,  0.71428571,  0.7755102 ,  0.83673469,  0.89795918,
+            0.95918367
+        ])
+
+        self.known_type9 = numpy.array([
+            0.03846154,  0.1       ,  0.16153846,  0.22307692,  0.28461538,
+            0.34615385,  0.40769231,  0.46923077,  0.53076923,  0.59230769,
+            0.65384615,  0.71538462,  0.77692308,  0.83846154,  0.9       ,
+            0.96153846
+        ])
+
+        self.known_weibull = self.known_type6
+
+        self.known_median = numpy.array([
+            0.04170486,  0.10281088,  0.1639169 ,  0.22502291,  0.28612893,
+            0.34723495,  0.40834097,  0.46944699,  0.53055301,  0.59165903,
+            0.65276505,  0.71387107,  0.77497709,  0.8360831 ,  0.89718912,
+            0.95829514
+        ])
+
+        self.known_apl = numpy.array([
+            0.0398773 ,  0.10122699,  0.16257669,  0.22392638,  0.28527607,
+            0.34662577,  0.40797546,  0.46932515,  0.53067485,  0.59202454,
+            0.65337423,  0.71472393,  0.77607362,  0.83742331,  0.89877301,
+            0.9601227
+        ])
+
+        self.known_pwm = self.known_apl
+
+        self.known_blom = self.known_type9
+
+        self.known_hazen = self.known_type5
+
+        self.known_cunnane = numpy.array([
+            0.03703704,  0.09876543,  0.16049383,  0.22222222,  0.28395062,
+            0.34567901,  0.40740741,  0.4691358 ,  0.5308642 ,  0.59259259,
+            0.65432099,  0.71604938,  0.77777778,  0.83950617,  0.90123457,
+            0.96296296
+        ])
+
+        self.known_gringorten = numpy.array([
+            0.03473945,  0.09677419,  0.15880893,  0.22084367,  0.28287841,
+            0.34491315,  0.40694789,  0.46898263,  0.53101737,  0.59305211,
+            0.65508685,  0.71712159,  0.77915633,  0.84119107,  0.90322581,
+            0.96526055
+        ])
+
+    def test_type4(self):
+        pp, yy = viz.plot_pos(self.data, postype='type 4')
+        nptest.assert_array_almost_equal(pp, self.known_type4)
+
+    def test_type5(self):
+        pp, yy = viz.plot_pos(self.data, postype='type 5')
+        nptest.assert_array_almost_equal(pp, self.known_type5)
+
+    def test_type6(self):
+        pp, yy = viz.plot_pos(self.data, postype='type 6')
+        nptest.assert_array_almost_equal(pp, self.known_type6)
+
+    def test_type7(self):
+        pp, yy = viz.plot_pos(self.data, postype='type 7')
+        nptest.assert_array_almost_equal(pp, self.known_type7)
+
+    def test_type8(self):
+        pp, yy = viz.plot_pos(self.data, postype='type 8')
+        nptest.assert_array_almost_equal(pp, self.known_type8)
+
+    def test_type9(self):
+        pp, yy = viz.plot_pos(self.data, postype='type 9')
+        nptest.assert_array_almost_equal(pp, self.known_type9)
+
+    def test_weibull(self):
+        pp, yy = viz.plot_pos(self.data, postype='weibull')
+        nptest.assert_array_almost_equal(pp, self.known_weibull)
+
+    def test_median(self):
+        pp, yy = viz.plot_pos(self.data, postype='median')
+        nptest.assert_array_almost_equal(pp, self.known_median)
+
+    def test_apl(self):
+        pp, yy = viz.plot_pos(self.data, postype='apl')
+        nptest.assert_array_almost_equal(pp, self.known_apl)
+
+    def test_pwm(self):
+        pp, yy = viz.plot_pos(self.data, postype='pwm')
+        nptest.assert_array_almost_equal(pp, self.known_pwm)
+
+    def test_blom(self):
+        pp, yy = viz.plot_pos(self.data, postype='blom')
+        nptest.assert_array_almost_equal(pp, self.known_blom)
+
+    def test_hazen(self):
+        pp, yy = viz.plot_pos(self.data, postype='hazen')
+        nptest.assert_array_almost_equal(pp, self.known_hazen)
+
+    def test_cunnane(self):
+        pp, yy = viz.plot_pos(self.data, postype='cunnane')
+        nptest.assert_array_almost_equal(pp, self.known_cunnane)
+
+    def test_gringorten(self):
+        pp, yy = viz.plot_pos(self.data, postype='gringorten')
+        nptest.assert_array_almost_equal(pp, self.known_gringorten)
+
+    @nt.raises(KeyError)
+    def test_bad_postype(self):
+        viz.plot_pos(self.data, postype='junk')
 
 
 @image_comparison(baseline_images=['test_probplot_prob'], extensions=['png'])
