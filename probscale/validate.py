@@ -7,7 +7,8 @@ def axes_object(ax):
     """
 
     if ax is None:
-        fig, ax = pyplot.subplots()
+        ax = pyplot.gca()
+        fig = ax.figure
     elif isinstance(ax, pyplot.Axes):
         fig = ax.figure
     else:
