@@ -22,17 +22,14 @@ requirements:
     - python
     - numpy
     - matplotlib
+    - nose
 
 test:
   imports:
     - probscale
 
   commands:
-    - nosetests
-
-  requires:
-    - nose
-    - scipy
+    - python -c "import matplotlib; matplotlib.use('agg'); import probscale; probscale.test()"
 
 about:
   home: http://phobson.github.io/mpl-probscale/
