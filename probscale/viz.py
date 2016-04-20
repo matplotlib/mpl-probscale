@@ -42,6 +42,9 @@ def probplot(data, ax=None, color=None, label=None, axtype='prob',
     scatter_kws, line_kws : dictionary, optional
         Dictionary of keyword arguments passed directly to ``ax.plot``
         when drawing the scatter points and best-fit line, respectively.
+    pp_kws : dictionary, optional
+        Dictionary of keyword arguments passed directly to
+        ``viz.plot_pos``.
     return_results : bool (default = False)
         If True a dictionary of results of is returned along with the
         figure.
@@ -59,7 +62,7 @@ def probplot(data, ax=None, color=None, label=None, axtype='prob',
 
     See also
     --------
-    viz.plot_plos
+    viz.plot_pos
     numpy.polyfit
     scipy.stats.probplot
     scipy.stats.mstats.plotting_positions
