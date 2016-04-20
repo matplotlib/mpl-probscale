@@ -8,7 +8,7 @@ from . import validate
 def probplot(data, ax=None, axtype='prob', probax='x',
              otherscale='linear', xlabel=None, ylabel=None,
              bestfit=False, return_results=False,
-             scatter_kws=None, line_kws=None):
+             scatter_kws=None, line_kws=None, pp_kws=None):
     """ Probability, percentile, and quantile plots.
 
     Parameters
@@ -46,11 +46,17 @@ def probplot(data, ax=None, axtype='prob', probax='x',
         The figure on which the plot was drawn.
     result : dictionary of linear fit results, optional
         Keys are:
-           - q: array of quantiles
-           - x, y: arrays of data passed to function
-           - xhat, yhat: arrays of modeled data plotted in best-fit line
-           - res: array of coeffcients of the best-fit line.
+           - q : array of quantiles
+           - x, y : arrays of data passed to function
+           - xhat, yhat : arrays of modeled data plotted in best-fit line
+           - res : array of coeffcients of the best-fit line.
 
+    See also
+    --------
+    viz.plot_plos
+    numpy.polyfit
+    scipy.stats.probplot
+    scipy.stats.mstats.plotting_positions
 
     """
 
@@ -59,14 +65,15 @@ def probplot(data, ax=None, axtype='prob', probax='x',
     probax = validate.axis_name(probax, 'x')
 
     # default values for plotting options
-    scatter_kws = {} if scatter_kws is None else scatter_kws.copy()
-    line_kws = {} if line_kws is None else line_kws.copy()
+    scatter_kws = validate.other_options(scatter_kws)
+    line_kws = validate.other_options(line_kws)
+    pp_kws = validate.other_options(pp_kws)
 
     # check axtype
     axtype = validate.axis_type(axtype)
 
     # compute the plotting positions and sort the data
-    probs, datavals = _plot_pos(data)
+    probs, datavals = plot_pos(data, **pp_kws)
     qntls = _minimal_norm.ppf(probs)
 
     # determine how the probability values should be expressed
@@ -125,31 +132,84 @@ def probplot(data, ax=None, axtype='prob', probax='x',
 
     # return the figure and maybe results of the best-fit
     if return_results:
-        return fig, dict(q=qntls, x=x, y=y, xhat=xhat, yhat=yhat, res=modelres)
+        results = dict(q=qntls, x=x, y=y, xhat=xhat, yhat=yhat, res=modelres)
+        return fig, results
     else:
         return fig
 
 
-def _plot_pos(data, postype='cunnane', alpha=None, beta=None):
-    pos_params = {
-        'type 4':  (0, 1),
-        'type 5':  (0.5, 0.5),
-        'type 6':  (0, 0),
-        'type 7':  (1, 1),
-        'type 8':  (1/3., 1/3.),
-        'type 9':  (3/8., 3/8.),
-        'weibull': (0, 0),
-        'median':  (0.3175, 0.3175),
-        'apl':  (0.35, 0.35),
-        'pwm':  (0.35, 0.35),
-        'blom':  (0.375, 0.375),
-        'hazen':  (0.5, 0.5),
-        'cunnane':  (0.4, 0.4),
-        'gringorten':  (0.44, 0.44), # Gumble
-    }
+def plot_pos(data, postype=None, alpha=None, beta=None):
+    """
+    Compute the plotting positions for a dataset. Heavily borrows from
+    ``scipy.stats.mstats.plotting_positions``.
 
+    A plottiting position is defined as: ``i-alpha)/(n+1-alpha-beta)``
+    where:
+
+        - ``i`` is the rank order
+        - ``n`` is the size of the dataset
+        - ``alpha`` and ``beta`` are parameters used to adjust the
+          positions.
+
+    The values of ``alpha`` and ``beta`` can be explicitly set. Typical
+    values can also be access via the ``postype`` parameter. Available
+    ``postype`` values are:
+
+        - "type 4" : (0, 1), linear interpolation of the empirical CDF
+        - "type 5" pr "hazen": (0.5, 0.5), piece-wise linear
+           interpolation.
+        - "type 6" or "weibull" : (0, 0) Weibull plotting positions,
+          Unbiased exceedance probability for all distributions. This is
+          the default value.
+        - "type 7" : (1, 1), the default values in R
+        - "type 8" : (1/3, 1/3)
+        - "type 9" or "blom" : approximately unbiased positions if the
+          data are normall distributed.
+        - "median" : (0.3175, 0.3175), Median exceedance probabilities
+          for all distributions (used in ``scipy.stats.probplot``)
+        - "apl" or "pwm" : (0.35, 0.35), used with probability-weighted
+          moments.
+        - "cunnane" : (0.4, 0.4), nearly unbiased quantiles for normally
+          distributed data.
+        - "gringorten" : (0.44, 0.44), used for Gumble distributions.
+
+    Parameters
+    ----------
+    data : array-like
+        The values whose plotting positions need to be computed.
+    postype : string, optional (default: "cunnane")
+    alpha, beta : float, optional
+        Custom plotting position parameters is the options available
+        through the `postype` parameter are insufficient.
+
+    References
+    ----------
+    http://artax.karlin.mff.cuni.cz/r-help/library/lmomco/html/pp.html
+    http://astrostatistics.psu.edu/su07/R/html/stats/html/quantile.html
+    http://docs.scipy.org/doc/scipy-0.17.0/reference/generated/scipy.stats.probplot.html
+    http://docs.scipy.org/doc/scipy-0.17.0/reference/generated/scipy.stats.mstats.plotting_positions.html
+
+    """
+
+    pos_params = {
+        'type 4': (0, 1),
+        'type 5': (0.5, 0.5),
+        'type 6': (0, 0),
+        'type 7': (1, 1),
+        'type 8': (1/3., 1/3.),
+        'type 9': (0.375, 0.375),
+        'weibull': (0, 0),
+        'median': (0.3175, 0.3175),
+        'apl': (0.35, 0.35),
+        'pwm': (0.35, 0.35),
+        'blom': (0.375, 0.375),
+        'hazen': (0.5, 0.5),
+        'cunnane': (0.4, 0.4),
+        'gringorten': (0.44, 0.44), # Gumble
+    }
+    postype = 'cunnane' if postype is None else postype
     if alpha is None and beta is None:
-        alpha, beta = pos_params.get(postype.lower(), pos_params['cunnane'])
+        alpha, beta = pos_params[postype.lower()]
 
     data = numpy.asarray(data, dtype=float).flatten()
     n = data.shape[0]

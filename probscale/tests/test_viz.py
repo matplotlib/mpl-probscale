@@ -223,7 +223,7 @@ class Test__estimate_from_fit(object):
         )
 
 
-class Test_plotpos(object):
+class Test_plot_pos(object):
     def setup(self):
         self.data = numpy.arange(16)
 
@@ -285,12 +285,7 @@ class Test_plotpos(object):
 
         self.known_pwm = self.known_apl
 
-        self.known_blom = numpy.array([
-            0.03846154,  0.1       ,  0.16153846,  0.22307692,  0.28461538,
-            0.34615385,  0.40769231,  0.46923077,  0.53076923,  0.59230769,
-            0.65384615,  0.71538462,  0.77692308,  0.83846154,  0.9       ,
-            0.96153846
-        ])
+        self.known_blom = self.known_type9
 
         self.known_hazen = self.known_type5
 
@@ -308,63 +303,65 @@ class Test_plotpos(object):
             0.96526055
         ])
 
-
     def test_type4(self):
-        pp, yy = viz._plot_pos(self.data, postype='type 4')
+        pp, yy = viz.plot_pos(self.data, postype='type 4')
         nptest.assert_array_almost_equal(pp, self.known_type4)
 
     def test_type5(self):
-        pp, yy = viz._plot_pos(self.data, postype='type 5')
+        pp, yy = viz.plot_pos(self.data, postype='type 5')
         nptest.assert_array_almost_equal(pp, self.known_type5)
 
     def test_type6(self):
-        pp, yy = viz._plot_pos(self.data, postype='type 6')
+        pp, yy = viz.plot_pos(self.data, postype='type 6')
         nptest.assert_array_almost_equal(pp, self.known_type6)
 
     def test_type7(self):
-        pp, yy = viz._plot_pos(self.data, postype='type 7')
+        pp, yy = viz.plot_pos(self.data, postype='type 7')
         nptest.assert_array_almost_equal(pp, self.known_type7)
 
     def test_type8(self):
-        pp, yy = viz._plot_pos(self.data, postype='type 8')
+        pp, yy = viz.plot_pos(self.data, postype='type 8')
         nptest.assert_array_almost_equal(pp, self.known_type8)
 
     def test_type9(self):
-        pp, yy = viz._plot_pos(self.data, postype='type 9')
+        pp, yy = viz.plot_pos(self.data, postype='type 9')
         nptest.assert_array_almost_equal(pp, self.known_type9)
 
     def test_weibull(self):
-        pp, yy = viz._plot_pos(self.data, postype='weibull')
+        pp, yy = viz.plot_pos(self.data, postype='weibull')
         nptest.assert_array_almost_equal(pp, self.known_weibull)
 
     def test_median(self):
-        pp, yy = viz._plot_pos(self.data, postype='median')
+        pp, yy = viz.plot_pos(self.data, postype='median')
         nptest.assert_array_almost_equal(pp, self.known_median)
 
     def test_apl(self):
-        pp, yy = viz._plot_pos(self.data, postype='apl')
+        pp, yy = viz.plot_pos(self.data, postype='apl')
         nptest.assert_array_almost_equal(pp, self.known_apl)
 
     def test_pwm(self):
-        pp, yy = viz._plot_pos(self.data, postype='pwm')
+        pp, yy = viz.plot_pos(self.data, postype='pwm')
         nptest.assert_array_almost_equal(pp, self.known_pwm)
 
     def test_blom(self):
-        pp, yy = viz._plot_pos(self.data, postype='blom')
+        pp, yy = viz.plot_pos(self.data, postype='blom')
         nptest.assert_array_almost_equal(pp, self.known_blom)
 
     def test_hazen(self):
-        pp, yy = viz._plot_pos(self.data, postype='hazen')
+        pp, yy = viz.plot_pos(self.data, postype='hazen')
         nptest.assert_array_almost_equal(pp, self.known_hazen)
 
     def test_cunnane(self):
-        pp, yy = viz._plot_pos(self.data, postype='cunnane')
+        pp, yy = viz.plot_pos(self.data, postype='cunnane')
         nptest.assert_array_almost_equal(pp, self.known_cunnane)
 
     def test_gringorten(self):
-        pp, yy = viz._plot_pos(self.data, postype='gringorten')
+        pp, yy = viz.plot_pos(self.data, postype='gringorten')
         nptest.assert_array_almost_equal(pp, self.known_gringorten)
 
+    @nt.raises(KeyError)
+    def test_bad_postype(self):
+        viz.plot_pos(self.data, postype='junk')
 
 
 @image_comparison(baseline_images=['test_probplot_prob'], extensions=['png'])
