@@ -223,6 +223,150 @@ class Test__estimate_from_fit(object):
         )
 
 
+class Test_plotpos(object):
+    def setup(self):
+        self.data = numpy.arange(16)
+
+        self.known_type4 = numpy.array([
+            0.0625,  0.125 ,  0.1875,  0.25  ,  0.3125,  0.375 ,  0.4375,
+            0.5   ,  0.5625,  0.625 ,  0.6875,  0.75  ,  0.8125,  0.875 ,
+            0.9375,  1.
+        ])
+
+        self.known_type5 = numpy.array([
+            0.03125,  0.09375,  0.15625,  0.21875,  0.28125,  0.34375,
+            0.40625,  0.46875,  0.53125,  0.59375,  0.65625,  0.71875,
+            0.78125,  0.84375,  0.90625,  0.96875
+        ])
+
+        self.known_type6 = numpy.array([
+            0.05882353,  0.11764706,  0.17647059,  0.23529412,  0.29411765,
+            0.35294118,  0.41176471,  0.47058824,  0.52941176,  0.58823529,
+            0.64705882,  0.70588235,  0.76470588,  0.82352941,  0.88235294,
+            0.94117647
+        ])
+
+        self.known_type7 = numpy.array([
+            0.        ,  0.06666667,  0.13333333,  0.2       ,  0.26666667,
+            0.33333333,  0.4       ,  0.46666667,  0.53333333,  0.6       ,
+            0.66666667,  0.73333333,  0.8       ,  0.86666667,  0.93333333,
+            1.
+        ])
+
+        self.known_type8 = numpy.array([
+            0.04081633,  0.10204082,  0.16326531,  0.2244898 ,  0.28571429,
+            0.34693878,  0.40816327,  0.46938776,  0.53061224,  0.59183673,
+            0.65306122,  0.71428571,  0.7755102 ,  0.83673469,  0.89795918,
+            0.95918367
+        ])
+
+        self.known_type9 = numpy.array([
+            0.03846154,  0.1       ,  0.16153846,  0.22307692,  0.28461538,
+            0.34615385,  0.40769231,  0.46923077,  0.53076923,  0.59230769,
+            0.65384615,  0.71538462,  0.77692308,  0.83846154,  0.9       ,
+            0.96153846
+        ])
+
+        self.known_weibull = self.known_type6
+
+        self.known_median = numpy.array([
+            0.04170486,  0.10281088,  0.1639169 ,  0.22502291,  0.28612893,
+            0.34723495,  0.40834097,  0.46944699,  0.53055301,  0.59165903,
+            0.65276505,  0.71387107,  0.77497709,  0.8360831 ,  0.89718912,
+            0.95829514
+        ])
+
+        self.known_apl = numpy.array([
+            0.0398773 ,  0.10122699,  0.16257669,  0.22392638,  0.28527607,
+            0.34662577,  0.40797546,  0.46932515,  0.53067485,  0.59202454,
+            0.65337423,  0.71472393,  0.77607362,  0.83742331,  0.89877301,
+            0.9601227
+        ])
+
+        self.known_pwm = self.known_apl
+
+        self.known_blom = numpy.array([
+            0.03846154,  0.1       ,  0.16153846,  0.22307692,  0.28461538,
+            0.34615385,  0.40769231,  0.46923077,  0.53076923,  0.59230769,
+            0.65384615,  0.71538462,  0.77692308,  0.83846154,  0.9       ,
+            0.96153846
+        ])
+
+        self.known_hazen = self.known_type5
+
+        self.known_cunnane = numpy.array([
+            0.03703704,  0.09876543,  0.16049383,  0.22222222,  0.28395062,
+            0.34567901,  0.40740741,  0.4691358 ,  0.5308642 ,  0.59259259,
+            0.65432099,  0.71604938,  0.77777778,  0.83950617,  0.90123457,
+            0.96296296
+        ])
+
+        self.known_gringorten = numpy.array([
+            0.03473945,  0.09677419,  0.15880893,  0.22084367,  0.28287841,
+            0.34491315,  0.40694789,  0.46898263,  0.53101737,  0.59305211,
+            0.65508685,  0.71712159,  0.77915633,  0.84119107,  0.90322581,
+            0.96526055
+        ])
+
+
+    def test_type4(self):
+        pp, yy = viz._plot_pos(self.data, postype='type 4')
+        nptest.assert_array_almost_equal(pp, self.known_type4)
+
+    def test_type5(self):
+        pp, yy = viz._plot_pos(self.data, postype='type 5')
+        nptest.assert_array_almost_equal(pp, self.known_type5)
+
+    def test_type6(self):
+        pp, yy = viz._plot_pos(self.data, postype='type 6')
+        nptest.assert_array_almost_equal(pp, self.known_type6)
+
+    def test_type7(self):
+        pp, yy = viz._plot_pos(self.data, postype='type 7')
+        nptest.assert_array_almost_equal(pp, self.known_type7)
+
+    def test_type8(self):
+        pp, yy = viz._plot_pos(self.data, postype='type 8')
+        nptest.assert_array_almost_equal(pp, self.known_type8)
+
+    def test_type9(self):
+        pp, yy = viz._plot_pos(self.data, postype='type 9')
+        nptest.assert_array_almost_equal(pp, self.known_type9)
+
+    def test_weibull(self):
+        pp, yy = viz._plot_pos(self.data, postype='weibull')
+        nptest.assert_array_almost_equal(pp, self.known_weibull)
+
+    def test_median(self):
+        pp, yy = viz._plot_pos(self.data, postype='median')
+        nptest.assert_array_almost_equal(pp, self.known_median)
+
+    def test_apl(self):
+        pp, yy = viz._plot_pos(self.data, postype='apl')
+        nptest.assert_array_almost_equal(pp, self.known_apl)
+
+    def test_pwm(self):
+        pp, yy = viz._plot_pos(self.data, postype='pwm')
+        nptest.assert_array_almost_equal(pp, self.known_pwm)
+
+    def test_blom(self):
+        pp, yy = viz._plot_pos(self.data, postype='blom')
+        nptest.assert_array_almost_equal(pp, self.known_blom)
+
+    def test_hazen(self):
+        pp, yy = viz._plot_pos(self.data, postype='hazen')
+        nptest.assert_array_almost_equal(pp, self.known_hazen)
+
+    def test_cunnane(self):
+        pp, yy = viz._plot_pos(self.data, postype='cunnane')
+        nptest.assert_array_almost_equal(pp, self.known_cunnane)
+
+    def test_gringorten(self):
+        pp, yy = viz._plot_pos(self.data, postype='gringorten')
+        nptest.assert_array_almost_equal(pp, self.known_gringorten)
+
+
+
 @image_comparison(baseline_images=['test_probplot_prob'], extensions=['png'])
 def test_probplot_prob():
     fig, ax = plt.subplots()
