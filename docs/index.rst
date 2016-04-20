@@ -18,7 +18,15 @@ https://github.com/phobson/mpl-probscale
 Installation
 ------------
 
+With conda
+~~~~~~~~~~
+
 ``conda install mpl-probscale --channel=phobson``
+
+With pip
+~~~~~~~~
+
+``pip install probscale``
 
 
 Quickstart

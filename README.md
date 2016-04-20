@@ -8,7 +8,12 @@ Real probability scales for matplotlib
 
 ## Installation
 
+### conda
+
 `conda install mpl-probscale --channel=phobson`
+
+### pip
+`pip install probscale`
 
 
 ## Quick start
