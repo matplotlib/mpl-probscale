@@ -1,22 +1,20 @@
 package:
   name: mpl-probscale
-  version: 0.1.1
+  version: 0.1.2dev
 
 source:
-  git_url: https://github.com/phobson/mpl-probscale.git
-  git_tag: v0.1.1
-#  patches:
-   # List any patch files here
-   # - fix.patch
+  path: ../
 
 build:
-  number: 1
+  script: python setup.py install
+  number: 2
 
 requirements:
   build:
     - python
     - numpy
     - matplotlib
+    - nose
 
   run:
     - python
@@ -31,11 +29,11 @@ test:
   commands:
     - python -c "import matplotlib; matplotlib.use('agg'); import probscale; probscale.test()"
 
+  requires:
+    - nose
+    - scipy
+
 about:
   home: http://phobson.github.io/mpl-probscale/
   license:  BSD License
   summary: 'Probability scales for matplotlib.'
-
-# See
-# http://docs.continuum.io/conda/build.html for
-# more information about meta.yaml/configure
