@@ -5,10 +5,10 @@ from .probscale import _minimal_norm
 from . import validate
 
 
-def probplot(data, ax=None, color=None, label=None, axtype='prob',
-             probax='x', otherscale='linear', xlabel=None, ylabel=None,
-             bestfit=False, return_results=False, scatter_kws=None,
-             line_kws=None, pp_kws=None):
+def probplot(data, ax=None, axtype='prob', dist=None, probax='x',
+             color=None, label=None, otherscale='linear', xlabel=None,
+             ylabel=None, bestfit=False, return_results=False,
+             scatter_kws=None, line_kws=None, pp_kws=None):
     """ Probability, percentile, and quantile plots.
 
     Parameters
@@ -18,17 +18,20 @@ def probplot(data, ax=None, color=None, label=None, axtype='prob',
     ax : matplotlib axes, optional
         The Axes on which to plot. If one is not provided, a new Axes
         will be created.
+    axtype : string (default = 'prob')
+        Type of plot to be created. Options are:
+           - 'prob': probabilty plot
+           - 'pp': percentile plot
+           - 'qq': quantile plot
+    dist : scipy distribution, optional
+        A distribtion to compute the scale's tick positions. If not
+        specified, a normal distribution will be used.
     color : valid matplotlib color specification, optional
         If provided, this value will be added to the ``scatter_kws``
         and ``line_kws`` dictionary under the "color" key.
     label : string, optional
         If provided, this legend label is applied to the scatter series
         of the probability plot.
-    axtype : string (default = 'prob')
-        Type of plot to be created. Options are:
-           - 'prob': probabilty plot
-           - 'pp': percentile plot
-           - 'qq': quantile plot
     probax : string, optional (default = 'x')
         The axis ('x' or 'y') that will serve as the probability (or
         quantile) axis.
@@ -69,6 +72,9 @@ def probplot(data, ax=None, color=None, label=None, axtype='prob',
 
     """
 
+    if dist is None:
+        dist = _minimal_norm
+
     # check input values
     fig, ax = validate.axes_object(ax)
     probax = validate.axis_name(probax, 'x')
@@ -102,7 +108,7 @@ def probplot(data, ax=None, color=None, label=None, axtype='prob',
     if probax == 'x':
         x, y = probvals, datavals
         if axtype == 'prob':
-            ax.set_xscale('prob')
+            ax.set_xscale('prob', dist=dist)
             fitprobs = 'x'
         else:
             fitprobs = None
@@ -116,7 +122,7 @@ def probplot(data, ax=None, color=None, label=None, axtype='prob',
     elif probax == 'y':
         y, x = probvals, datavals
         if axtype == 'prob':
-            ax.set_yscale('prob')
+            ax.set_yscale('prob', dist=dist)
             fitprobs = 'y'
         else:
             fitprobs = None
@@ -141,7 +147,7 @@ def probplot(data, ax=None, color=None, label=None, axtype='prob',
 
     # maybe do a best-fit and plot
     if bestfit:
-        xhat, yhat, modelres = _fit_line(x, y, fitprobs=fitprobs, fitlogs=fitlogs)
+        xhat, yhat, modelres = _fit_line(x, y, fitprobs=fitprobs, fitlogs=fitlogs, dist=dist)
         ax.plot(xhat, yhat, **line_kws)
     else:
         xhat, yhat, modelres = (None, None, None)
