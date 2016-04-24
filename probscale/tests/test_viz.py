@@ -6,9 +6,14 @@ import matplotlib.pyplot as plt
 import nose.tools as nt
 import numpy.testing as nptest
 from matplotlib.testing.decorators import image_comparison, cleanup
+try:
+    from scipy import stats
+except:
+    stats = None
 
 from probscale import viz
 from probscale.probscale import _minimal_norm
+
 
 @nt.nottest
 def setup_plot_data():
@@ -464,6 +469,40 @@ def test_probplot_pp_bestfit_probax_y():
     fig = viz.probplot(data, ax=ax, axtype='pp', otherscale='linear', probax='y',
                        xlabel='test x', bestfit=True, ylabel='test y',
                        scatter_kws=scatter_kws, line_kws=line_kws)
+
+
+@image_comparison(baseline_images=['test_probplot_beta_dist_best_fit_y'], extensions=['png'])
+@nptest.dec.skipif(stats is None)
+def test_probplot_beta_dist_best_fit_y():
+    fig, (ax1, ax2) = plt.subplots(ncols=2)
+    data = setup_plot_data()
+    dist = stats.beta(3, 3)
+    fig = viz.probplot(data, dist=dist, ax=ax1, ylabel='Beta scale',
+                       bestfit=True, otherscale='log', probax='y')
+    ax1.set_ylim(bottom=0.5, top=98)
+
+    fig = viz.probplot(data, ax=ax2, xlabel='Default (norm)',
+                       bestfit=True, otherscale='log', probax='y')
+    ax2.set_ylim(bottom=0.5, top=98)
+
+    nt.assert_true(isinstance(fig, plt.Figure))
+
+
+@image_comparison(baseline_images=['test_probplot_beta_dist_best_fit_x'], extensions=['png'])
+@nptest.dec.skipif(stats is None)
+def test_probplot_beta_dist_best_fit_x():
+    fig, (ax1, ax2) = plt.subplots(nrows=2)
+    data = setup_plot_data()
+    dist = stats.beta(3, 3)
+    fig = viz.probplot(data, dist=dist, ax=ax1, xlabel='Beta scale',
+                       bestfit=True, otherscale='log', probax='x')
+    ax1.set_xlim(left=0.5, right=98)
+
+    fig = viz.probplot(data, ax=ax2, xlabel='Default (norm)',
+                       bestfit=True, otherscale='log', probax='x')
+    ax2.set_xlim(left=0.5, right=98)
+
+    nt.assert_true(isinstance(fig, plt.Figure))
 
 
 @cleanup
