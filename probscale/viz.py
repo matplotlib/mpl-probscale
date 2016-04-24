@@ -26,15 +26,15 @@ def probplot(data, ax=None, axtype='prob', dist=None, probax='x',
     dist : scipy distribution, optional
         A distribtion to compute the scale's tick positions. If not
         specified, a normal distribution will be used.
+    probax : string, optional (default = 'x')
+        The axis ('x' or 'y') that will serve as the probability (or
+        quantile) axis.
     color : valid matplotlib color specification, optional
         If provided, this value will be added to the ``scatter_kws``
         and ``line_kws`` dictionary under the "color" key.
     label : string, optional
         If provided, this legend label is applied to the scatter series
         of the probability plot.
-    probax : string, optional (default = 'x')
-        The axis ('x' or 'y') that will serve as the probability (or
-        quantile) axis.
     otherscale : string, optional (default = 'log')
         Scale for the other axis that is not
     xlabel, ylabel : string, optional
@@ -42,15 +42,15 @@ def probplot(data, ax=None, axtype='prob', dist=None, probax='x',
     bestfit : bool, optional (default is False)
         Specifies whether a best-fit line should be added to the
         plot.
+    return_results : bool (default = False)
+        If True a dictionary of results of is returned along with the
+        figure.
     scatter_kws, line_kws : dictionary, optional
         Dictionary of keyword arguments passed directly to ``ax.plot``
         when drawing the scatter points and best-fit line, respectively.
     pp_kws : dictionary, optional
         Dictionary of keyword arguments passed directly to
         ``viz.plot_pos``.
-    return_results : bool (default = False)
-        If True a dictionary of results of is returned along with the
-        figure.
 
     Returns
     -------
