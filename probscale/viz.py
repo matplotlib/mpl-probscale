@@ -5,8 +5,8 @@ from .probscale import _minimal_norm
 from . import validate
 
 
-def probplot(data, ax=None, axtype='prob', dist=None, probax='x',
-             color=None, label=None, otherscale='linear', xlabel=None,
+def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
+             color=None, label=None, datascale='linear', xlabel=None,
              ylabel=None, bestfit=False, return_results=False,
              scatter_kws=None, line_kws=None, pp_kws=None):
     """ Probability, percentile, and quantile plots.
@@ -18,7 +18,7 @@ def probplot(data, ax=None, axtype='prob', dist=None, probax='x',
     ax : matplotlib axes, optional
         The Axes on which to plot. If one is not provided, a new Axes
         will be created.
-    axtype : string (default = 'prob')
+    plottype : string (default = 'prob')
         Type of plot to be created. Options are:
            - 'prob': probabilty plot
            - 'pp': percentile plot
@@ -35,7 +35,7 @@ def probplot(data, ax=None, axtype='prob', dist=None, probax='x',
     label : string, optional
         If provided, this legend label is applied to the scatter series
         of the probability plot.
-    otherscale : string, optional (default = 'log')
+    datascale : string, optional (default = 'log')
         Scale for the other axis that is not
     xlabel, ylabel : string, optional
         Axis labels for the plot.
@@ -91,15 +91,15 @@ def probplot(data, ax=None, axtype='prob', dist=None, probax='x',
     if label is not None:
         scatter_kws['label'] = label
 
-    # check axtype
-    axtype = validate.axis_type(axtype)
+    # check plottype
+    plottype = validate.axis_type(plottype)
 
     # compute the plotting positions and sort the data
     probs, datavals = plot_pos(data, **pp_kws)
     qntls = dist.ppf(probs)
 
     # determine how the probability values should be expressed
-    if axtype == 'qq':
+    if plottype == 'qq':
         probvals = qntls
     else:
         probvals = probs * 100
@@ -107,30 +107,30 @@ def probplot(data, ax=None, axtype='prob', dist=None, probax='x',
     # set up x, y, Axes for probabilities on the x
     if probax == 'x':
         x, y = probvals, datavals
-        if axtype == 'prob':
+        if plottype == 'prob':
             ax.set_xscale('prob', dist=dist)
             fitprobs = 'x'
         else:
             fitprobs = None
-            if axtype == 'pp':
+            if plottype == 'pp':
                 ax.set_xlim(left=0, right=100)
 
-        ax.set_yscale(otherscale)
-        fitlogs = 'y' if otherscale == 'log' else None
+        ax.set_yscale(datascale)
+        fitlogs = 'y' if datascale == 'log' else None
 
     # setup x, y, Axes for probabilities on the y
     elif probax == 'y':
         y, x = probvals, datavals
-        if axtype == 'prob':
+        if plottype == 'prob':
             ax.set_yscale('prob', dist=dist)
             fitprobs = 'y'
         else:
             fitprobs = None
-            if axtype == 'pp':
+            if plottype == 'pp':
                 ax.set_ylim(bottom=0, top=100)
 
-        ax.set_xscale(otherscale)
-        fitlogs = 'x' if otherscale == 'log' else None
+        ax.set_xscale(datascale)
+        fitlogs = 'x' if datascale == 'log' else None
 
     # plot the final ROS data versus the Z-scores
     linestyle = scatter_kws.pop('linestyle', 'none')
