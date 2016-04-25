@@ -96,7 +96,7 @@ def probplot(data, ax=None, axtype='prob', dist=None, probax='x',
 
     # compute the plotting positions and sort the data
     probs, datavals = plot_pos(data, **pp_kws)
-    qntls = _minimal_norm.ppf(probs)
+    qntls = dist.ppf(probs)
 
     # determine how the probability values should be expressed
     if axtype == 'qq':
