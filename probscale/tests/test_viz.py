@@ -373,7 +373,7 @@ class Test_plot_pos(object):
 def test_probplot_prob():
     fig, ax = plt.subplots()
     data = setup_plot_data()
-    fig = viz.probplot(data, ax=ax, xlabel='Test xlabel', otherscale='log')
+    fig = viz.probplot(data, ax=ax, xlabel='Test xlabel', datascale='log')
     nt.assert_true(isinstance(fig, plt.Figure))
 
 
@@ -381,8 +381,8 @@ def test_probplot_prob():
 def test_probplot_qq():
     fig, ax = plt.subplots()
     data = setup_plot_data()
-    fig = viz.probplot(data, ax=ax, axtype='qq', ylabel='Test label',
-                       otherscale='log', scatter_kws=dict(color='r'))
+    fig = viz.probplot(data, ax=ax, plottype='qq', ylabel='Test label',
+                       datascale='log', scatter_kws=dict(color='r'))
 
 
 @image_comparison(baseline_images=['test_probplot_pp'], extensions=['png'])
@@ -390,7 +390,7 @@ def test_probplot_pp():
     fig, ax = plt.subplots()
     data = setup_plot_data()
     scatter_kws = dict(color='b', linestyle='--', markeredgecolor='g', markerfacecolor='none')
-    fig = viz.probplot(data, ax=ax, axtype='pp', otherscale='linear',
+    fig = viz.probplot(data, ax=ax, plottype='pp', datascale='linear',
                        xlabel='test x', ylabel='test y', scatter_kws=scatter_kws)
 
 
@@ -398,7 +398,7 @@ def test_probplot_pp():
 def test_probplot_prob_bestfit():
     fig, ax = plt.subplots()
     data = setup_plot_data()
-    fig = viz.probplot(data, ax=ax, xlabel='Test xlabel', bestfit=True, otherscale='log')
+    fig = viz.probplot(data, ax=ax, xlabel='Test xlabel', bestfit=True, datascale='log')
     nt.assert_true(isinstance(fig, plt.Figure))
 
 
@@ -406,7 +406,7 @@ def test_probplot_prob_bestfit():
 def test_probplot_qq_bestfit():
     fig, ax = plt.subplots()
     data = setup_plot_data()
-    fig = viz.probplot(data, ax=ax, axtype='qq', bestfit=True, ylabel='Test label', otherscale='log')
+    fig = viz.probplot(data, ax=ax, plottype='qq', bestfit=True, ylabel='Test label', datascale='log')
 
 
 @image_comparison(baseline_images=['test_probplot_pp_bestfit'], extensions=['png'])
@@ -415,7 +415,7 @@ def test_probplot_pp_bestfit():
     data = setup_plot_data()
     scatter_kws = {'marker': 's', 'color': 'red'}
     line_kws = {'linestyle': '--', 'linewidth': 3}
-    fig = viz.probplot(data, ax=ax, axtype='pp', otherscale='linear',
+    fig = viz.probplot(data, ax=ax, plottype='pp', datascale='linear',
                        xlabel='test x', bestfit=True, ylabel='test y',
                        scatter_kws=scatter_kws, line_kws=line_kws)
 
@@ -424,7 +424,7 @@ def test_probplot_pp_bestfit():
 def test_probplot_prob_probax_y():
     fig, ax = plt.subplots()
     data = setup_plot_data()
-    fig = viz.probplot(data, ax=ax, xlabel='Test xlabel', otherscale='log', probax='y')
+    fig = viz.probplot(data, ax=ax, xlabel='Test xlabel', datascale='log', probax='y')
     nt.assert_true(isinstance(fig, plt.Figure))
 
 
@@ -432,8 +432,8 @@ def test_probplot_prob_probax_y():
 def test_probplot_qq_probax_y():
     fig, ax = plt.subplots()
     data = setup_plot_data()
-    fig = viz.probplot(data, ax=ax, axtype='qq', ylabel='Test label', probax='y',
-                       otherscale='log', scatter_kws=dict(color='r'))
+    fig = viz.probplot(data, ax=ax, plottype='qq', ylabel='Test label', probax='y',
+                       datascale='log', scatter_kws=dict(color='r'))
 
 
 @image_comparison(baseline_images=['test_probplot_pp_probax_y'], extensions=['png'])
@@ -441,7 +441,7 @@ def test_probplot_pp_probax_y():
     fig, ax = plt.subplots()
     data = setup_plot_data()
     scatter_kws = dict(color='b', linestyle='--', markeredgecolor='g', markerfacecolor='none')
-    fig = viz.probplot(data, ax=ax, axtype='pp', otherscale='linear', probax='y',
+    fig = viz.probplot(data, ax=ax, plottype='pp', datascale='linear', probax='y',
                        xlabel='test x', ylabel='test y', scatter_kws=scatter_kws)
 
 
@@ -449,7 +449,7 @@ def test_probplot_pp_probax_y():
 def test_probplot_prob_bestfit_probax_y():
     fig, ax = plt.subplots()
     data = setup_plot_data()
-    fig = viz.probplot(data, ax=ax, xlabel='Test xlabel', bestfit=True, otherscale='log', probax='y')
+    fig = viz.probplot(data, ax=ax, xlabel='Test xlabel', bestfit=True, datascale='log', probax='y')
     nt.assert_true(isinstance(fig, plt.Figure))
 
 
@@ -457,7 +457,7 @@ def test_probplot_prob_bestfit_probax_y():
 def test_probplot_qq_bestfit_probax_y():
     fig, ax = plt.subplots()
     data = setup_plot_data()
-    fig = viz.probplot(data, ax=ax, axtype='qq', bestfit=True, ylabel='Test label', otherscale='log', probax='y')
+    fig = viz.probplot(data, ax=ax, plottype='qq', bestfit=True, ylabel='Test label', datascale='log', probax='y')
 
 
 @image_comparison(baseline_images=['test_probplot_pp_bestfit_probax_y'], extensions=['png'])
@@ -466,7 +466,7 @@ def test_probplot_pp_bestfit_probax_y():
     data = setup_plot_data()
     scatter_kws = {'marker': 's', 'color': 'red'}
     line_kws = {'linestyle': '--', 'linewidth': 3}
-    fig = viz.probplot(data, ax=ax, axtype='pp', otherscale='linear', probax='y',
+    fig = viz.probplot(data, ax=ax, plottype='pp', datascale='linear', probax='y',
                        xlabel='test x', bestfit=True, ylabel='test y',
                        scatter_kws=scatter_kws, line_kws=line_kws)
 
@@ -478,11 +478,11 @@ def test_probplot_beta_dist_best_fit_y():
     data = setup_plot_data()
     dist = stats.beta(3, 3)
     fig = viz.probplot(data, dist=dist, ax=ax1, ylabel='Beta scale',
-                       bestfit=True, otherscale='log', probax='y')
+                       bestfit=True, datascale='log', probax='y')
     ax1.set_ylim(bottom=0.5, top=98)
 
     fig = viz.probplot(data, ax=ax2, xlabel='Default (norm)',
-                       bestfit=True, otherscale='log', probax='y')
+                       bestfit=True, datascale='log', probax='y')
     ax2.set_ylim(bottom=0.5, top=98)
 
     nt.assert_true(isinstance(fig, plt.Figure))
@@ -495,11 +495,11 @@ def test_probplot_beta_dist_best_fit_x():
     data = setup_plot_data()
     dist = stats.beta(3, 3)
     fig = viz.probplot(data, dist=dist, ax=ax1, xlabel='Beta scale',
-                       bestfit=True, otherscale='log', probax='x')
+                       bestfit=True, datascale='log', probax='x')
     ax1.set_xlim(left=0.5, right=98)
 
     fig = viz.probplot(data, ax=ax2, xlabel='Default (norm)',
-                       bestfit=True, otherscale='log', probax='x')
+                       bestfit=True, datascale='log', probax='x')
     ax2.set_xlim(left=0.5, right=98)
 
     nt.assert_true(isinstance(fig, plt.Figure))

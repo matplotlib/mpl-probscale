@@ -18,15 +18,23 @@ https://github.com/phobson/mpl-probscale
 Installation
 ------------
 
-With conda
-~~~~~~~~~~
+Official releases
+~~~~~~~~~~~~~~~~~
 
-``conda install mpl-probscale --channel=phobson``
+Official releases are available through the conda-forge channel or pip:
 
-With pip
-~~~~~~~~
+``conda install mpl-probscale --channel=conda-forge``
+
+or
 
 ``pip install probscale``
+
+Development builds
+~~~~~~~~~~~~~~~~~~
+
+Development builds are available through my conda channel:
+
+``conda install mpl-probscale --channel=phobson``
 
 
 Quickstart
@@ -61,6 +69,7 @@ Tutorial
    :maxdepth: 2
 
    tutorial/getting_started.rst
+   tutorial/closer_look_at_viz.rst
 
 Testing
 -------

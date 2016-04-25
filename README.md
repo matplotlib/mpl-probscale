@@ -8,12 +8,19 @@ Real probability scales for matplotlib
 
 ## Installation
 
-### conda
+### Official releases
+
+Official releases are available through the conda-forge channel or pip"
+`conda install mpl-probscale --channel=conda-forge`
+
+`pip install probscale`
+
+### Development builds
+
+Development builds are available through my conda channel:
 
 `conda install mpl-probscale --channel=phobson`
 
-### pip
-`pip install probscale`
 
 
 ## Quick start
