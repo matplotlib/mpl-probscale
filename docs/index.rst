@@ -62,8 +62,8 @@ Simply importing ``probscale`` lets you use probability scales in your matplotli
 .. image:: /img/example.png
 
 
-Tutorial
---------
+Tutorials
+=========
 
 .. toctree::
    :maxdepth: 2
@@ -72,7 +72,7 @@ Tutorial
    tutorial/closer_look_at_viz.rst
 
 Testing
--------
+=======
 
 It's easiest to run the tests from an interactive python session:
 
@@ -83,15 +83,13 @@ It's easiest to run the tests from an interactive python session:
     import probscale
     probscale.test()
 
-
 API References
---------------
+==============
 
 .. toctree::
    :maxdepth: 2
 
-   viz.rst
-   probscale.rst
+   api.rst
 
 Indices and tables
 ==================
