@@ -1,6 +1,6 @@
 import numpy
 
-import nose.tools as nt
+import pytest
 import numpy.testing as nptest
 
 from probscale import formatters
@@ -11,62 +11,59 @@ class Mixin_Check_Formatter_sig_figs(object):
         pass
 
     def test_baseline(self):
-        nt.assert_equal(self.fmt._sig_figs(self.x, 3), self.known_3)
-        nt.assert_equal(self.fmt._sig_figs(self.x, 4), self.known_4)
+        assert self.fmt._sig_figs(self.x, 3) == self.known_3
+        assert self.fmt._sig_figs(self.x, 4) == self.known_4
 
     def test_string(self):
-        nt.assert_equal(self.fmt._sig_figs('1.23', 3), '1.23')
+        assert self.fmt._sig_figs('1.23', 3) == '1.23'
 
     def test_na_inf(self):
-        nt.assert_equal(self.fmt._sig_figs(numpy.nan, 3), 'NA')
-        nt.assert_equal(self.fmt._sig_figs(numpy.inf, 3), 'NA')
+        assert self.fmt._sig_figs(numpy.nan, 3) == 'NA'
+        assert self.fmt._sig_figs(numpy.inf, 3) == 'NA'
 
     def test_zero(self):
-        nt.assert_equal(self.fmt._sig_figs(0, 3), '0')
+        assert self.fmt._sig_figs(0, 3) == '0'
 
     def test_trailing_zeros(self):
-        nt.assert_equal(self.fmt._sig_figs(self.x, 8), self.known_8)
+        assert self.fmt._sig_figs(self.x, 8) == self.known_8
 
-    @nptest.raises(ValueError)
     def test_sigFigs_zero_n(self):
-        self.fmt._sig_figs(self.x, 0)
+        with pytest.raises(ValueError):
+            self.fmt._sig_figs(self.x, 0)
 
-    @nptest.raises(ValueError)
     def test_sigFigs_negative_n(self):
-        self.fmt._sig_figs(self.x, -1)
+        with pytest.raises(ValueError):
+            self.fmt._sig_figs(self.x, -1)
 
     def test_forceint(self):
-        nt.assert_equal(
-            self.fmt._sig_figs(self.x, 3, forceint=True),
-            self.known_int
-        )
+        assert self.fmt._sig_figs(self.x, 3, forceint=True) == self.known_int
 
 
 class Mixin_Check_PctFormatter_sig_figs(Mixin_Check_Formatter_sig_figs):
     fmt = formatters.PctFormatter()
     def test__call__(self):
-        nt.assert_equal(self.fmt(0.0301), '0.03')
-        nt.assert_equal(self.fmt(0.2), '0.2')
-        nt.assert_equal(self.fmt(0.1), '0.1')
-        nt.assert_equal(self.fmt(10), '10')
-        nt.assert_equal(self.fmt(5), '5')
-        nt.assert_equal(self.fmt(50), '50')
-        nt.assert_equal(self.fmt(99), '99')
-        nt.assert_equal(self.fmt(99.1), '99.1')
-        nt.assert_equal(self.fmt(99.99), '99.99')
+        assert self.fmt(0.0301) == '0.03'
+        assert self.fmt(0.2) == '0.2'
+        assert self.fmt(0.1) == '0.1'
+        assert self.fmt(10) == '10'
+        assert self.fmt(5) == '5'
+        assert self.fmt(50) == '50'
+        assert self.fmt(99) == '99'
+        assert self.fmt(99.1) == '99.1'
+        assert self.fmt(99.99) == '99.99'
 
 
 class Mixin_Check_ProbFormatter_sig_figs(Mixin_Check_Formatter_sig_figs):
     fmt = formatters.ProbFormatter()
     def test__call__(self):
-        nt.assert_equal(self.fmt(0.000301), '0.0003')
-        nt.assert_equal(self.fmt(0.001), '0.001')
-        nt.assert_equal(self.fmt(0.10), '0.10')
-        nt.assert_equal(self.fmt(0.05), '0.05')
-        nt.assert_equal(self.fmt(0.50), '0.50')
-        nt.assert_equal(self.fmt(0.99), '0.99')
-        nt.assert_equal(self.fmt(0.991), '0.991')
-        nt.assert_equal(self.fmt(0.9999), '0.9999')
+        assert self.fmt(0.000301) == '0.0003'
+        assert self.fmt(0.001) == '0.001'
+        assert self.fmt(0.10) == '0.10'
+        assert self.fmt(0.05) == '0.05'
+        assert self.fmt(0.50) == '0.50'
+        assert self.fmt(0.99) == '0.99'
+        assert self.fmt(0.991) == '0.991'
+        assert self.fmt(0.9999) == '0.9999'
 
 
 class Test_PctFormatter_sig_figs_gt1(Mixin_Check_PctFormatter_sig_figs):

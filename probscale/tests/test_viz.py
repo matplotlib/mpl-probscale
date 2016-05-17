@@ -1,11 +1,9 @@
 ﻿import numpy
-import matplotlib
-matplotlib.use('agg')
 import matplotlib.pyplot as plt
 
-import nose.tools as nt
+import pytest
 import numpy.testing as nptest
-from matplotlib.testing.decorators import image_comparison, cleanup
+
 try:
     from scipy import stats
 except:
@@ -13,18 +11,6 @@ except:
 
 from probscale import viz
 from probscale.probscale import _minimal_norm
-
-
-@nt.nottest
-def setup_plot_data():
-    data = numpy.array([
-         3.113,   3.606,   4.046,   4.046,   4.710,   6.140,   6.978,
-         2.000,   4.200,   4.620,   5.570,   5.660,   5.860,   6.650,
-         6.780,   6.790,   7.500,   7.500,   7.500,   8.630,   8.710,
-         8.990,   9.850,  10.820,  11.250,  11.250,  12.200,  14.920,
-        16.770,  17.810,  19.160,  19.190,  19.640,  20.180,  22.970,
-    ])
-    return data
 
 
 class Test__fit_line(object):
@@ -78,56 +64,56 @@ class Test__fit_line(object):
         x, y = self.zscores, self.data
         x_, y_, res = viz._fit_line(x, y, **scales)
         nptest.assert_array_almost_equal(y_, self.known_y_linlin)
-        nt.assert_true(isinstance(res, numpy.ndarray))
+        assert isinstance(res, numpy.ndarray)
 
     def test_xlinear_ylog(self):
         scales = {'fitlogs': 'y', 'fitprobs': None}
         x, y = self.zscores, self.data
         x_, y_, res = viz._fit_line(x, y, **scales)
         nptest.assert_array_almost_equal(y_, self.known_y_linlog)
-        nt.assert_true(isinstance(res, numpy.ndarray))
+        assert isinstance(res, numpy.ndarray)
 
     def test_xlinear_yprob(self):
         scales = {'fitlogs': None, 'fitprobs': 'y'}
         x, y = self.data, self.probs
         x_, y_, res = viz._fit_line(x, y, **scales)
         nptest.assert_array_almost_equal(y_, self.known_y_linprob)
-        nt.assert_true(isinstance(res, numpy.ndarray))
+        assert isinstance(res, numpy.ndarray)
 
     def test_xlog_ylinear(self):
         scales = {'fitlogs': 'x', 'fitprobs': None}
         x, y = self.data, self.zscores
         x_, y_, res = viz._fit_line(x, y, **scales)
         nptest.assert_array_almost_equal(y_, self.known_y_loglin)
-        nt.assert_true(isinstance(res, numpy.ndarray))
+        assert isinstance(res, numpy.ndarray)
 
     def test_xlog_ylog(self):
         scales = {'fitlogs': 'both', 'fitprobs': None}
         x, y = self.data, self.y
         x_, y_, res = viz._fit_line(x, y, **scales)
         nptest.assert_array_almost_equal(y_, self.known_y_loglog)
-        nt.assert_true(isinstance(res, numpy.ndarray))
+        assert isinstance(res, numpy.ndarray)
 
     def test_xlog_yprob(self):
         scales = {'fitlogs': 'x', 'fitprobs': 'y'}
         x, y = self.data, self.probs
         x_, y_, res = viz._fit_line(x, y, **scales)
         nptest.assert_array_almost_equal(y_, self.known_y_logprob)
-        nt.assert_true(isinstance(res, numpy.ndarray))
+        assert isinstance(res, numpy.ndarray)
 
     def test_xprob_ylinear(self):
         scales = {'fitlogs': None, 'fitprobs': 'x'}
         x, y = self.probs, self.data
         x_, y_, res = viz._fit_line(x, y, **scales)
         nptest.assert_array_almost_equal(y_, self.known_y_problin)
-        nt.assert_true(isinstance(res, numpy.ndarray))
+        assert isinstance(res, numpy.ndarray)
 
     def test_xprob_ylog(self):
         scales = {'fitlogs': 'y', 'fitprobs': 'x'}
         x, y = self.probs, self.data
         x_, y_, res = viz._fit_line(x, y, **scales)
         nptest.assert_array_almost_equal(y_, self.known_y_problog)
-        nt.assert_true(isinstance(res, numpy.ndarray))
+        assert isinstance(res, numpy.ndarray)
 
     def test_xprob_yprob(self):
         p2 = numpy.array([
@@ -146,17 +132,17 @@ class Test__fit_line(object):
         x, y = self.probs, p2,
         x_, y_, res = viz._fit_line(x, y, **scales)
         nptest.assert_array_almost_equal(y_, self.known_y_probprob)
-        nt.assert_true(isinstance(res, numpy.ndarray))
+        assert isinstance(res, numpy.ndarray)
 
-    @nt.raises(ValueError)
     def test_bad_fitlogs(self):
-        x, y = self.zscores, self.data
-        x_, y_, res = viz._fit_line(x, y, fitlogs='junk')
+        with pytest.raises(ValueError):
+            x, y = self.zscores, self.data
+            x_, y_, res = viz._fit_line(x, y, fitlogs='junk')
 
-    @nt.raises(ValueError)
     def test_bad_fitprobs(self):
-        x, y = self.zscores, self.data
-        x_, y_, res = viz._fit_line(x, y, fitprobs='junk')
+        with pytest.raises(ValueError):
+            x, y = self.zscores, self.data
+            x_, y_, res = viz._fit_line(x, y, fitprobs='junk')
 
     def test_custom_xhat(self):
         x, y = self.zscores, self.data
@@ -364,153 +350,167 @@ class Test_plot_pos(object):
         pp, yy = viz.plot_pos(self.data, postype='gringorten')
         nptest.assert_array_almost_equal(pp, self.known_gringorten)
 
-    @nt.raises(KeyError)
     def test_bad_postype(self):
-        viz.plot_pos(self.data, postype='junk')
+        with pytest.raises(KeyError):
+            viz.plot_pos(self.data, postype='junk')
 
 
-@image_comparison(baseline_images=['test_probplot_prob'], extensions=['png'])
-def test_probplot_prob():
+@pytest.fixture
+def plot_data():
+    data = numpy.array([
+         3.113,   3.606,   4.046,   4.046,   4.710,   6.140,   6.978,
+         2.000,   4.200,   4.620,   5.570,   5.660,   5.860,   6.650,
+         6.780,   6.790,   7.500,   7.500,   7.500,   8.630,   8.710,
+         8.990,   9.850,  10.820,  11.250,  11.250,  12.200,  14.920,
+        16.770,  17.810,  19.160,  19.190,  19.640,  20.180,  22.970,
+    ])
+    return data
+
+
+@pytest.mark.mpl_image_compare(baseline_dir='baseline_images/test_viz')
+def test_probplot_prob(plot_data):
     fig, ax = plt.subplots()
-    data = setup_plot_data()
-    fig = viz.probplot(data, ax=ax, xlabel='Test xlabel', datascale='log')
-    nt.assert_true(isinstance(fig, plt.Figure))
+    fig = viz.probplot(plot_data, ax=ax, xlabel='Test xlabel', datascale='log')
+    assert isinstance(fig, plt.Figure)
+    return fig
 
 
-@image_comparison(baseline_images=['test_probplot_qq'], extensions=['png'])
-def test_probplot_qq():
+@pytest.mark.mpl_image_compare(baseline_dir='baseline_images/test_viz')
+def test_probplot_qq(plot_data):
     fig, ax = plt.subplots()
-    data = setup_plot_data()
-    fig = viz.probplot(data, ax=ax, plottype='qq', ylabel='Test label',
+    fig = viz.probplot(plot_data, ax=ax, plottype='qq', ylabel='Test label',
                        datascale='log', scatter_kws=dict(color='r'))
+    return fig
 
 
-@image_comparison(baseline_images=['test_probplot_pp'], extensions=['png'])
-def test_probplot_pp():
+@pytest.mark.mpl_image_compare(baseline_dir='baseline_images/test_viz')
+def test_probplot_pp(plot_data):
     fig, ax = plt.subplots()
-    data = setup_plot_data()
     scatter_kws = dict(color='b', linestyle='--', markeredgecolor='g', markerfacecolor='none')
-    fig = viz.probplot(data, ax=ax, plottype='pp', datascale='linear',
+    fig = viz.probplot(plot_data, ax=ax, plottype='pp', datascale='linear',
                        xlabel='test x', ylabel='test y', scatter_kws=scatter_kws)
+    return fig
 
 
-@image_comparison(baseline_images=['test_probplot_prob_bestfit'], extensions=['png'])
-def test_probplot_prob_bestfit():
+@pytest.mark.mpl_image_compare(baseline_dir='baseline_images/test_viz')
+def test_probplot_prob_bestfit(plot_data):
     fig, ax = plt.subplots()
-    data = setup_plot_data()
-    fig = viz.probplot(data, ax=ax, xlabel='Test xlabel', bestfit=True, datascale='log')
-    nt.assert_true(isinstance(fig, plt.Figure))
+    fig = viz.probplot(plot_data, ax=ax, xlabel='Test xlabel', bestfit=True, datascale='log')
+    assert isinstance(fig, plt.Figure)
+    return fig
 
 
-@image_comparison(baseline_images=['test_probplot_qq_bestfit'], extensions=['png'])
-def test_probplot_qq_bestfit():
+@pytest.mark.mpl_image_compare(baseline_dir='baseline_images/test_viz')
+def test_probplot_qq_bestfit(plot_data):
     fig, ax = plt.subplots()
-    data = setup_plot_data()
-    fig = viz.probplot(data, ax=ax, plottype='qq', bestfit=True, ylabel='Test label', datascale='log')
+    fig = viz.probplot(plot_data, ax=ax, plottype='qq', bestfit=True,
+                       ylabel='Test label', datascale='log')
+    return fig
 
 
-@image_comparison(baseline_images=['test_probplot_pp_bestfit'], extensions=['png'])
-def test_probplot_pp_bestfit():
+@pytest.mark.mpl_image_compare(baseline_dir='baseline_images/test_viz')
+def test_probplot_pp_bestfit(plot_data):
     fig, ax = plt.subplots()
-    data = setup_plot_data()
     scatter_kws = {'marker': 's', 'color': 'red'}
     line_kws = {'linestyle': '--', 'linewidth': 3}
-    fig = viz.probplot(data, ax=ax, plottype='pp', datascale='linear',
+    fig = viz.probplot(plot_data, ax=ax, plottype='pp', datascale='linear',
                        xlabel='test x', bestfit=True, ylabel='test y',
                        scatter_kws=scatter_kws, line_kws=line_kws)
+    return fig
 
 
-@image_comparison(baseline_images=['test_probplot_prob_probax_y'], extensions=['png'])
-def test_probplot_prob_probax_y():
+@pytest.mark.mpl_image_compare(baseline_dir='baseline_images/test_viz')
+def test_probplot_prob_probax_y(plot_data):
     fig, ax = plt.subplots()
-    data = setup_plot_data()
-    fig = viz.probplot(data, ax=ax, xlabel='Test xlabel', datascale='log', probax='y')
-    nt.assert_true(isinstance(fig, plt.Figure))
+    fig = viz.probplot(plot_data, ax=ax, xlabel='Test xlabel', datascale='log', probax='y')
+    assert isinstance(fig, plt.Figure)
+    return fig
 
 
-@image_comparison(baseline_images=['test_probplot_qq_probax_y'], extensions=['png'])
-def test_probplot_qq_probax_y():
+@pytest.mark.mpl_image_compare(baseline_dir='baseline_images/test_viz')
+def test_probplot_qq_probax_y(plot_data):
     fig, ax = plt.subplots()
-    data = setup_plot_data()
-    fig = viz.probplot(data, ax=ax, plottype='qq', ylabel='Test label', probax='y',
+    fig = viz.probplot(plot_data, ax=ax, plottype='qq', ylabel='Test label', probax='y',
                        datascale='log', scatter_kws=dict(color='r'))
+    return fig
 
 
-@image_comparison(baseline_images=['test_probplot_pp_probax_y'], extensions=['png'])
-def test_probplot_pp_probax_y():
+@pytest.mark.mpl_image_compare(baseline_dir='baseline_images/test_viz')
+def test_probplot_pp_probax_y(plot_data):
     fig, ax = plt.subplots()
-    data = setup_plot_data()
     scatter_kws = dict(color='b', linestyle='--', markeredgecolor='g', markerfacecolor='none')
-    fig = viz.probplot(data, ax=ax, plottype='pp', datascale='linear', probax='y',
+    fig = viz.probplot(plot_data, ax=ax, plottype='pp', datascale='linear', probax='y',
                        xlabel='test x', ylabel='test y', scatter_kws=scatter_kws)
+    return fig
 
 
-@image_comparison(baseline_images=['test_probplot_prob_bestfit_probax_y'], extensions=['png'])
-def test_probplot_prob_bestfit_probax_y():
+@pytest.mark.mpl_image_compare(baseline_dir='baseline_images/test_viz')
+def test_probplot_prob_bestfit_probax_y(plot_data):
     fig, ax = plt.subplots()
-    data = setup_plot_data()
-    fig = viz.probplot(data, ax=ax, xlabel='Test xlabel', bestfit=True, datascale='log', probax='y')
-    nt.assert_true(isinstance(fig, plt.Figure))
+    fig = viz.probplot(plot_data, ax=ax, xlabel='Test xlabel', bestfit=True,
+                       datascale='log', probax='y')
+    assert isinstance(fig, plt.Figure)
+    return fig
 
 
-@image_comparison(baseline_images=['test_probplot_qq_bestfit_probax_y'], extensions=['png'])
-def test_probplot_qq_bestfit_probax_y():
+@pytest.mark.mpl_image_compare(baseline_dir='baseline_images/test_viz')
+def test_probplot_qq_bestfit_probax_y(plot_data):
     fig, ax = plt.subplots()
-    data = setup_plot_data()
-    fig = viz.probplot(data, ax=ax, plottype='qq', bestfit=True, ylabel='Test label', datascale='log', probax='y')
+    fig = viz.probplot(plot_data, ax=ax, plottype='qq', bestfit=True, ylabel='Test label',
+                       datascale='log', probax='y')
+    return fig
 
 
-@image_comparison(baseline_images=['test_probplot_pp_bestfit_probax_y'], extensions=['png'])
-def test_probplot_pp_bestfit_probax_y():
+@pytest.mark.mpl_image_compare(baseline_dir='baseline_images/test_viz')
+def test_probplot_pp_bestfit_probax_y(plot_data):
     fig, ax = plt.subplots()
-    data = setup_plot_data()
     scatter_kws = {'marker': 's', 'color': 'red'}
     line_kws = {'linestyle': '--', 'linewidth': 3}
-    fig = viz.probplot(data, ax=ax, plottype='pp', datascale='linear', probax='y',
+    fig = viz.probplot(plot_data, ax=ax, plottype='pp', datascale='linear', probax='y',
                        xlabel='test x', bestfit=True, ylabel='test y',
                        scatter_kws=scatter_kws, line_kws=line_kws)
+    return fig
 
 
-@image_comparison(baseline_images=['test_probplot_beta_dist_best_fit_y'], extensions=['png'])
-@nptest.dec.skipif(stats is None)
-def test_probplot_beta_dist_best_fit_y():
+@pytest.mark.mpl_image_compare(baseline_dir='baseline_images/test_viz')
+@pytest.mark.skipif(stats is None, reason="no scipy")
+def test_probplot_beta_dist_best_fit_y(plot_data):
     fig, (ax1, ax2) = plt.subplots(ncols=2)
-    data = setup_plot_data()
     dist = stats.beta(3, 3)
-    fig = viz.probplot(data, dist=dist, ax=ax1, ylabel='Beta scale',
+    fig = viz.probplot(plot_data, dist=dist, ax=ax1, ylabel='Beta scale',
                        bestfit=True, datascale='log', probax='y')
     ax1.set_ylim(bottom=0.5, top=98)
 
-    fig = viz.probplot(data, ax=ax2, xlabel='Default (norm)',
+    fig = viz.probplot(plot_data, ax=ax2, xlabel='Default (norm)',
                        bestfit=True, datascale='log', probax='y')
     ax2.set_ylim(bottom=0.5, top=98)
 
-    nt.assert_true(isinstance(fig, plt.Figure))
+    assert isinstance(fig, plt.Figure)
+    return fig
 
 
-@image_comparison(baseline_images=['test_probplot_beta_dist_best_fit_x'], extensions=['png'])
-@nptest.dec.skipif(stats is None)
-def test_probplot_beta_dist_best_fit_x():
+@pytest.mark.mpl_image_compare(baseline_dir='baseline_images/test_viz')
+@pytest.mark.skipif(stats is None, reason="no scipy")
+def test_probplot_beta_dist_best_fit_x(plot_data):
     fig, (ax1, ax2) = plt.subplots(nrows=2)
-    data = setup_plot_data()
     dist = stats.beta(3, 3)
-    fig = viz.probplot(data, dist=dist, ax=ax1, xlabel='Beta scale',
+    fig = viz.probplot(plot_data, dist=dist, ax=ax1, xlabel='Beta scale',
                        bestfit=True, datascale='log', probax='x')
     ax1.set_xlim(left=0.5, right=98)
 
-    fig = viz.probplot(data, ax=ax2, xlabel='Default (norm)',
+    fig = viz.probplot(plot_data, ax=ax2, xlabel='Default (norm)',
                        bestfit=True, datascale='log', probax='x')
     ax2.set_xlim(left=0.5, right=98)
 
-    nt.assert_true(isinstance(fig, plt.Figure))
+    assert isinstance(fig, plt.Figure)
+    return fig
 
 
-@cleanup
-def test_probplot_test_results():
+def test_probplot_test_results(plot_data):
     fig, ax = plt.subplots()
-    data = setup_plot_data()
-    fig, results = viz.probplot(data, return_results=True)
+    fig, results = viz.probplot(plot_data, return_results=True)
 
-    nt.assert_true(isinstance(results, dict))
+    assert isinstance(results, dict)
     known_keys = sorted(['q', 'x', 'y', 'xhat', 'yhat', 'res'])
-    nt.assert_list_equal(sorted(list(results.keys())), known_keys)
+    assert sorted(list(results.keys())) == known_keys
+    return fig
