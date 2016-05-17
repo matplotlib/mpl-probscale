@@ -12,6 +12,12 @@ from .formatters import PctFormatter, ProbFormatter
 
 
 class _minimal_norm(object):
+    """
+    A basic implmentation of a normal distribution, minimally
+    API-complient with scipt.stats.norm
+
+    """
+
     _A = -(8 * (numpy.pi - 3.0) / (3.0 * numpy.pi * (numpy.pi - 4.0)))
 
     @classmethod
@@ -71,10 +77,16 @@ class ProbScale(ScaleBase):
 
     Examples
     --------
-    >>> from matplotlib import pyplot
-    >>> import probscale
-    >>> fig, ax = pyplot.subplots()
-    >>> ax.set_xscale('prob')
+    The most basic use:
+
+    .. plot::
+        :context: close-figs
+
+        >>> from matplotlib import pyplot
+        >>> import probscale
+        >>> fig, ax = pyplot.subplots()
+        >>> ax.set_xlim(left=0.2, right=99.9)
+        >>> ax.set_xscale('prob')
 
     """
 
@@ -111,6 +123,7 @@ class ProbScale(ScaleBase):
             new_lower = lower_fringe / 10**(n)
             new_upper = upper_fringe / 10**(n) + axis_probs.max()
             axis_probs = numpy.hstack([new_lower, axis_probs, new_upper])
+
         locs = axis_probs / factor
         return locs
 

@@ -242,6 +242,7 @@ def plot_pos(data, postype=None, alpha=None, beta=None):
         'cunnane': (0.4, 0.4),
         'gringorten': (0.44, 0.44), # Gumble
     }
+
     postype = 'cunnane' if postype is None else postype
     if alpha is None and beta is None:
         alpha, beta = pos_params[postype.lower()]

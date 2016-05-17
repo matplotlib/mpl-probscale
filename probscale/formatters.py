@@ -3,9 +3,12 @@ from matplotlib.ticker import Formatter
 
 
 class _FormatterMixin(Formatter):
+    """ A mpl-axes formatter mixin class """
+
     @classmethod
     def _sig_figs(cls, x, n, expthresh=5, forceint=False):
-        """ Formats a number with the correct number of sig figs.
+        """
+        Formats a number with the correct number of significant digits.
 
         Parameters
         ----------
@@ -85,12 +88,22 @@ class _FormatterMixin(Formatter):
 
 
 class PctFormatter(_FormatterMixin):
+    """
+    Formatter class for MPL axes to display probalities as percentages.
+
+    """
+
     factor = 1.0
     offset = 2
     top = 100
 
 
 class ProbFormatter(_FormatterMixin):
+    """
+    Formatter class for MPL axes to display probalities as decimals.
+
+    """
+
     factor = 100.0
     offset = 0
     top = 1

@@ -28,6 +28,12 @@ def _clip_out_of_bounds(a):
 
 
 class _ProbTransformMixin(Transform):
+    """
+    Mixin for MPL axes transform for quantiles/probabilities or
+    percentages.
+
+    """
+
     input_dims = 1
     output_dims = 1
     is_separable = True
@@ -52,6 +58,12 @@ class _ProbTransformMixin(Transform):
 
 
 class ProbTransform(_ProbTransformMixin):
+    """
+    MPL axes tranform class to convert quantiles to probabilities
+    or percents.
+
+    """
+
     def transform_non_affine(self, prob):
         prob = self._handle_out_of_bounds(numpy.asarray(prob) / self.factor)
         q = self.dist.ppf(prob)
@@ -62,6 +74,12 @@ class ProbTransform(_ProbTransformMixin):
 
 
 class QuantileTransform(_ProbTransformMixin):
+    """
+    MPL axes tranform class to convert probabilities or percents to
+    quantiles.
+
+    """
+
     def transform_non_affine(self, q):
         prob = self.dist.cdf(q) * self.factor
         return prob
