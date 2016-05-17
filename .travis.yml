@@ -5,15 +5,19 @@ matrix:
     - python: 2.7
       env:
         - COVERAGE=false
+        - ARGS="--cov --verbose"
     - python: 3.4
       env:
         - COVERAGE=false
+        - ARGS="--mpl --cov --verbose"
     - python: 3.5
       env:
         - COVERAGE=false
+        - ARGS="--mpl --cov --verbose"
     - python: 3.5
       env:
         - COVERAGE=true
+        - ARGS="--mpl --cov --verbose"
 
 before_install:
 
@@ -32,13 +36,14 @@ install:
 
   - conda create --yes -n test python=$TRAVIS_PYTHON_VERSION
   - source activate test
-  - conda install --yes numpy nose matplotlib coverage docopt requests pyyaml
+  - conda install --yes numpy matplotlib coverage docopt requests pyyaml
+  - conda install --yes --channel=conda-forge pytest pytest-cov pytest-mpl
   - if [ ${COVERAGE} = true ]; then conda install scipy --yes; fi
   - pip install coveralls
   - pip install .
 
 script:
-  - python check_probscale.py --with-coverage --cover-package=probscale --verbose
+  - python check_probscale.py ${ARGS}
 
 after_success:
   - if [ ${COVERAGE} = true ]; then coveralls; fi
