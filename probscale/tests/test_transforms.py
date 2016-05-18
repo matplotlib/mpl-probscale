@@ -1,8 +1,6 @@
 import numpy
-import matplotlib
-matplotlib.use('agg')
 
-import nose.tools as nt
+import pytest
 import numpy.testing as nptest
 
 from probscale.probscale import _minimal_norm
@@ -10,17 +8,18 @@ from probscale import transforms
 
 
 def test__mask_out_of_bounds():
-    x = [-0.1, 0, 0.1, 0.5, 0.9, 1.0, 1.1]
     known = numpy.array([numpy.nan, numpy.nan, 0.1, 0.5, 0.9, numpy.nan, numpy.nan])
+    x = [-0.1, 0, 0.1, 0.5, 0.9, 1.0, 1.1]
     result = transforms._mask_out_of_bounds(x)
-    nptest.assert_array_almost_equal(result, known)
+    nptest.assert_array_equal(known, result)
 
 
 def test__clip_out_of_bounds():
-    x = [-0.1, 0, 0.1, 0.5, 0.9, 1.0, 1.1]
     known = numpy.array([0.0, 0.0, 0.1, 0.5, 0.9, 1.0, 1.0])
+    x = [-0.1, 0, 0.1, 0.5, 0.9, 1.0, 1.1]
     result = transforms._clip_out_of_bounds(x)
-    nptest.assert_array_almost_equal(result, known)
+    diff = numpy.abs(result - known)
+    assert numpy.all(diff < 0.0001)
 
 
 class Mixin_Transform(object):
@@ -30,38 +29,36 @@ class Mixin_Transform(object):
     known_has_inverse = True
 
     def test_input_dims(self):
-        nt.assert_true(hasattr(self.trans, 'input_dims'))
-        nt.assert_equal(self.trans.input_dims, self.known_input_dims)
+        assert hasattr(self.trans, 'input_dims')
+        assert self.trans.input_dims == self.known_input_dims
 
     def test_output_dims(self):
-        nt.assert_true(hasattr(self.trans, 'output_dims'))
-        nt.assert_equal(self.trans.output_dims, self.known_output_dims)
+        assert hasattr(self.trans, 'output_dims')
+        assert self.trans.output_dims == self.known_output_dims
 
     def test_is_separable(self):
-        nt.assert_true(hasattr(self.trans, 'is_separable'))
-        nt.assert_equal(self.trans.is_separable, self.known_is_separable)
+        assert hasattr(self.trans, 'is_separable')
+        assert self.trans.is_separable == self.known_is_separable
 
     def test_has_inverse(self):
-        nt.assert_true(hasattr(self.trans, 'has_inverse'))
-        nt.assert_equal(self.trans.has_inverse, self.known_has_inverse)
+        assert hasattr(self.trans, 'has_inverse')
+        assert self.trans.has_inverse == self.known_has_inverse
 
     def test_dist(self):
-        nt.assert_true(hasattr(self.trans, 'dist'))
-        nt.assert_equal(self.trans.dist, _minimal_norm)
+        assert hasattr(self.trans, 'dist')
+        assert self.trans.dist == _minimal_norm
 
     def test_transform_non_affine(self):
-        nt.assert_true(hasattr(self.trans, 'transform_non_affine'))
-        nptest.assert_almost_equal(self.trans.transform_non_affine([0.5]), self.known_tras_na)
+        assert hasattr(self.trans, 'transform_non_affine')
+        diff = numpy.abs(self.trans.transform_non_affine([0.5]) - self.known_tras_na)
+        assert numpy.all(diff < 0.0001)
 
     def test_inverted(self):
-        nt.assert_true(hasattr(self.trans, 'inverted'))
+        assert hasattr(self.trans, 'inverted')
 
-    @nt.raises(ValueError)
     def test_bad_non_pos(self):
-        self._trans(_minimal_norm, nonpos='junk')
-
-    # def test_non_pos_default(self):
-    #     x = [-0.1, 0, 0.1, 0.5, 0.99, 1, 1.1]
+        with pytest.raises(ValueError):
+            self._trans(_minimal_norm, nonpos='junk')
 
     def test_non_pos_clip(self):
         self._trans(_minimal_norm, nonpos='clip')
@@ -75,9 +72,9 @@ class Test_ProbTransform(Mixin_Transform):
 
     def test_inverted(self):
         inv_trans = self.trans.inverted()
-        nt.assert_equal(self.trans.dist, inv_trans.dist)
-        nt.assert_equal(self.trans.factor, inv_trans.factor)
-        nt.assert_equal(self.trans.nonpos, inv_trans.nonpos)
+        assert self.trans.dist == inv_trans.dist
+        assert self.trans.factor == inv_trans.factor
+        assert self.trans.nonpos == inv_trans.nonpos
 
 
 class Test_QuantileTransform(Mixin_Transform):
@@ -88,6 +85,6 @@ class Test_QuantileTransform(Mixin_Transform):
 
     def test_inverted(self):
         inv_trans = self.trans.inverted()
-        nt.assert_equal(self.trans.dist, inv_trans.dist)
-        nt.assert_equal(self.trans.factor, inv_trans.factor)
-        nt.assert_equal(self.trans.nonpos, inv_trans.nonpos)
+        assert self.trans.dist == inv_trans.dist
+        assert self.trans.factor == inv_trans.factor
+        assert self.trans.nonpos == inv_trans.nonpos
