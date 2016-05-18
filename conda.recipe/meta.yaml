@@ -1,36 +1,36 @@
 package:
   name: mpl-probscale
-  version: 0.1.2dev
+  version: 0.2.0dev
 
 source:
   path: ../
 
 build:
   script: python setup.py install
-  number: 2
+  number: 1
 
 requirements:
   build:
     - python
+    - setuptools
     - numpy
     - matplotlib
-    - nose
 
   run:
     - python
     - numpy
     - matplotlib
-    - nose
+    - pytest
 
 test:
   imports:
     - probscale
 
   commands:
-    - python -c "import matplotlib; matplotlib.use('agg'); import probscale; probscale.test()"
+    - python -c "import matplotlib as mpl; mpl.use('agg'); import probscale as ps; ps.test()"
 
   requires:
-    - nose
+    - pytest
     - scipy
 
 about:
