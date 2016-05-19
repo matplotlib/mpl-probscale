@@ -367,7 +367,10 @@ def plot_data():
     return data
 
 
-@pytest.mark.mpl_image_compare(baseline_dir='baseline_images/test_viz')
+@pytest.mark.mpl_image_compare(
+    baseline_dir='baseline_images/test_viz',
+    tolerance=10
+)
 def test_probplot_prob(plot_data):
     fig, ax = plt.subplots()
     fig = viz.probplot(plot_data, ax=ax, xlabel='Test xlabel', datascale='log')
@@ -375,7 +378,10 @@ def test_probplot_prob(plot_data):
     return fig
 
 
-@pytest.mark.mpl_image_compare(baseline_dir='baseline_images/test_viz')
+@pytest.mark.mpl_image_compare(
+    baseline_dir='baseline_images/test_viz',
+    tolerance=10
+)
 def test_probplot_qq(plot_data):
     fig, ax = plt.subplots()
     fig = viz.probplot(plot_data, ax=ax, plottype='qq', ylabel='Test label',
@@ -383,7 +389,10 @@ def test_probplot_qq(plot_data):
     return fig
 
 
-@pytest.mark.mpl_image_compare(baseline_dir='baseline_images/test_viz')
+@pytest.mark.mpl_image_compare(
+    baseline_dir='baseline_images/test_viz',
+    tolerance=10
+)
 def test_probplot_pp(plot_data):
     fig, ax = plt.subplots()
     scatter_kws = dict(color='b', linestyle='--', markeredgecolor='g', markerfacecolor='none')
@@ -392,7 +401,10 @@ def test_probplot_pp(plot_data):
     return fig
 
 
-@pytest.mark.mpl_image_compare(baseline_dir='baseline_images/test_viz')
+@pytest.mark.mpl_image_compare(
+    baseline_dir='baseline_images/test_viz',
+    tolerance=10
+)
 def test_probplot_prob_bestfit(plot_data):
     fig, ax = plt.subplots()
     fig = viz.probplot(plot_data, ax=ax, xlabel='Test xlabel', bestfit=True, datascale='log')
@@ -400,7 +412,10 @@ def test_probplot_prob_bestfit(plot_data):
     return fig
 
 
-@pytest.mark.mpl_image_compare(baseline_dir='baseline_images/test_viz')
+@pytest.mark.mpl_image_compare(
+    baseline_dir='baseline_images/test_viz',
+    tolerance=10
+)
 def test_probplot_qq_bestfit(plot_data):
     fig, ax = plt.subplots()
     fig = viz.probplot(plot_data, ax=ax, plottype='qq', bestfit=True,
@@ -408,7 +423,10 @@ def test_probplot_qq_bestfit(plot_data):
     return fig
 
 
-@pytest.mark.mpl_image_compare(baseline_dir='baseline_images/test_viz')
+@pytest.mark.mpl_image_compare(
+    baseline_dir='baseline_images/test_viz',
+    tolerance=10
+)
 def test_probplot_pp_bestfit(plot_data):
     fig, ax = plt.subplots()
     scatter_kws = {'marker': 's', 'color': 'red'}
@@ -419,7 +437,10 @@ def test_probplot_pp_bestfit(plot_data):
     return fig
 
 
-@pytest.mark.mpl_image_compare(baseline_dir='baseline_images/test_viz')
+@pytest.mark.mpl_image_compare(
+    baseline_dir='baseline_images/test_viz',
+    tolerance=10
+)
 def test_probplot_prob_probax_y(plot_data):
     fig, ax = plt.subplots()
     fig = viz.probplot(plot_data, ax=ax, xlabel='Test xlabel', datascale='log', probax='y')
@@ -427,7 +448,10 @@ def test_probplot_prob_probax_y(plot_data):
     return fig
 
 
-@pytest.mark.mpl_image_compare(baseline_dir='baseline_images/test_viz')
+@pytest.mark.mpl_image_compare(
+    baseline_dir='baseline_images/test_viz',
+    tolerance=10
+)
 def test_probplot_qq_probax_y(plot_data):
     fig, ax = plt.subplots()
     fig = viz.probplot(plot_data, ax=ax, plottype='qq', ylabel='Test label', probax='y',
@@ -435,7 +459,10 @@ def test_probplot_qq_probax_y(plot_data):
     return fig
 
 
-@pytest.mark.mpl_image_compare(baseline_dir='baseline_images/test_viz')
+@pytest.mark.mpl_image_compare(
+    baseline_dir='baseline_images/test_viz',
+    tolerance=10
+)
 def test_probplot_pp_probax_y(plot_data):
     fig, ax = plt.subplots()
     scatter_kws = dict(color='b', linestyle='--', markeredgecolor='g', markerfacecolor='none')
@@ -444,7 +471,10 @@ def test_probplot_pp_probax_y(plot_data):
     return fig
 
 
-@pytest.mark.mpl_image_compare(baseline_dir='baseline_images/test_viz')
+@pytest.mark.mpl_image_compare(
+    baseline_dir='baseline_images/test_viz',
+    tolerance=10
+)
 def test_probplot_prob_bestfit_probax_y(plot_data):
     fig, ax = plt.subplots()
     fig = viz.probplot(plot_data, ax=ax, xlabel='Test xlabel', bestfit=True,
@@ -453,7 +483,10 @@ def test_probplot_prob_bestfit_probax_y(plot_data):
     return fig
 
 
-@pytest.mark.mpl_image_compare(baseline_dir='baseline_images/test_viz')
+@pytest.mark.mpl_image_compare(
+    baseline_dir='baseline_images/test_viz',
+    tolerance=10
+)
 def test_probplot_qq_bestfit_probax_y(plot_data):
     fig, ax = plt.subplots()
     fig = viz.probplot(plot_data, ax=ax, plottype='qq', bestfit=True, ylabel='Test label',
@@ -461,7 +494,10 @@ def test_probplot_qq_bestfit_probax_y(plot_data):
     return fig
 
 
-@pytest.mark.mpl_image_compare(baseline_dir='baseline_images/test_viz')
+@pytest.mark.mpl_image_compare(
+    baseline_dir='baseline_images/test_viz',
+    tolerance=10
+)
 def test_probplot_pp_bestfit_probax_y(plot_data):
     fig, ax = plt.subplots()
     scatter_kws = {'marker': 's', 'color': 'red'}
@@ -472,7 +508,10 @@ def test_probplot_pp_bestfit_probax_y(plot_data):
     return fig
 
 
-@pytest.mark.mpl_image_compare(baseline_dir='baseline_images/test_viz')
+@pytest.mark.mpl_image_compare(
+    baseline_dir='baseline_images/test_viz',
+    tolerance=15
+)
 @pytest.mark.skipif(stats is None, reason="no scipy")
 def test_probplot_beta_dist_best_fit_y(plot_data):
     fig, (ax1, ax2) = plt.subplots(ncols=2)
@@ -489,7 +528,10 @@ def test_probplot_beta_dist_best_fit_y(plot_data):
     return fig
 
 
-@pytest.mark.mpl_image_compare(baseline_dir='baseline_images/test_viz')
+@pytest.mark.mpl_image_compare(
+    baseline_dir='baseline_images/test_viz',
+    tolerance=10
+)
 @pytest.mark.skipif(stats is None, reason="no scipy")
 def test_probplot_beta_dist_best_fit_x(plot_data):
     fig, (ax1, ax2) = plt.subplots(nrows=2)
