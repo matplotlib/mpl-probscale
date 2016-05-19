@@ -37,11 +37,14 @@ class _FormatterMixin(Formatter):
         """
 
         # return a string value unaltered
-        if isinstance(x, str) or x == 0.0:
-            out = str(x)
+        if isinstance(x, str):
+            out = cls._sig_figs(float(x), n, expthresh=expthresh, forceint=forceint)
+
+        elif x == 0.0:
+            out = '0'
 
         # check on the number provided
-        elif x is not None and not numpy.isinf(x) and not numpy.isnan(x):
+        elif x is not None and numpy.isfinite(x):
 
             # check on the _sig_figs
             if n < 1:
