@@ -6,94 +6,58 @@ import numpy.testing as nptest
 from probscale import formatters
 
 
-class Mixin_Check_Formatter_sig_figs(object):
-    def teardown(self):
-        pass
-
-    def test_baseline(self):
-        assert self.fmt._sig_figs(self.x, 3) == self.known_3
-        assert self.fmt._sig_figs(self.x, 4) == self.known_4
-
-    def test_string(self):
-        assert self.fmt._sig_figs('1.23', 3) == '1.23'
-
-    def test_na_inf(self):
-        assert self.fmt._sig_figs(numpy.nan, 3) == 'NA'
-        assert self.fmt._sig_figs(numpy.inf, 3) == 'NA'
-
-    def test_zero(self):
-        assert self.fmt._sig_figs(0, 3) == '0'
-
-    def test_trailing_zeros(self):
-        assert self.fmt._sig_figs(self.x, 8) == self.known_8
-
-    def test_sigFigs_zero_n(self):
-        with pytest.raises(ValueError):
-            self.fmt._sig_figs(self.x, 0)
-
-    def test_sigFigs_negative_n(self):
-        with pytest.raises(ValueError):
-            self.fmt._sig_figs(self.x, -1)
-
-    def test_forceint(self):
-        assert self.fmt._sig_figs(self.x, 3, forceint=True) == self.known_int
+@pytest.mark.parametrize("fmtr", [formatters.PctFormatter, formatters.ProbFormatter])
+def test_base_class_of_formatter(fmtr):
+    assert issubclass(fmtr, formatters._FormatterMixin)
 
 
-class Mixin_Check_PctFormatter_sig_figs(Mixin_Check_Formatter_sig_figs):
+@pytest.mark.parametrize(('pct', 'expected'), [
+    (0.0301, '0.03'), (0.20, '0.2'),  (0.100, '0.1'),
+    (10.000, '10'),   (5.00, '5'),    (50.00, '50'),
+    (99.000, '99'),   (99.1, '99.1'), (99.99, '99.99'),
+])
+def test__call___PctFormatter(pct, expected):
     fmt = formatters.PctFormatter()
-    def test__call__(self):
-        assert self.fmt(0.0301) == '0.03'
-        assert self.fmt(0.2) == '0.2'
-        assert self.fmt(0.1) == '0.1'
-        assert self.fmt(10) == '10'
-        assert self.fmt(5) == '5'
-        assert self.fmt(50) == '50'
-        assert self.fmt(99) == '99'
-        assert self.fmt(99.1) == '99.1'
-        assert self.fmt(99.99) == '99.99'
+    assert fmt(pct) == expected
 
 
-class Mixin_Check_ProbFormatter_sig_figs(Mixin_Check_Formatter_sig_figs):
+@pytest.mark.parametrize(('prob', 'expected'), [
+    (0.000301, '0.0003'), (0.001000, '0.001'), (0.100000, '0.10'),
+    (0.050000, '0.05'),   (0.500000, '0.50'),  (0.990000, '0.99'),
+    (0.991000, '0.991'),  (0.999900, '0.9999'),
+])
+def test__call___ProbFormmater(prob, expected):
     fmt = formatters.ProbFormatter()
-    def test__call__(self):
-        assert self.fmt(0.000301) == '0.0003'
-        assert self.fmt(0.001) == '0.001'
-        assert self.fmt(0.10) == '0.10'
-        assert self.fmt(0.05) == '0.05'
-        assert self.fmt(0.50) == '0.50'
-        assert self.fmt(0.99) == '0.99'
-        assert self.fmt(0.991) == '0.991'
-        assert self.fmt(0.9999) == '0.9999'
+    assert fmt(prob) == expected
 
 
-class Test_PctFormatter_sig_figs_gt1(Mixin_Check_PctFormatter_sig_figs):
-    def setup(self):
-        self.x = 1234.56
-        self.known_3 = '1,230'
-        self.known_4 = '1,235'
-        self.known_8 = '1,234.5600'
-        self.known_exp3 = '1.23e+08'
-        self.known_int = '1,235'
-        self.factor = 10**5
+@pytest.mark.parametrize(('value', 'N', 'expected', 'forceint'), [
+    (1234.56, 3, '1,230', False),
+    (1234.56, 4, '1,235', False),
+    ('1.23', 3, '1.23', False),
+    (numpy.nan, 3, 'NA', False),
+    (numpy.inf, 3, 'NA', False),
+    (0, 3, '0', False),
+    (1234.56, 8, '1,234.5600', False),
+    (1.23456e8, 3, '1.23e+08', False),
+    (1234.56, 3, '1,235', True),
+    (0.123456, 3, '0.123', False),
+    (0.123456, 4, '0.1235', False),
+    ('0.123456', 3, '0.123', False),
+    (numpy.nan, 3, 'NA', False),
+    (numpy.inf, 3, 'NA', False),
+    (0, 3, '0', False),
+    (0.123456, 8, '0.12345600', False),
+    (1.23456e-7, 3, '1.23e-07', False),
+    (0.123456, 3, '0', True),
+])
+def test__sig_figs(value, N, expected, forceint):
+    fmt = formatters._FormatterMixin()
+    assert fmt._sig_figs(value, N, forceint=forceint) == expected
 
 
-class Test_PctFormatter_sig_figs_lt1(Mixin_Check_PctFormatter_sig_figs):
-    def setup(self):
-        self.x = 0.123456
-        self.known_3 = '0.123'
-        self.known_4 = '0.1235'
-        self.known_8 = '0.12345600'
-        self.known_exp3 = '1.23e-07'
-        self.known_int = '0'
-        self.factor = 10**-6
-
-
-class Test_ProbFormatter_sig_figs(Mixin_Check_ProbFormatter_sig_figs):
-    def setup(self):
-        self.x = 0.123456
-        self.known_3 = '0.123'
-        self.known_4 = '0.1235'
-        self.known_8 = '0.12345600'
-        self.known_exp3 = '1.23e-07'
-        self.known_int = '0'
-        self.factor = 10**-6
+@pytest.mark.parametrize('N', [-1, 0, 0.5])
+def test__sig_figs_errors(N):
+    fmt = formatters._FormatterMixin()
+    with pytest.raises(ValueError):
+        fmt._sig_figs(1.23, N)
