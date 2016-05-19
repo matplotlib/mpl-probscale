@@ -70,7 +70,10 @@ def test_minimal_norm_cdf(mn, mn_input):
     assert numpy.all(numpy.abs(diff) < 0.001)
 
 
-@pytest.mark.mpl_image_compare(baseline_dir='baseline_images/test_probscale')
+@pytest.mark.mpl_image_compare(
+    baseline_dir='baseline_images/test_probscale',
+    tolerance=15
+)
 @pytest.mark.skipif(PYTHON27, reason="legacy python")
 def test_the_scale_default():
     fig, ax = plt.subplots(figsize=(4, 8))
@@ -80,7 +83,10 @@ def test_the_scale_default():
     return fig
 
 
-@pytest.mark.mpl_image_compare(baseline_dir='baseline_images/test_probscale')
+@pytest.mark.mpl_image_compare(
+    baseline_dir='baseline_images/test_probscale',
+    tolerance=15
+)
 def test_the_scale_not_as_pct():
     fig, ax = plt.subplots(figsize=(4, 8))
     ax.set_yscale('prob', as_pct=False)
@@ -88,7 +94,10 @@ def test_the_scale_not_as_pct():
     return fig
 
 
-@pytest.mark.mpl_image_compare(baseline_dir='baseline_images/test_probscale')
+@pytest.mark.mpl_image_compare(
+    baseline_dir='baseline_images/test_probscale',
+    tolerance=13
+)
 @pytest.mark.skipif(stats is None, reason="scipy not installed")
 def test_the_scale_beta():
     fig, ax = plt.subplots(figsize=(4, 8))
