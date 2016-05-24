@@ -70,6 +70,7 @@ Tutorials
 
    tutorial/getting_started.rst
    tutorial/closer_look_at_viz.rst
+   tutorial/closer_look_at_plot_pos.rst
 
 Testing
 =======
