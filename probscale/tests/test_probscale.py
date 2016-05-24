@@ -72,7 +72,7 @@ def test_minimal_norm_cdf(mn, mn_input):
 
 @pytest.mark.mpl_image_compare(
     baseline_dir='baseline_images/test_probscale',
-    tolerance=15
+    tolerance=17
 )
 @pytest.mark.skipif(PYTHON27, reason="legacy python")
 def test_the_scale_default():
