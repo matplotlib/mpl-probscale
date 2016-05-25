@@ -47,7 +47,6 @@ def test_fit_arguments_invalid(kwarg):
         validate.fit_argument('junk', kwarg)
 
 
-
 @pytest.mark.parametrize(('value', 'error'), [
     ('x', None), ('y', None), ('junk', ValueError)
 ])
@@ -80,3 +79,9 @@ def test_axis_type(value, expected, error):
 ])
 def test_other_options(value, expected):
     assert validate.other_options(value) == expected
+
+
+@pytest.mark.parametrize(('value', 'expected'), [(None, ''), ('test', 'test')])
+def test_axis_label(value, expected):
+    result = validate.axis_label(value)
+    assert result == expected
