@@ -526,8 +526,6 @@ def test_probplot_test_results(plot_data):
     return fig
 
 
-
-
 @pytest.mark.parametrize('probax', ['x', 'y'])
 @pytest.mark.parametrize(('N', 'minval', 'maxval'), [
     (8, 10, 90),
@@ -544,3 +542,11 @@ def test__set_prob_limits_x(probax, N, minval, maxval):
             ax.set_xlim.assert_called_once_with(left=minval, right=maxval)
         elif probax == 'y':
             ax.set_ylim.assert_called_once_with(bottom=minval, top=maxval)
+
+
+@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=10)
+def test_probplot_color_and_label(plot_data):
+    fig, ax = plt.subplots()
+    fig = viz.probplot(plot_data, ax=ax, color='pink', label='A Top-Level Label')
+    ax.legend(loc='lower right')
+    return fig
