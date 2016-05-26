@@ -1,6 +1,12 @@
-﻿import numpy
+﻿import sys
+
+import numpy
 import matplotlib.pyplot as plt
 
+if sys.version_info.major == 2:
+    import mock
+else:
+    from unittest import mock
 import pytest
 import numpy.testing as nptest
 
@@ -11,6 +17,9 @@ except:
 
 from probscale import viz
 from probscale.probscale import _minimal_norm
+
+
+BASELINE_DIR = 'baseline_images/test_viz'
 
 
 class Test__fit_line(object):
@@ -367,160 +376,122 @@ def plot_data():
     return data
 
 
-@pytest.mark.mpl_image_compare(
-    baseline_dir='baseline_images/test_viz',
-    tolerance=10
-)
+@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=10)
 def test_probplot_prob(plot_data):
     fig, ax = plt.subplots()
-    fig = viz.probplot(plot_data, ax=ax, xlabel='Test xlabel', datascale='log')
+    fig = viz.probplot(plot_data, ax=ax, problabel='Test xlabel', datascale='log')
     assert isinstance(fig, plt.Figure)
     return fig
 
 
-@pytest.mark.mpl_image_compare(
-    baseline_dir='baseline_images/test_viz',
-    tolerance=10
-)
+@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=10)
 def test_probplot_qq(plot_data):
     fig, ax = plt.subplots()
-    fig = viz.probplot(plot_data, ax=ax, plottype='qq', ylabel='Test label',
+    fig = viz.probplot(plot_data, ax=ax, plottype='qq', datalabel='Test label',
                        datascale='log', scatter_kws=dict(color='r'))
     return fig
 
 
-@pytest.mark.mpl_image_compare(
-    baseline_dir='baseline_images/test_viz',
-    tolerance=10
-)
+@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=10)
 def test_probplot_pp(plot_data):
     fig, ax = plt.subplots()
     scatter_kws = dict(color='b', linestyle='--', markeredgecolor='g', markerfacecolor='none')
     fig = viz.probplot(plot_data, ax=ax, plottype='pp', datascale='linear',
-                       xlabel='test x', ylabel='test y', scatter_kws=scatter_kws)
+                       datalabel='test x', problabel='test y',
+                       scatter_kws=scatter_kws)
     return fig
 
 
-@pytest.mark.mpl_image_compare(
-    baseline_dir='baseline_images/test_viz',
-    tolerance=10
-)
+@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=10)
 def test_probplot_prob_bestfit(plot_data):
     fig, ax = plt.subplots()
-    fig = viz.probplot(plot_data, ax=ax, xlabel='Test xlabel', bestfit=True, datascale='log')
+    fig = viz.probplot(plot_data, ax=ax, datalabel='Test xlabel', bestfit=True, datascale='log')
     assert isinstance(fig, plt.Figure)
     return fig
 
 
-@pytest.mark.mpl_image_compare(
-    baseline_dir='baseline_images/test_viz',
-    tolerance=10
-)
+@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=10)
 def test_probplot_qq_bestfit(plot_data):
     fig, ax = plt.subplots()
     fig = viz.probplot(plot_data, ax=ax, plottype='qq', bestfit=True,
-                       ylabel='Test label', datascale='log')
+                       problabel='Test label', datascale='log')
     return fig
 
 
-@pytest.mark.mpl_image_compare(
-    baseline_dir='baseline_images/test_viz',
-    tolerance=10
-)
+@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=10)
 def test_probplot_pp_bestfit(plot_data):
     fig, ax = plt.subplots()
     scatter_kws = {'marker': 's', 'color': 'red'}
     line_kws = {'linestyle': '--', 'linewidth': 3}
     fig = viz.probplot(plot_data, ax=ax, plottype='pp', datascale='linear',
-                       xlabel='test x', bestfit=True, ylabel='test y',
+                       datalabel='test x', bestfit=True, problabel='test y',
                        scatter_kws=scatter_kws, line_kws=line_kws)
     return fig
 
 
-@pytest.mark.mpl_image_compare(
-    baseline_dir='baseline_images/test_viz',
-    tolerance=10
-)
+@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=10)
 def test_probplot_prob_probax_y(plot_data):
     fig, ax = plt.subplots()
-    fig = viz.probplot(plot_data, ax=ax, xlabel='Test xlabel', datascale='log', probax='y')
+    fig = viz.probplot(plot_data, ax=ax, datalabel='Test xlabel', datascale='log', probax='y')
     assert isinstance(fig, plt.Figure)
     return fig
 
 
-@pytest.mark.mpl_image_compare(
-    baseline_dir='baseline_images/test_viz',
-    tolerance=10
-)
+@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=10)
 def test_probplot_qq_probax_y(plot_data):
     fig, ax = plt.subplots()
-    fig = viz.probplot(plot_data, ax=ax, plottype='qq', ylabel='Test label', probax='y',
+    fig = viz.probplot(plot_data, ax=ax, plottype='qq', problabel='Test label', probax='y',
                        datascale='log', scatter_kws=dict(color='r'))
     return fig
 
 
-@pytest.mark.mpl_image_compare(
-    baseline_dir='baseline_images/test_viz',
-    tolerance=10
-)
+@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=10)
 def test_probplot_pp_probax_y(plot_data):
     fig, ax = plt.subplots()
     scatter_kws = dict(color='b', linestyle='--', markeredgecolor='g', markerfacecolor='none')
     fig = viz.probplot(plot_data, ax=ax, plottype='pp', datascale='linear', probax='y',
-                       xlabel='test x', ylabel='test y', scatter_kws=scatter_kws)
+                       datalabel='test x', problabel='test y', scatter_kws=scatter_kws)
     return fig
 
 
-@pytest.mark.mpl_image_compare(
-    baseline_dir='baseline_images/test_viz',
-    tolerance=10
-)
+@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=10)
 def test_probplot_prob_bestfit_probax_y(plot_data):
     fig, ax = plt.subplots()
-    fig = viz.probplot(plot_data, ax=ax, xlabel='Test xlabel', bestfit=True,
+    fig = viz.probplot(plot_data, ax=ax, datalabel='Test xlabel', bestfit=True,
                        datascale='log', probax='y')
     assert isinstance(fig, plt.Figure)
     return fig
 
 
-@pytest.mark.mpl_image_compare(
-    baseline_dir='baseline_images/test_viz',
-    tolerance=10
-)
+@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=10)
 def test_probplot_qq_bestfit_probax_y(plot_data):
     fig, ax = plt.subplots()
-    fig = viz.probplot(plot_data, ax=ax, plottype='qq', bestfit=True, ylabel='Test label',
+    fig = viz.probplot(plot_data, ax=ax, plottype='qq', bestfit=True, problabel='Test label',
                        datascale='log', probax='y')
     return fig
 
 
-@pytest.mark.mpl_image_compare(
-    baseline_dir='baseline_images/test_viz',
-    tolerance=10
-)
+@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=10)
 def test_probplot_pp_bestfit_probax_y(plot_data):
     fig, ax = plt.subplots()
     scatter_kws = {'marker': 's', 'color': 'red'}
     line_kws = {'linestyle': '--', 'linewidth': 3}
     fig = viz.probplot(plot_data, ax=ax, plottype='pp', datascale='linear', probax='y',
-                       xlabel='test x', bestfit=True, ylabel='test y',
+                       datalabel='test x', bestfit=True, problabel='test y',
                        scatter_kws=scatter_kws, line_kws=line_kws)
     return fig
 
 
-@pytest.mark.mpl_image_compare(
-    baseline_dir='baseline_images/test_viz',
-    tolerance=15
-)
+@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=15)
 @pytest.mark.skipif(stats is None, reason="no scipy")
 def test_probplot_beta_dist_best_fit_y(plot_data):
     fig, (ax1, ax2) = plt.subplots(ncols=2)
     dist = stats.beta(3, 3)
-    fig = viz.probplot(plot_data, dist=dist, ax=ax1, ylabel='Beta scale',
+    fig = viz.probplot(plot_data, dist=dist, ax=ax1, problabel='Beta scale',
                        bestfit=True, datascale='log', probax='y')
     ax1.set_ylim(bottom=0.5, top=98)
 
-    fig = viz.probplot(plot_data, ax=ax2, xlabel='Default (norm)',
+    fig = viz.probplot(plot_data, ax=ax2, datalabel='Default (norm)',
                        bestfit=True, datascale='log', probax='y')
     ax2.set_ylim(bottom=0.5, top=98)
 
@@ -528,19 +499,16 @@ def test_probplot_beta_dist_best_fit_y(plot_data):
     return fig
 
 
-@pytest.mark.mpl_image_compare(
-    baseline_dir='baseline_images/test_viz',
-    tolerance=10
-)
+@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=10)
 @pytest.mark.skipif(stats is None, reason="no scipy")
 def test_probplot_beta_dist_best_fit_x(plot_data):
     fig, (ax1, ax2) = plt.subplots(nrows=2)
     dist = stats.beta(3, 3)
-    fig = viz.probplot(plot_data, dist=dist, ax=ax1, xlabel='Beta scale',
+    fig = viz.probplot(plot_data, dist=dist, ax=ax1, problabel='Beta scale',
                        bestfit=True, datascale='log', probax='x')
     ax1.set_xlim(left=0.5, right=98)
 
-    fig = viz.probplot(plot_data, ax=ax2, xlabel='Default (norm)',
+    fig = viz.probplot(plot_data, ax=ax2, problabel='Default (norm)',
                        bestfit=True, datascale='log', probax='x')
     ax2.set_xlim(left=0.5, right=98)
 
@@ -550,9 +518,29 @@ def test_probplot_beta_dist_best_fit_x(plot_data):
 
 def test_probplot_test_results(plot_data):
     fig, ax = plt.subplots()
-    fig, results = viz.probplot(plot_data, return_results=True)
+    fig, results = viz.probplot(plot_data, return_best_fit_results=True)
 
     assert isinstance(results, dict)
     known_keys = sorted(['q', 'x', 'y', 'xhat', 'yhat', 'res'])
     assert sorted(list(results.keys())) == known_keys
     return fig
+
+
+
+
+@pytest.mark.parametrize('probax', ['x', 'y'])
+@pytest.mark.parametrize(('N', 'minval', 'maxval'), [
+    (8, 10, 90),
+    (37, 1, 99),
+    (101, 0.1, 99.9),
+    (10001, 0.001, 99.999)
+])
+def test__set_prob_limits_x(probax, N, minval, maxval):
+    from probscale import validate
+    ax = mock.Mock()
+    with mock.patch.object(validate, 'axes_object', return_value=[None, ax]):
+        viz._set_prob_limits(ax, probax, N)
+        if probax == 'x':
+            ax.set_xlim.assert_called_once_with(left=minval, right=maxval)
+        elif probax == 'y':
+            ax.set_ylim.assert_called_once_with(bottom=minval, top=maxval)
