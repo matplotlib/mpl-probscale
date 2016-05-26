@@ -3,7 +3,7 @@
 import numpy
 import matplotlib.pyplot as plt
 
-if sys.version_info.major == 2:
+if sys.version_info.major == 2:  # pragma: no cover
     import mock
 else:
     from unittest import mock
@@ -12,7 +12,7 @@ import numpy.testing as nptest
 
 try:
     from scipy import stats
-except:
+except:  # pragma: no cover
     stats = None
 
 from probscale import viz
