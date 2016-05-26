@@ -3,6 +3,7 @@ from matplotlib import pyplot
 
 def axes_object(ax):
     """ Checks if a value if an Axes. If None, a new one is created.
+    Both the figure and axes are returned (in that order).
 
     """
 
@@ -19,6 +20,11 @@ def axes_object(ax):
 
 
 def axis_name(axis, axname):
+    """
+    Checks that an axis name is either 'x' or 'y'. Raises an error on
+    an invalid value. Returns the lower cased verion of valid values.
+    """
+
     valid_args = ['x', 'y']
     if axis.lower() not in valid_args:
         msg = 'Invalid value for {} ({}). Must be on of {}.'
@@ -28,21 +34,43 @@ def axis_name(axis, axname):
 
 
 def fit_argument(arg, argname):
+    """
+    Checks that an axis options is either 'x', y', 'both', or None.
+    Raises an error on an invalid value. Returns the lower case verion
+    of valid values.
+    """
+
     valid_args = ['x', 'y', 'both', None]
     if arg not in valid_args:
         msg = 'Invalid value for {} ({}). Must be on of {}.'
         raise ValueError(msg.format(argname, arg, valid_args))
+    elif arg is not None:
+        arg = arg.lower()
 
     return arg
 
 
 def axis_type(axtype):
+    """
+    Checks that a valid axis type is requested.
+    pp - percentile axis
+    qq - quantile axis
+    prob - probability axis
+
+    Raises an error on an invalid value. Returns the lower case verion
+    of valid values.
+    """
+
     if axtype.lower() not in ['pp', 'qq', 'prob']:
         raise ValueError("invalid axtype: {}".format(axtype))
     return axtype.lower()
 
 
 def axis_label(label):
+    """
+    Replaces None with an empty string for axis labels.
+    """
+
     if label is None:
         return ''
     else:
@@ -50,4 +78,8 @@ def axis_label(label):
 
 
 def other_options(options):
+    """
+    Replaces None with an empty dict for plotting options.
+    """
+
     return dict() if options is None else options.copy()
