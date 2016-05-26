@@ -30,6 +30,7 @@ test:
     - python -c "import sys; import matplotlib as mpl; mpl.use('agg'); import probscale as ps; sys.exit(ps.test('--mpl'))"
 
   requires:
+    - mock  # [py27]
     - pytest
     - pytest-mpl
     - scipy

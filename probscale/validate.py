@@ -18,13 +18,13 @@ def axes_object(ax):
     return fig, ax
 
 
-def axis_name(axname, argname):
+def axis_name(axis, axname):
     valid_args = ['x', 'y']
-    if axname.lower() not in valid_args:
+    if axis.lower() not in valid_args:
         msg = 'Invalid value for {} ({}). Must be on of {}.'
-        raise ValueError(msg.format(argname, axname, valid_args))
+        raise ValueError(msg.format(axname, axis, valid_args))
 
-    return axname.lower()
+    return axis.lower()
 
 
 def fit_argument(arg, argname):
@@ -40,6 +40,13 @@ def axis_type(axtype):
     if axtype.lower() not in ['pp', 'qq', 'prob']:
         raise ValueError("invalid axtype: {}".format(axtype))
     return axtype.lower()
+
+
+def axis_label(label):
+    if label is None:
+        return ''
+    else:
+        return label
 
 
 def other_options(options):

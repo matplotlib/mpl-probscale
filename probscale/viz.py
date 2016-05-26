@@ -6,10 +6,11 @@ from . import validate
 
 
 def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
-             color=None, label=None, datascale='linear', xlabel=None,
-             ylabel=None, bestfit=False, return_results=False,
+             problabel=None, datascale='linear', datalabel=None,
+             bestfit=False, return_best_fit_results=False,
              scatter_kws=None, line_kws=None, pp_kws=None):
-    """ Probability, percentile, and quantile plots.
+    """
+    Probability, percentile, and quantile plots.
 
     Parameters
     ----------
@@ -25,24 +26,18 @@ def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
            - 'qq': quantile plot
     dist : scipy distribution, optional
         A distribtion to compute the scale's tick positions. If not
-        specified, a normal distribution will be used.
+        specified, a standard normal distribution will be used.
     probax : string, optional (default = 'x')
         The axis ('x' or 'y') that will serve as the probability (or
         quantile) axis.
-    color : valid matplotlib color specification, optional
-        If provided, this value will be added to the ``scatter_kws``
-        and ``line_kws`` dictionary under the "color" key.
-    label : string, optional
-        If provided, this legend label is applied to the scatter series
-        of the probability plot.
+    problabel, datalabel : string, optional
+        Axis labels for the probability/quantile and data axes
+        respectively.
     datascale : string, optional (default = 'log')
         Scale for the other axis that is not
-    xlabel, ylabel : string, optional
-        Axis labels for the plot.
     bestfit : bool, optional (default is False)
-        Specifies whether a best-fit line should be added to the
-        plot.
-    return_results : bool (default = False)
+        Specifies whether a best-fit line should be added to the plot.
+    return_best_fit_results : bool (default is False)
         If True a dictionary of results of is returned along with the
         figure.
     scatter_kws, line_kws : dictionary, optional
@@ -50,7 +45,7 @@ def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
         when drawing the scatter points and best-fit line, respectively.
     pp_kws : dictionary, optional
         Dictionary of keyword arguments passed directly to
-        ``viz.plot_pos``.
+        ``viz.plot_pos`` when computing the plotting positions.
 
     Returns
     -------
@@ -77,19 +72,14 @@ def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
 
     # check input values
     fig, ax = validate.axes_object(ax)
-    probax = validate.axis_name(probax, 'x')
+    probax = validate.axis_name(probax, 'probability axis')
+    problabel = validate.axis_label(problabel)
+    datalabel = validate.axis_label(datalabel)
 
-    # default values for plotting options
+    # default values for symbology options
     scatter_kws = validate.other_options(scatter_kws)
     line_kws = validate.other_options(line_kws)
     pp_kws = validate.other_options(pp_kws)
-
-    if color is not None:
-        scatter_kws['color'] = color
-        line_kws['color'] = color
-
-    if label is not None:
-        scatter_kws['label'] = label
 
     # check plottype
     plottype = validate.axis_type(plottype)
@@ -107,6 +97,8 @@ def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
     # set up x, y, Axes for probabilities on the x
     if probax == 'x':
         x, y = probvals, datavals
+        ax.set_xlabel(problabel)
+        ax.set_ylabel(datalabel)
         if plottype == 'prob':
             ax.set_xscale('prob', dist=dist)
             fitprobs = 'x'
@@ -121,6 +113,8 @@ def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
     # setup x, y, Axes for probabilities on the y
     elif probax == 'y':
         y, x = probvals, datavals
+        ax.set_xlabel(datalabel)
+        ax.set_ylabel(problabel)
         if plottype == 'prob':
             ax.set_yscale('prob', dist=dist)
             fitprobs = 'y'
@@ -132,18 +126,10 @@ def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
         ax.set_xscale(datascale)
         fitlogs = 'x' if datascale == 'log' else None
 
-    # plot the final ROS data versus the Z-scores
+    # finally plot the data
     linestyle = scatter_kws.pop('linestyle', 'none')
     marker = scatter_kws.pop('marker', 'o')
     ax.plot(x, y, linestyle=linestyle, marker=marker, **scatter_kws)
-
-    # maybe label the x-axis
-    if xlabel is not None:
-        ax.set_xlabel(xlabel)
-
-    # maybe label the y-axis
-    if ylabel is not None:
-        ax.set_ylabel(ylabel)
 
     # maybe do a best-fit and plot
     if bestfit:
@@ -152,8 +138,12 @@ def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
     else:
         xhat, yhat, modelres = (None, None, None)
 
+    # set the probability axes limits
+    if plottype == 'prob':
+        _set_prob_limits(ax, probax, len(probs))
+
     # return the figure and maybe results of the best-fit
-    if return_results:
+    if return_best_fit_results:
         results = dict(q=qntls, x=x, y=y, xhat=xhat, yhat=yhat, res=modelres)
         return fig, results
     else:
@@ -260,6 +250,35 @@ def plot_pos(data, postype=None, alpha=None, beta=None):
     pos[sorted_index[:n]] = (numpy.arange(1, n+1) - alpha) / (n + 1.0 - alpha - beta)
 
     return pos[sorted_index], data[sorted_index]
+
+
+def _set_prob_limits(ax, probax, N):
+    """ Sets the limits of a probabilty axis based the number of point.
+
+    Parameters
+    ----------
+    ax : matplotlib Axes
+        The Axes object that will be modified.
+    N : int
+        Maximum number of points for the series plotted on the Axes.
+    which : string
+        The axis whose ticklabels will be rotated. Valid values are 'x',
+        'y', or 'both'.
+
+    Returns
+    -------
+    None
+
+    """
+
+    fig, ax = validate.axes_object(ax)
+    which = validate.axis_name(probax, 'probability axis')
+
+    minval = 10 ** (-1 *numpy.ceil(numpy.log10(N) - 2))
+    if which in ['x', 'both']:
+        ax.set_xlim(left=minval, right=100-minval)
+    elif which in ['y', 'both']:
+        ax.set_ylim(bottom=minval, top=100-minval)
 
 
 def _fit_line(x, y, xhat=None, fitprobs=None, fitlogs=None, dist=None):
