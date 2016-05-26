@@ -482,7 +482,7 @@ def test_probplot_pp_bestfit_probax_y(plot_data):
     return fig
 
 
-@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=15)
+@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=10)
 @pytest.mark.skipif(stats is None, reason="no scipy")
 def test_probplot_beta_dist_best_fit_y(plot_data):
     fig, (ax1, ax2) = plt.subplots(ncols=2)
