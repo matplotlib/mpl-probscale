@@ -8,7 +8,8 @@ from . import validate
 def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
              problabel=None, datascale='linear', datalabel=None,
              bestfit=False, return_best_fit_results=False,
-             scatter_kws=None, line_kws=None, pp_kws=None):
+             scatter_kws=None, line_kws=None, pp_kws=None,
+             color=None, label=None):
     """
     Probability, percentile, and quantile plots.
 
@@ -80,6 +81,13 @@ def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
     scatter_kws = validate.other_options(scatter_kws)
     line_kws = validate.other_options(line_kws)
     pp_kws = validate.other_options(pp_kws)
+
+    if color is not None:
+        scatter_kws['color'] = color
+        line_kws['color'] = color
+
+    if label is not None:
+        scatter_kws['label'] = label
 
     # check plottype
     plottype = validate.axis_type(plottype)

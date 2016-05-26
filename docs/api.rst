@@ -6,3 +6,6 @@ API and Source Reference
 
    api/viz.rst
    api/probscale.rst
+   api/formatters.rst
+   api/transforms.rst
+   api/validate.rst
