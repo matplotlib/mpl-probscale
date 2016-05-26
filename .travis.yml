@@ -5,18 +5,22 @@ matrix:
     - python: 2.7
       env:
         - COVERAGE=false
+        - TESTERS="conda-forge pytest mock pytest-mpl coverage"
         - ARGS="--verbose"
     - python: 3.4
       env:
         - COVERAGE=false
+        - TESTERS="conda-forge pytest pytest-mpl coverage"
         - ARGS="--mpl --verbose"
     - python: 3.5
       env:
         - COVERAGE=false
+        - TESTERS="conda-forge pytest pytest-mpl coverage"
         - ARGS="--mpl --verbose"
     - python: 3.5
       env:
         - COVERAGE=true
+        - TESTERS="conda-forge pytest pytest-mpl coverage"
         - ARGS="--mpl --verbose"
 
 before_install:
@@ -36,8 +40,8 @@ install:
 
   - conda create --yes -n test python=$TRAVIS_PYTHON_VERSION
   - source activate test
-  - conda install --yes --channel=conda-forge numpy matplotlib coverage docopt requests pyyaml
-  - conda install --yes --channel=conda-forge pytest pytest-cov pytest-mpl
+  - conda install --yes --channel=conda-forge numpy matplotlib docopt requests pyyaml
+  - conda install --yes --channel=${TESTERS}
   - if [ ${COVERAGE} = true ]; then conda install scipy --yes; fi
   - pip install coveralls
   - pip install .
