@@ -393,6 +393,15 @@ def test_probplot_qq(plot_data):
 
 
 @pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=10)
+def test_probplot_qq_dist(plot_data):
+    fig, ax = plt.subplots()
+    norm = stats.norm(*stats.norm.fit(plot_data))
+    fig = viz.probplot(plot_data, ax=ax, plottype='qq', dist=norm,
+                       datalabel='Test label')
+    return fig
+
+
+@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=10)
 def test_probplot_pp(plot_data):
     fig, ax = plt.subplots()
     scatter_kws = dict(color='b', linestyle='--', markeredgecolor='g', markerfacecolor='none')
