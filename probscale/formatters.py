@@ -29,10 +29,10 @@ class _FormatterMixin(Formatter):
 
         Examples
         --------
-        >>> print(_sig_figs(1247.15, 3))
-               1250
-        >>> print(_sig_figs(1247.15, 7))
-               1247.150
+        >>> _sig_figs(1247.15, 3)
+        '1250'
+        >>> _sig_figs(1247.15, 7)
+        '1247.150'
 
         """
 
@@ -121,7 +121,7 @@ class ProbFormatter(_FormatterMixin):
     >>> from probscale import formatters
     >>> fmt = formatters.ProbFormatter()
     >>> fmt(0.01)
-    '0,01'
+    '0.01'
     >>> fmt(0.2)
     '0.20'
     >>> try:
