@@ -22,69 +22,81 @@ def test__clip_out_of_bounds():
     assert numpy.all(diff < 0.0001)
 
 
-class Mixin_Transform(object):
-    known_input_dims = 1
-    known_output_dims = 1
-    known_is_separable = True
-    known_has_inverse = True
 
-    def test_input_dims(self):
-        assert hasattr(self.trans, 'input_dims')
-        assert self.trans.input_dims == self.known_input_dims
+@pytest.fixture
+def prob_trans():
+    cls = transforms.ProbTransform
+    return cls(_minimal_norm)
 
-    def test_output_dims(self):
-        assert hasattr(self.trans, 'output_dims')
-        assert self.trans.output_dims == self.known_output_dims
 
-    def test_is_separable(self):
-        assert hasattr(self.trans, 'is_separable')
-        assert self.trans.is_separable == self.known_is_separable
+@pytest.fixture
+def quant_trans():
+    cls = transforms.QuantileTransform
+    return cls(_minimal_norm)
 
-    def test_has_inverse(self):
-        assert hasattr(self.trans, 'has_inverse')
-        assert self.trans.has_inverse == self.known_has_inverse
 
-    def test_dist(self):
-        assert hasattr(self.trans, 'dist')
-        assert self.trans.dist == _minimal_norm
+@pytest.mark.parametrize('trans', [prob_trans(), quant_trans()])
+def test_transform_input_dims(trans):
+    assert trans.input_dims == 1
 
-    def test_transform_non_affine(self):
-        assert hasattr(self.trans, 'transform_non_affine')
-        diff = numpy.abs(self.trans.transform_non_affine([0.5]) - self.known_tras_na)
-        assert numpy.all(diff < 0.0001)
 
-    def test_inverted(self):
-        assert hasattr(self.trans, 'inverted')
+@pytest.mark.parametrize('trans', [prob_trans(), quant_trans()])
+def test_transform_output_dims(trans):
+    assert trans.output_dims == 1
 
-    def test_bad_non_pos(self):
+
+@pytest.mark.parametrize('trans', [prob_trans(), quant_trans()])
+def test_transform_is_separable(trans):
+    assert trans.is_separable
+
+
+@pytest.mark.parametrize('trans', [prob_trans(), quant_trans()])
+def test_transform_has_inverse(trans):
+    assert trans.has_inverse
+
+
+@pytest.mark.parametrize('trans', [prob_trans(), quant_trans()])
+def test_transform_dist(trans):
+    trans.dist == _minimal_norm
+
+
+@pytest.mark.parametrize(('trans', 'known_trans_na'), [
+    (prob_trans(), -2.569150498), (quant_trans(), 69.1464492)
+])
+def test_transform_non_affine(trans, known_trans_na):
+    diff = numpy.abs(trans.transform_non_affine([0.5]) - known_trans_na)
+    assert numpy.all(diff < 0.0001)
+
+
+@pytest.mark.parametrize(('trans', 'inver_cls'), [
+    (prob_trans(), transforms.QuantileTransform),
+    (quant_trans(), transforms.ProbTransform),
+])
+def test_transform_inverted(trans, inver_cls):
+    t_inv = trans.inverted()
+    assert isinstance(t_inv, inver_cls)
+    assert trans.dist == t_inv.dist
+    assert trans.as_pct == t_inv.as_pct
+    assert trans.out_of_bounds == t_inv.out_of_bounds
+
+
+@pytest.mark.parametrize('cls', [transforms.ProbTransform, transforms.QuantileTransform])
+def test_bad_out_of_bounds(cls):
+    with pytest.raises(ValueError):
+        cls(_minimal_norm, out_of_bounds='junk')
+
+
+@pytest.mark.parametrize('cls', [transforms.ProbTransform, transforms.QuantileTransform])
+@pytest.mark.parametrize(('method', 'func'), [
+    ('clip', transforms._clip_out_of_bounds),
+    ('mask', transforms._mask_out_of_bounds),
+    ('junk', None),
+])
+def test_out_of_bounds(cls, method, func):
+    if func is None:
         with pytest.raises(ValueError):
-            self._trans(_minimal_norm, nonpos='junk')
-
-    def test_non_pos_clip(self):
-        self._trans(_minimal_norm, nonpos='clip')
-
-
-class Test_ProbTransform(Mixin_Transform):
-    def setup(self):
-        self._trans = transforms.ProbTransform
-        self.trans = transforms.ProbTransform(_minimal_norm)
-        self.known_tras_na = [-2.569150498]
-
-    def test_inverted(self):
-        inv_trans = self.trans.inverted()
-        assert self.trans.dist == inv_trans.dist
-        assert self.trans.factor == inv_trans.factor
-        assert self.trans.nonpos == inv_trans.nonpos
-
-
-class Test_QuantileTransform(Mixin_Transform):
-    def setup(self):
-        self._trans = transforms.QuantileTransform
-        self.trans = transforms.QuantileTransform(_minimal_norm)
-        self.known_tras_na = [69.1464492]
-
-    def test_inverted(self):
-        inv_trans = self.trans.inverted()
-        assert self.trans.dist == inv_trans.dist
-        assert self.trans.factor == inv_trans.factor
-        assert self.trans.nonpos == inv_trans.nonpos
+            cls(_minimal_norm, out_of_bounds=method)
+    else:
+        t = cls(_minimal_norm, out_of_bounds=method)
+        assert t.out_of_bounds == method
+        assert t._handle_out_of_bounds == func

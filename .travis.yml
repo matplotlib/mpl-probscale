@@ -32,15 +32,15 @@ before_install:
   - ./miniconda.sh -b -p $HOME/miniconda
   - export PATH="$HOME/miniconda/bin:$PATH"
   - conda update --yes conda
+  - conda install --yes nomkl
 
 install:
 
   # We just set up a conda environment with the right Python version. This
   # should not need changing.
 
-  - conda create --yes -n test python=$TRAVIS_PYTHON_VERSION
+  - conda create --yes -n test python=$TRAVIS_PYTHON_VERSION numpy matplotlib docopt requests pyyaml
   - source activate test
-  - conda install --yes --channel=conda-forge numpy matplotlib docopt requests pyyaml
   - conda install --yes --channel=${TESTERS}
   - if [ ${COVERAGE} = true ]; then conda install scipy --yes; fi
   - pip install coveralls

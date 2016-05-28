@@ -21,7 +21,7 @@ def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
         The Axes on which to plot. If one is not provided, a new Axes
         will be created.
     plottype : string (default = 'prob')
-        Type of plot to be created. Options are:
+       Type of plot to be created. Options are:
            - 'prob': probabilty plot
            - 'pp': percentile plot
            - 'qq': quantile plot
@@ -48,12 +48,26 @@ def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
         Dictionary of keyword arguments passed directly to
         ``viz.plot_pos`` when computing the plotting positions.
 
+    Other Parameters
+    ----------------
+    color : string, optional
+        A directly-specified matplotlib color argument for both the
+        data series and the best-fit line if drawn. This argument is
+        made available for compatibility for the seaborn package and
+        is not recommended for general use. Instead colors should be
+        specified within ``scatter_kws`` and ``line_kws``.
+    label : string, optional
+        A directly-specified legend label for the data series. This
+        argument is made available for compatibility for the seaborn
+        package and is not recommended for general use. Instead the
+        data series label should be specified within ``scatter_kws``
+
     Returns
     -------
     fig : matplotlib.Figure
         The figure on which the plot was drawn.
     result : dictionary of linear fit results, optional
-        Keys are:
+       Keys are:
            - q : array of quantiles
            - x, y : arrays of data passed to function
            - xhat, yhat : arrays of modeled data plotted in best-fit line
@@ -65,6 +79,51 @@ def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
     numpy.polyfit
     scipy.stats.probplot
     scipy.stats.mstats.plotting_positions
+
+    Examples
+    --------
+
+    Probability plot with the probabilities on the y-axis
+
+    .. plot::
+        :context: close-figs
+
+        >>> import numpy; numpy.random.seed(0)
+        >>> from matplotlib import pyplot
+        >>> from scipy import stats
+        >>> from probscale.viz import probplot
+        >>> data = numpy.random.normal(loc=5, scale=1.25, size=37)
+        >>> fig = probplot(data, plottype='prob', probax='y',
+        ...          problabel='Non-exceedance probability',
+        ...          datalabel='Observed values', bestfit=True,
+        ...          line_kws=dict(linestyle='--', linewidth=2),
+        ...          scatter_kws=dict(marker='o', alpha=0.5))
+
+
+    Quantile plot with the quantiles on the x-axis
+
+    .. plot::
+        :context: close-figs
+
+        >>> fig = probplot(data, plottype='qq', probax='x',
+        ...          problabel='Theoretical Quantiles',
+        ...          datalabel='Observed values', bestfit=True,
+        ...          line_kws=dict(linestyle='-', linewidth=2),
+        ...          scatter_kws=dict(marker='s', alpha=0.5))
+
+
+
+    Quantile plot with a custom distribution
+
+    .. plot::
+        :context: close-figs
+
+        >>> norm = stats.norm(5, 1.25)
+        >>> fig = probplot(data, ax=ax, plottype='qq', dist=norm,
+        ...          probax='x', problabel='Theoretical Quantiles',
+        ...          datalabel='Observed values', bestfit=True,
+        ...          line_kws=dict(linestyle=':', linewidth=2),
+        ...          scatter_kws=dict(marker='^', alpha=0.5))
 
     """
 

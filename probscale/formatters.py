@@ -94,6 +94,17 @@ class PctFormatter(_FormatterMixin):
     """
     Formatter class for MPL axes to display probalities as percentages.
 
+    Examples
+    --------
+    >>> from probscale import formatters
+    >>> fmt = formatters.PctFormatter()
+    >>> fmt(0.2)
+    '0.2'
+    >>> fmt(10)
+    '10'
+    >>> fmt(99.999)
+    '99.999'
+
     """
 
     factor = 1.0
@@ -105,6 +116,19 @@ class ProbFormatter(_FormatterMixin):
     """
     Formatter class for MPL axes to display probalities as decimals.
 
+    Examples
+    --------
+    >>> from probscale import formatters
+    >>> fmt = formatters.ProbFormatter()
+    >>> fmt(0.01)
+    '0,01'
+    >>> fmt(0.2)
+    '0.20'
+    >>> try:
+    ...    fmt(10.5)
+    ... except(ValueError):
+    ...     print('formatter out of bounds')
+    formatter out of bounds
     """
 
     factor = 100.0

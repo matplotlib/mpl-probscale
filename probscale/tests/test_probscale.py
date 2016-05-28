@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 try:
     from scipy import stats
-except:
+except:  # pragma: no cover
     stats = None
 
 import pytest

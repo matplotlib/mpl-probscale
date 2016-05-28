@@ -3,7 +3,7 @@
 import numpy
 import matplotlib.pyplot as plt
 
-if sys.version_info.major == 2:
+if sys.version_info.major == 2:  # pragma: no cover
     import mock
 else:
     from unittest import mock
@@ -12,7 +12,7 @@ import numpy.testing as nptest
 
 try:
     from scipy import stats
-except:
+except:  # pragma: no cover
     stats = None
 
 from probscale import viz
@@ -393,6 +393,16 @@ def test_probplot_qq(plot_data):
 
 
 @pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=10)
+@pytest.mark.skipif(stats is None, reason="no scipy")
+def test_probplot_qq_dist(plot_data):
+    fig, ax = plt.subplots()
+    norm = stats.norm(*stats.norm.fit(plot_data))
+    fig = viz.probplot(plot_data, ax=ax, plottype='qq', dist=norm,
+                       datalabel='Test label')
+    return fig
+
+
+@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=10)
 def test_probplot_pp(plot_data):
     fig, ax = plt.subplots()
     scatter_kws = dict(color='b', linestyle='--', markeredgecolor='g', markerfacecolor='none')
@@ -482,7 +492,7 @@ def test_probplot_pp_bestfit_probax_y(plot_data):
     return fig
 
 
-@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=15)
+@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=10)
 @pytest.mark.skipif(stats is None, reason="no scipy")
 def test_probplot_beta_dist_best_fit_y(plot_data):
     fig, (ax1, ax2) = plt.subplots(ncols=2)
@@ -526,8 +536,6 @@ def test_probplot_test_results(plot_data):
     return fig
 
 
-
-
 @pytest.mark.parametrize('probax', ['x', 'y'])
 @pytest.mark.parametrize(('N', 'minval', 'maxval'), [
     (8, 10, 90),
@@ -544,3 +552,11 @@ def test__set_prob_limits_x(probax, N, minval, maxval):
             ax.set_xlim.assert_called_once_with(left=minval, right=maxval)
         elif probax == 'y':
             ax.set_ylim.assert_called_once_with(bottom=minval, top=maxval)
+
+
+@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=10)
+def test_probplot_color_and_label(plot_data):
+    fig, ax = plt.subplots()
+    fig = viz.probplot(plot_data, ax=ax, color='pink', label='A Top-Level Label')
+    ax.legend(loc='lower right')
+    return fig

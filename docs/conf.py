@@ -17,6 +17,9 @@ import sys
 import os
 import shlex
 
+import seaborn
+clear_bkgd = {'axes.facecolor':'none', 'figure.facecolor':'none'}
+seaborn.set(style='ticks', context='talk', color_codes=True, rc=clear_bkgd)
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -59,6 +62,12 @@ templates_path = ['_templates']
 # You can specify multiple suffix as a list of string:
 # source_suffix = ['.rst', '.md']
 source_suffix = '.rst'
+
+# Include the example source for plots in API docs
+plot_include_source = True
+plot_formats = [("png", 150)]
+plot_html_show_formats = False
+plot_html_show_source_link = False
 
 # The encoding of source files.
 #source_encoding = 'utf-8-sig'

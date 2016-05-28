@@ -39,28 +39,42 @@ class _ProbTransformMixin(Transform):
     is_separable = True
     has_inverse = True
 
-    def __init__(self, dist, as_pct=True, nonpos='mask'):
+    def __init__(self, dist, as_pct=True, out_of_bounds='mask'):
         Transform.__init__(self)
         self.dist = dist
         self.as_pct = as_pct
-        self.nonpos = nonpos
+        self.out_of_bounds = out_of_bounds
         if self.as_pct:
             self.factor = 100.0
         else:
             self.factor = 1.0
 
-        if self.nonpos == 'mask':
+        if self.out_of_bounds == 'mask':
             self._handle_out_of_bounds = _mask_out_of_bounds
-        elif self.nonpos == 'clip':
+        elif self.out_of_bounds == 'clip':
             self._handle_out_of_bounds = _clip_out_of_bounds
         else:
-            raise ValueError("`nonpos` muse be either 'mask' or 'clip'")
+            raise ValueError("`out_of_bounds` muse be either 'mask' or 'clip'")
 
 
 class ProbTransform(_ProbTransformMixin):
     """
     MPL axes tranform class to convert quantiles to probabilities
     or percents.
+
+    Parameters
+    ----------
+    dist : scipy.stats distribution
+        The distribution whose ``cdf`` and ``pdf`` methods wiil set the
+        scale of the axis.
+    as_pct : bool, optional (True)
+        Toggles the formatting of the probabilities associated with the
+        tick labels as percentanges (0 - 100) or fractions (0 - 1).
+    out_of_bounds : string, optionals ('mask' or 'clip')
+        Determines how data outside the range of valid values is
+        handled. The default behavior is to mask the data.
+        Alternatively, the data can be clipped to values arbitrarily
+        close to the limits of the scale.
 
     """
 
@@ -70,13 +84,27 @@ class ProbTransform(_ProbTransformMixin):
         return q
 
     def inverted(self):
-        return QuantileTransform(self.dist, as_pct=self.as_pct, nonpos=self.nonpos)
+        return QuantileTransform(self.dist, as_pct=self.as_pct, out_of_bounds=self.out_of_bounds)
 
 
 class QuantileTransform(_ProbTransformMixin):
     """
     MPL axes tranform class to convert probabilities or percents to
     quantiles.
+
+    Parameters
+    ----------
+    dist : scipy.stats distribution
+        The distribution whose ``cdf`` and ``pdf`` methods wiil set the
+        scale of the axis.
+    as_pct : bool, optional (True)
+        Toggles the formatting of the probabilities associated with the
+        tick labels as percentanges (0 - 100) or fractions (0 - 1).
+    out_of_bounds : string, optionals ('mask' or 'clip')
+        Determines how data outside the range of valid values is
+        handled. The default behavior is to mask the data.
+        Alternatively, the data can be clipped to values arbitrarily
+        close to the limits of the scale.
 
     """
 
@@ -85,4 +113,4 @@ class QuantileTransform(_ProbTransformMixin):
         return prob
 
     def inverted(self):
-        return ProbTransform(self.dist, as_pct=self.as_pct, nonpos=self.nonpos)
+        return ProbTransform(self.dist, as_pct=self.as_pct, out_of_bounds=self.out_of_bounds)
