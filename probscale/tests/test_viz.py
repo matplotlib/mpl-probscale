@@ -393,6 +393,7 @@ def test_probplot_qq(plot_data):
 
 
 @pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=10)
+@pytest.mark.skipif(stats is None, reason="no scipy")
 def test_probplot_qq_dist(plot_data):
     fig, ax = plt.subplots()
     norm = stats.norm(*stats.norm.fit(plot_data))

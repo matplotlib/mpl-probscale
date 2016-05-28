@@ -22,9 +22,11 @@ def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
         will be created.
     plottype : string (default = 'prob')
         Type of plot to be created. Options are:
+
            - 'prob': probabilty plot
            - 'pp': percentile plot
            - 'qq': quantile plot
+
     dist : scipy distribution, optional
         A distribtion to compute the scale's tick positions. If not
         specified, a standard normal distribution will be used.
@@ -68,6 +70,7 @@ def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
         The figure on which the plot was drawn.
     result : dictionary of linear fit results, optional
         Keys are:
+
            - q : array of quantiles
            - x, y : arrays of data passed to function
            - xhat, yhat : arrays of modeled data plotted in best-fit line
@@ -89,6 +92,8 @@ def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
         :context: close-figs
 
         >>> import numpy; numpy.random.seed(0)
+        >>> from matplotlib import pyplot
+        >>> from scipy import stats
         >>> from probscale.viz import probplot
         >>> data = numpy.random.normal(loc=5, scale=1.25, size=37)
         >>> fig = probplot(data, plottype='prob', probax='y',
@@ -116,14 +121,12 @@ def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
     .. plot::
         :context: close-figs
 
-        >>> from scipy import stats
         >>> norm = stats.norm(5, 1.25)
-        >>> fig = probplot(data, plottype='qq', probax='x', dist=norm,
-        ...          problabel='Theoretical Quantiles',
+        >>> fig = probplot(data, ax=ax, plottype='qq', dist=norm,
+        ...          probax='x', problabel='Theoretical Quantiles',
         ...          datalabel='Observed values', bestfit=True,
         ...          line_kws=dict(linestyle=':', linewidth=2),
         ...          scatter_kws=dict(marker='^', alpha=0.5))
-        >>> fig.axes[0].set_aspect('equal')
 
     """
 
