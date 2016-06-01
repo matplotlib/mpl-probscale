@@ -21,10 +21,12 @@ def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
         The Axes on which to plot. If one is not provided, a new Axes
         will be created.
     plottype : string (default = 'prob')
-       Type of plot to be created. Options are:
+        Type of plot to be created. Options are:
+
            - 'prob': probabilty plot
            - 'pp': percentile plot
            - 'qq': quantile plot
+
     dist : scipy distribution, optional
         A distribtion to compute the scale's tick positions. If not
         specified, a standard normal distribution will be used.
@@ -67,7 +69,8 @@ def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
     fig : matplotlib.Figure
         The figure on which the plot was drawn.
     result : dictionary of linear fit results, optional
-       Keys are:
+        Keys are:
+
            - q : array of quantiles
            - x, y : arrays of data passed to function
            - xhat, yhat : arrays of modeled data plotted in best-fit line

@@ -85,7 +85,7 @@ class ProbScale(ScaleBase):
         >>> from matplotlib import pyplot
         >>> import probscale
         >>> fig, ax = pyplot.subplots()
-        >>> ax.set_ylim(bottom=0.2, top=99.9)
+        >>> ax.set_ylim(bottom=0.2, top=99.8)
         >>> ax.set_yscale('prob')
 
     """
