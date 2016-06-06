@@ -29,9 +29,9 @@ class _FormatterMixin(Formatter):
 
         Examples
         --------
-        >>> print(_sig_figs(1247.15, 3))
+        >>> _sig_figs(1247.15, 3)
         '1250'
-        >>> print(_sig_figs(1247.15, 7))
+        >>> _sig_figs(1247.15, 7)
         '1247.150'
 
         """
