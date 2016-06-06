@@ -1,5 +1,4 @@
 import sys
-PYTHON27 = sys.version_info.major == 2
 
 import numpy
 import matplotlib.pyplot as plt
@@ -13,6 +12,10 @@ import pytest
 
 import probscale
 from probscale.probscale import _minimal_norm
+
+
+PYTHON27 = sys.version_info.major == 2
+TOLERANCE = 22
 
 
 @pytest.fixture
@@ -72,7 +75,7 @@ def test_minimal_norm_cdf(mn, mn_input):
 
 @pytest.mark.mpl_image_compare(
     baseline_dir='baseline_images/test_probscale',
-    tolerance=15
+    tolerance=TOLERANCE
 )
 @pytest.mark.skipif(PYTHON27, reason="legacy python")
 def test_the_scale_default():
@@ -85,7 +88,7 @@ def test_the_scale_default():
 
 @pytest.mark.mpl_image_compare(
     baseline_dir='baseline_images/test_probscale',
-    tolerance=15
+    tolerance=TOLERANCE
 )
 def test_the_scale_not_as_pct():
     fig, ax = plt.subplots(figsize=(4, 8))
