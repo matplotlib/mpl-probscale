@@ -21,10 +21,12 @@ def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
         The Axes on which to plot. If one is not provided, a new Axes
         will be created.
     plottype : string (default = 'prob')
-       Type of plot to be created. Options are:
+        Type of plot to be created. Options are:
+
            - 'prob': probabilty plot
            - 'pp': percentile plot
            - 'qq': quantile plot
+
     dist : scipy distribution, optional
         A distribtion to compute the scale's tick positions. If not
         specified, a standard normal distribution will be used.
@@ -67,7 +69,8 @@ def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
     fig : matplotlib.Figure
         The figure on which the plot was drawn.
     result : dictionary of linear fit results, optional
-       Keys are:
+        Keys are:
+
            - q : array of quantiles
            - x, y : arrays of data passed to function
            - xhat, yhat : arrays of modeled data plotted in best-fit line
@@ -110,20 +113,6 @@ def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
         ...          datalabel='Observed values', bestfit=True,
         ...          line_kws=dict(linestyle='-', linewidth=2),
         ...          scatter_kws=dict(marker='s', alpha=0.5))
-
-
-
-    Quantile plot with a custom distribution
-
-    .. plot::
-        :context: close-figs
-
-        >>> norm = stats.norm(5, 1.25)
-        >>> fig = probplot(data, ax=ax, plottype='qq', dist=norm,
-        ...          probax='x', problabel='Theoretical Quantiles',
-        ...          datalabel='Observed values', bestfit=True,
-        ...          line_kws=dict(linestyle=':', linewidth=2),
-        ...          scatter_kws=dict(marker='^', alpha=0.5))
 
     """
 
@@ -234,32 +223,32 @@ def plot_pos(data, postype=None, alpha=None, beta=None):
     values can also be access via the ``postype`` parameter. Available
     ``postype`` values (alpha, beta) are:
 
-        "type 4" (alpha=0, beta=1)
+       "type 4" (alpha=0, beta=1)
             Linear interpolation of the empirical CDF.
-        "type 5" or "hazen" (alpha=0.5, beta=0.5)
+       "type 5" or "hazen" (alpha=0.5, beta=0.5)
             Piecewise linear interpolation.
-        "type 6" or "weibull" (alpha=0, beta=0)
+       "type 6" or "weibull" (alpha=0, beta=0)
             Weibull plotting positions. Unbiased exceedance probability
             for all distributions. Recommended for hydrologic
             applications.
-        "type 7" (alpha=1, beta=1)
+       "type 7" (alpha=1, beta=1)
             The default values in R. Not recommended with probability
             scales as the min and max data points get plotting positions
             of 0 and 1, respectively, and therefore cannot be shown.
-        "type 8" (alpha=1/3, beta=1/3)
+       "type 8" (alpha=1/3, beta=1/3)
             Approximately median-unbiased.
-        "type 9" or "blom" (alpha=0.375, beta=0.375)
+       "type 9" or "blom" (alpha=0.375, beta=0.375)
             Approximately unbiased positions if the data are normally
             distributed.
-        "median" (alpha=0.3175, beta=0.3175)
+       "median" (alpha=0.3175, beta=0.3175)
             Median exceedance probabilities for all distributions
             (used in ``scipy.stats.probplot``).
-        "apl" or "pwm" (alpha=0.35, beta=0.35)
+       "apl" or "pwm" (alpha=0.35, beta=0.35)
             Used with probability-weighted moments.
-        "cunnane" (alpha=0.4, beta=0.4)
+       "cunnane" (alpha=0.4, beta=0.4)
             Nearly unbiased quantiles for normally distributed data.
             This is the default value.
-        "gringorten" (alpha=0.44, beta=0.44)
+       "gringorten" (alpha=0.44, beta=0.44)
             Used for Gumble distributions.
 
     Parameters
