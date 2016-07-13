@@ -189,7 +189,7 @@ def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
 
     # maybe do a best-fit and plot
     if bestfit:
-        xhat, yhat, modelres = _fit_line(x, y, fitprobs=fitprobs, fitlogs=fitlogs, dist=dist)
+        xhat, yhat, modelres = fit_line(x, y, fitprobs=fitprobs, fitlogs=fitlogs, dist=dist)
         ax.plot(xhat, yhat, **line_kws)
     else:
         xhat, yhat, modelres = (None, None, None)
@@ -337,7 +337,8 @@ def _set_prob_limits(ax, probax, N):
         ax.set_ylim(bottom=minval, top=100-minval)
 
 
-def _fit_line(x, y, xhat=None, fitprobs=None, fitlogs=None, dist=None):
+def fit_line(x, y, xhat=None, fitprobs=None, fitlogs=None, dist=None,
+             estimate_ci=False, niter=10000, alpha=0.05):
     """
     Fits a line to x-y data in various forms (linear, log, prob scales).
 

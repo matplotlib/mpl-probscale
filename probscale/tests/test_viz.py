@@ -22,7 +22,7 @@ from probscale.probscale import _minimal_norm
 BASELINE_DIR = 'baseline_images/test_viz'
 
 
-class Test__fit_line(object):
+class Test_fit_line(object):
     def setup(self):
         self.data = numpy.array([
             2.00,   4.0 ,   4.62,   5.00,   5.00,   5.50,   5.57,   5.66,
@@ -71,56 +71,56 @@ class Test__fit_line(object):
     def test_xlinear_ylinear(self):
         scales = {'fitlogs': None, 'fitprobs': None}
         x, y = self.zscores, self.data
-        x_, y_, res = viz._fit_line(x, y, **scales)
+        x_, y_, res = viz.fit_line(x, y, **scales)
         nptest.assert_array_almost_equal(y_, self.known_y_linlin)
         assert isinstance(res, numpy.ndarray)
 
     def test_xlinear_ylog(self):
         scales = {'fitlogs': 'y', 'fitprobs': None}
         x, y = self.zscores, self.data
-        x_, y_, res = viz._fit_line(x, y, **scales)
+        x_, y_, res = viz.fit_line(x, y, **scales)
         nptest.assert_array_almost_equal(y_, self.known_y_linlog)
         assert isinstance(res, numpy.ndarray)
 
     def test_xlinear_yprob(self):
         scales = {'fitlogs': None, 'fitprobs': 'y'}
         x, y = self.data, self.probs
-        x_, y_, res = viz._fit_line(x, y, **scales)
+        x_, y_, res = viz.fit_line(x, y, **scales)
         nptest.assert_array_almost_equal(y_, self.known_y_linprob)
         assert isinstance(res, numpy.ndarray)
 
     def test_xlog_ylinear(self):
         scales = {'fitlogs': 'x', 'fitprobs': None}
         x, y = self.data, self.zscores
-        x_, y_, res = viz._fit_line(x, y, **scales)
+        x_, y_, res = viz.fit_line(x, y, **scales)
         nptest.assert_array_almost_equal(y_, self.known_y_loglin)
         assert isinstance(res, numpy.ndarray)
 
     def test_xlog_ylog(self):
         scales = {'fitlogs': 'both', 'fitprobs': None}
         x, y = self.data, self.y
-        x_, y_, res = viz._fit_line(x, y, **scales)
+        x_, y_, res = viz.fit_line(x, y, **scales)
         nptest.assert_array_almost_equal(y_, self.known_y_loglog)
         assert isinstance(res, numpy.ndarray)
 
     def test_xlog_yprob(self):
         scales = {'fitlogs': 'x', 'fitprobs': 'y'}
         x, y = self.data, self.probs
-        x_, y_, res = viz._fit_line(x, y, **scales)
+        x_, y_, res = viz.fit_line(x, y, **scales)
         nptest.assert_array_almost_equal(y_, self.known_y_logprob)
         assert isinstance(res, numpy.ndarray)
 
     def test_xprob_ylinear(self):
         scales = {'fitlogs': None, 'fitprobs': 'x'}
         x, y = self.probs, self.data
-        x_, y_, res = viz._fit_line(x, y, **scales)
+        x_, y_, res = viz.fit_line(x, y, **scales)
         nptest.assert_array_almost_equal(y_, self.known_y_problin)
         assert isinstance(res, numpy.ndarray)
 
     def test_xprob_ylog(self):
         scales = {'fitlogs': 'y', 'fitprobs': 'x'}
         x, y = self.probs, self.data
-        x_, y_, res = viz._fit_line(x, y, **scales)
+        x_, y_, res = viz.fit_line(x, y, **scales)
         nptest.assert_array_almost_equal(y_, self.known_y_problog)
         assert isinstance(res, numpy.ndarray)
 
@@ -139,23 +139,23 @@ class Test__fit_line(object):
 
         scales = {'fitlogs': None, 'fitprobs': 'both'}
         x, y = self.probs, p2,
-        x_, y_, res = viz._fit_line(x, y, **scales)
+        x_, y_, res = viz.fit_line(x, y, **scales)
         nptest.assert_array_almost_equal(y_, self.known_y_probprob)
         assert isinstance(res, numpy.ndarray)
 
     def test_bad_fitlogs(self):
         with pytest.raises(ValueError):
             x, y = self.zscores, self.data
-            x_, y_, res = viz._fit_line(x, y, fitlogs='junk')
+            x_, y_, res = viz.fit_line(x, y, fitlogs='junk')
 
     def test_bad_fitprobs(self):
         with pytest.raises(ValueError):
             x, y = self.zscores, self.data
-            x_, y_, res = viz._fit_line(x, y, fitprobs='junk')
+            x_, y_, res = viz.fit_line(x, y, fitprobs='junk')
 
     def test_custom_xhat(self):
         x, y = self.zscores, self.data
-        x_, y_, res = viz._fit_line(x, y, xhat=self.custom_xhat)
+        x_, y_, res = viz.fit_line(x, y, xhat=self.custom_xhat)
         nptest.assert_array_almost_equal(y_, self.known_custom_yhat)
 
 
