@@ -531,13 +531,13 @@ def _fit_ci(x, y, xhat, fitlogs=None, niter=10000, alpha=0.05):
     return yhat_lo, yhat_hi
 
 
-def _estimate_from_fit(xdata, slope, intercept, xlog=False, ylog=False):
+def _estimate_from_fit(xhat, slope, intercept, xlog=False, ylog=False):
     """ Estimate the dependent variables of a linear fit given x-data
     and linear parameters.
 
     Parameters
     ----------
-    xdata : numpy array or pandas Series/DataFrame
+    xhat : numpy array or pandas Series/DataFrame
         The input independent variable of the fit
     slope : float
         Slope of the best-fit line
@@ -549,23 +549,23 @@ def _estimate_from_fit(xdata, slope, intercept, xlog=False, ylog=False):
 
     Returns
     -------
-    yhat : same type as xdata
+    yhat : numpy array
         Estimate of the dependent variable.
 
     """
 
-    x = numpy.array(xdata)
+    xhat = numpy.asarray(xhat)
     if ylog:
         if xlog:
-            yhat = numpy.exp(intercept) * x  ** slope
+            yhat = numpy.exp(intercept) * xhat  ** slope
         else:
-            yhat = numpy.exp(intercept) * numpy.exp(slope) ** x
+            yhat = numpy.exp(intercept) * numpy.exp(slope) ** xhat
 
     else:
         if xlog:
-            yhat = slope * numpy.log(x) + intercept
+            yhat = slope * numpy.log(xhat) + intercept
 
         else:
-            yhat = slope * x + intercept
+            yhat = slope * xhat + intercept
 
     return yhat
