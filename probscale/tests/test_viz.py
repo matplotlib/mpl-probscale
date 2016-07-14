@@ -4,7 +4,8 @@ from functools import wraps
 import numpy
 import matplotlib.pyplot as plt
 
-if sys.version_info.major == 2:  # pragma: no cover
+PY2K = sys.version_info.major == 2
+if PY2K:  # pragma: no cover
     import mock
 else:
     from unittest import mock
@@ -498,7 +499,6 @@ def test__fit_simple(plot_data, fitlogs, known_yhat):
     nptest.assert_allclose(yhat, known_yhat, rtol=0.0001)
 
 
-@seed
 @pytest.mark.parametrize(('fitlogs', 'known_lo', 'known_hi'), [
     (None, numpy.array([-0.7944, 2.7051, 6.1974,  9.2612, 11.9382, 14.4290]),
            numpy.array([ 2.1447, 4.8360, 7.7140, 10.8646, 14.1014, 17.4432])),
@@ -510,6 +510,7 @@ def test__fit_simple(plot_data, fitlogs, known_yhat):
              numpy.array([5.5107, 13.0148 , 17.232, 20.4285, 23.1035, 25.3843])),
 ])
 def test__fit_ci(plot_data, fitlogs, known_lo, known_hi):
+    numpy.random.seed(0)
     x = numpy.arange(1, len(plot_data)+1)
     xhat = x[::6]
     yhat_lo, yhat_hi = viz._fit_ci(x, plot_data, xhat, fitlogs=fitlogs, niter=1000)
