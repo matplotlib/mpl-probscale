@@ -337,6 +337,26 @@ def _set_prob_limits(ax, probax, N):
         ax.set_ylim(bottom=minval, top=100-minval)
 
 
+def _make_boot_index(elements, niter):
+    """ Generate an array of bootstrap sample sets
+
+    Parameters
+    ----------
+    elements : int
+        The number of rows in the original dataset.
+    niter : int
+        Number of iteration for the bootstrapping.
+
+    Returns
+    -------
+    index : numpy array
+        A collection of random *indices* that can be used to randomly
+        sample a dataset ``niter`` times.
+
+    """
+    return numpy.random.randint(low=0, high=elements, size=(niter, elements))
+
+
 def fit_line(x, y, xhat=None, fitprobs=None, fitlogs=None, dist=None,
              estimate_ci=False, niter=10000, alpha=0.05):
     """

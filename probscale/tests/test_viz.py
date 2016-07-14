@@ -364,6 +364,13 @@ class Test_plot_pos(object):
             viz.plot_pos(self.data, postype='junk')
 
 
+def test__make_boot_index():
+    result = viz._make_boot_index(5, 5000)
+    assert result.shape == (5000, 5)
+    assert result.min() == 0
+    assert result.max() == 4
+
+
 @pytest.fixture
 def plot_data():
     data = numpy.array([
