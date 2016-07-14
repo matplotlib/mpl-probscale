@@ -1,4 +1,6 @@
-﻿import numpy
+﻿import copy
+
+import numpy
 from matplotlib import pyplot
 
 from .probscale import _minimal_norm
@@ -387,17 +389,21 @@ def fit_line(x, y, xhat=None, fitprobs=None, fitlogs=None, dist=None,
     -------
     xhat, yhat : numpy arrays
         Linear model estimates of ``x`` and ``y``.
-    results : a statmodels result object
-        The object returned by numpy.polyfit
+    results : dict
+        Dictionary of linear fit results. Keys include:
+
+          - slope
+          - intersept
+          - yhat_lo (lower confidence interval of the estimated y-vals)
+          - yhat_hi (upper confidence interval of the estimated y-vals)
 
     """
-
     fitprobs = validate.fit_argument(fitprobs, "fitprobs")
     fitlogs = validate.fit_argument(fitlogs, "fitlogs")
 
     # maybe set xhat to default values
     if xhat is None:
-        xhat = numpy.array([numpy.min(x), numpy.max(x)])
+        xhat = copy.copy(x)
 
     # maybe set dist to default value
     if dist is None:
@@ -420,23 +426,109 @@ def fit_line(x, y, xhat=None, fitprobs=None, fitlogs=None, dist=None,
     if fitlogs in ['y', 'both']:
         y = numpy.log(y)
 
-    # do the best-fit
-    coeffs = numpy.polyfit(x, y, 1)
+    yhat, results =  _fit_simple(x, y, xhat, fitlogs=fitlogs)
 
-    # estimate y values
-    yhat = _estimate_from_fit(xhat, coeffs[0], coeffs[1],
-                                  xlog=fitlogs in ['x', 'both'],
-                                  ylog=fitlogs in ['y', 'both'])
+    if estimate_ci:
+        yhat_lo, yhat_hi = _fit_ci(x, y, xhat, fitlogs=fitlogs,
+                                   niter=niter, alpha=alpha)
+    else:
+        yhat_lo, yhat_hi = None, None
 
     # maybe undo the ppf transform
     if fitprobs in ['y', 'both']:
-        yhat = 100.* dist.cdf(yhat)
+        yhat = 100. * dist.cdf(yhat)
+        if yhat_lo is not None:
+            yhat_lo = 100. * dist.cdf(yhat_lo)
+            yhat_hi = 100. * dist.cdf(yhat_hi)
 
     # maybe undo ppf transform
     if fitprobs in ['x', 'both']:
-        xhat = 100.* dist.cdf(xhat)
+        xhat = 100. * dist.cdf(xhat)
 
-    return xhat, yhat, coeffs
+    results['yhat_lo'] = yhat_lo
+    results['yhat_hi'] = yhat_hi
+
+    return xhat, yhat, results
+
+
+def _fit_simple(x, y, xhat, fitlogs=None):
+    """
+    Simple linear fit of x and y data using ``numpy.polyfit``.
+
+    Parameters
+    ----------
+    x, y : array-like
+    fitlogs : str, optional.
+        Defines which data should be log-transformed. Valid values are
+        'x', 'y', or 'both'.
+
+    Returns
+    -------
+    xhat, yhat : array-like
+        Estimates of x and y based on the linear fit
+    results : dict
+        Dictionary of the fit coefficients
+
+    See also
+    --------
+    numpy.polyfit
+
+    """
+
+    # do the best-fit
+    coeffs = numpy.polyfit(x, y, 1)
+
+    results = {
+        'slope': coeffs[0],
+        'intercept': coeffs[1]
+    }
+
+    # estimate y values
+    yhat = _estimate_from_fit(xhat, coeffs[0], coeffs[1],
+                              xlog=fitlogs in ['x', 'both'],
+                              ylog=fitlogs in ['y', 'both'])
+
+    return yhat, results
+
+
+def _fit_ci(x, y, xhat, fitlogs=None, niter=10000, alpha=0.05):
+    """
+    Percentile method bootstrapping of linear fit of x and y data using
+    ``numpy.polyfit``.
+
+    Parameters
+    ----------
+    x, y : array-like
+    fitlogs : str, optional.
+        Defines which data should be log-transformed. Valid values are
+        'x', 'y', or 'both'.
+    niter : int, optional (default is 10000)
+        Number of bootstrap iterations to use
+    alpha : float, optional
+        Confidence level of the estimate.
+
+    Returns
+    -------
+    xhat, yhat : array-like
+        Estimates of x and y based on the linear fit
+    results : dict
+        Dictionary of the fit coefficients
+
+    See also
+    --------
+    numpy.polyfit
+
+    """
+
+    index = _make_boot_index(len(x), niter)
+    yhat_array = numpy.array([
+        _fit_simple(x[ii], y[ii], xhat, fitlogs=fitlogs)[0]
+        for ii in index
+    ])
+
+    percentiles = 100 * numpy.array([alpha*0.5, 1 - alpha*0.5])
+    yhat_lo, yhat_hi = numpy.percentile(yhat_array, percentiles, axis=0)
+    return yhat_lo, yhat_hi
 
 
 def _estimate_from_fit(xdata, slope, intercept, xlog=False, ylog=False):
