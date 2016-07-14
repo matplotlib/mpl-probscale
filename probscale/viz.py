@@ -9,9 +9,10 @@ from . import validate
 
 def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
              problabel=None, datascale='linear', datalabel=None,
-             bestfit=False, return_best_fit_results=False,
+             bestfit=False, estimate_ci=False,
+             return_best_fit_results=False,
              scatter_kws=None, line_kws=None, pp_kws=None,
-             color=None, label=None):
+             **fgkwargs):
     """
     Probability, percentile, and quantile plots.
 
@@ -60,11 +61,21 @@ def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
         made available for compatibility for the seaborn package and
         is not recommended for general use. Instead colors should be
         specified within ``scatter_kws`` and ``line_kws``.
+
+        .. note::
+           Users should not specify the parameter. It is inteded to only
+           be used by seaborn when operating within a FacetGrid.
+
     label : string, optional
         A directly-specified legend label for the data series. This
         argument is made available for compatibility for the seaborn
         package and is not recommended for general use. Instead the
-        data series label should be specified within ``scatter_kws``
+        data series label should be specified within ``scatter_kws``.
+
+        .. note::
+           Users should not specify the parameter. It is inteded to only
+           be used by seaborn when operating within a FacetGrid.
+
 
     Returns
     -------
@@ -132,15 +143,19 @@ def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
     line_kws = validate.other_options(line_kws)
     pp_kws = validate.other_options(pp_kws)
 
-    if color is not None:
-        scatter_kws['color'] = color
-        line_kws['color'] = color
-
-    if label is not None:
-        scatter_kws['label'] = label
-
     # check plottype
     plottype = validate.axis_type(plottype)
+
+    ## !-- kwarg that only seaborn should use --! ##
+    _color = fgkwargs.get('color', None)
+    if _color is not None:
+        scatter_kws['color'] = _color
+        line_kws['color'] = _color
+
+    ## !-- kwarg that only seaborn should use --! ##
+    _label = fgkwargs.get('label', None)
+    if _label is not None:
+        scatter_kws['label'] = _label
 
     # compute the plotting positions and sort the data
     probs, datavals = plot_pos(data, **pp_kws)
@@ -191,8 +206,22 @@ def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
 
     # maybe do a best-fit and plot
     if bestfit:
-        xhat, yhat, modelres = fit_line(x, y, fitprobs=fitprobs, fitlogs=fitlogs, dist=dist)
+        xhat, yhat, modelres = fit_line(x, y, xhat=sorted(x), dist=dist,
+                                        fitprobs=fitprobs, fitlogs=fitlogs,
+                                        estimate_ci=estimate_ci)
         ax.plot(xhat, yhat, **line_kws)
+        if estimate_ci:
+            # for alpha, use half of existing or 0.5 * 0.5 = 0.25
+            # for zorder, use 1 less than existing or 1 - 1 = 0
+            opts = {
+                'facecolor': line_kws.get('color', 'k'),
+                'edgecolor': line_kws.get('color', 'None'),
+                'alpha': line_kws.get('alpha', 0.5) * 0.5,
+                'zorder': line_kws.get('zorder', 1) - 1,
+                'label': '95% conf. interval'
+            }
+            ax.fill_between(xhat, y1=modelres['yhat_hi'], y2=modelres['yhat_lo'],
+                            **opts)
     else:
         xhat, yhat, modelres = (None, None, None)
 
