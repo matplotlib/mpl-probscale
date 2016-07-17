@@ -14,8 +14,11 @@ import probscale
 from probscale.probscale import _minimal_norm
 
 
-PYTHON27 = sys.version_info.major == 2
-TOLERANCE = 22
+PY27 = sys.version_info.major == 2
+if PY27:
+    TOLERANCE = 25
+else:
+    TOLERANCE = 15
 
 
 @pytest.fixture
@@ -77,7 +80,6 @@ def test_minimal_norm_cdf(mn, mn_input):
     baseline_dir='baseline_images/test_probscale',
     tolerance=TOLERANCE
 )
-@pytest.mark.skipif(PYTHON27, reason="legacy python")
 def test_the_scale_default():
     fig, ax = plt.subplots(figsize=(4, 8))
     ax.set_yscale('prob')
@@ -99,7 +101,7 @@ def test_the_scale_not_as_pct():
 
 @pytest.mark.mpl_image_compare(
     baseline_dir='baseline_images/test_probscale',
-    tolerance=13
+    tolerance=TOLERANCE
 )
 @pytest.mark.skipif(stats is None, reason="scipy not installed")
 def test_the_scale_beta():
