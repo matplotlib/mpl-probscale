@@ -80,6 +80,7 @@ def test_minimal_norm_cdf(mn, mn_input):
     baseline_dir='baseline_images/test_probscale',
     tolerance=TOLERANCE
 )
+@pytest.mark.skipif(PY27, reason="legacy python")
 def test_the_scale_default():
     fig, ax = plt.subplots(figsize=(4, 8))
     ax.set_yscale('prob')
