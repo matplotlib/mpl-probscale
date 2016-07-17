@@ -1,4 +1,6 @@
-﻿import numpy
+﻿import copy
+
+import numpy
 from matplotlib import pyplot
 
 from .probscale import _minimal_norm
@@ -7,9 +9,10 @@ from . import validate
 
 def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
              problabel=None, datascale='linear', datalabel=None,
-             bestfit=False, return_best_fit_results=False,
+             bestfit=False, estimate_ci=False,
+             return_best_fit_results=False,
              scatter_kws=None, line_kws=None, pp_kws=None,
-             color=None, label=None):
+             **fgkwargs):
     """
     Probability, percentile, and quantile plots.
 
@@ -58,11 +61,21 @@ def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
         made available for compatibility for the seaborn package and
         is not recommended for general use. Instead colors should be
         specified within ``scatter_kws`` and ``line_kws``.
+
+        .. note::
+           Users should not specify the parameter. It is inteded to only
+           be used by seaborn when operating within a FacetGrid.
+
     label : string, optional
         A directly-specified legend label for the data series. This
         argument is made available for compatibility for the seaborn
         package and is not recommended for general use. Instead the
-        data series label should be specified within ``scatter_kws``
+        data series label should be specified within ``scatter_kws``.
+
+        .. note::
+           Users should not specify the parameter. It is inteded to only
+           be used by seaborn when operating within a FacetGrid.
+
 
     Returns
     -------
@@ -130,15 +143,19 @@ def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
     line_kws = validate.other_options(line_kws)
     pp_kws = validate.other_options(pp_kws)
 
-    if color is not None:
-        scatter_kws['color'] = color
-        line_kws['color'] = color
-
-    if label is not None:
-        scatter_kws['label'] = label
-
     # check plottype
     plottype = validate.axis_type(plottype)
+
+    ## !-- kwarg that only seaborn should use --! ##
+    _color = fgkwargs.get('color', None)
+    if _color is not None:
+        scatter_kws['color'] = _color
+        line_kws['color'] = _color
+
+    ## !-- kwarg that only seaborn should use --! ##
+    _label = fgkwargs.get('label', None)
+    if _label is not None:
+        scatter_kws['label'] = _label
 
     # compute the plotting positions and sort the data
     probs, datavals = plot_pos(data, **pp_kws)
@@ -189,8 +206,22 @@ def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
 
     # maybe do a best-fit and plot
     if bestfit:
-        xhat, yhat, modelres = _fit_line(x, y, fitprobs=fitprobs, fitlogs=fitlogs, dist=dist)
+        xhat, yhat, modelres = fit_line(x, y, xhat=sorted(x), dist=dist,
+                                        fitprobs=fitprobs, fitlogs=fitlogs,
+                                        estimate_ci=estimate_ci)
         ax.plot(xhat, yhat, **line_kws)
+        if estimate_ci:
+            # for alpha, use half of existing or 0.5 * 0.5 = 0.25
+            # for zorder, use 1 less than existing or 1 - 1 = 0
+            opts = {
+                'facecolor': line_kws.get('color', 'k'),
+                'edgecolor': line_kws.get('color', 'None'),
+                'alpha': line_kws.get('alpha', 0.5) * 0.5,
+                'zorder': line_kws.get('zorder', 1) - 1,
+                'label': '95% conf. interval'
+            }
+            ax.fill_between(xhat, y1=modelres['yhat_hi'], y2=modelres['yhat_lo'],
+                            **opts)
     else:
         xhat, yhat, modelres = (None, None, None)
 
@@ -337,7 +368,28 @@ def _set_prob_limits(ax, probax, N):
         ax.set_ylim(bottom=minval, top=100-minval)
 
 
-def _fit_line(x, y, xhat=None, fitprobs=None, fitlogs=None, dist=None):
+def _make_boot_index(elements, niter):
+    """ Generate an array of bootstrap sample sets
+
+    Parameters
+    ----------
+    elements : int
+        The number of rows in the original dataset.
+    niter : int
+        Number of iteration for the bootstrapping.
+
+    Returns
+    -------
+    index : numpy array
+        A collection of random *indices* that can be used to randomly
+        sample a dataset ``niter`` times.
+
+    """
+    return numpy.random.randint(low=0, high=elements, size=(niter, elements))
+
+
+def fit_line(x, y, xhat=None, fitprobs=None, fitlogs=None, dist=None,
+             estimate_ci=False, niter=10000, alpha=0.05):
     """
     Fits a line to x-y data in various forms (linear, log, prob scales).
 
@@ -366,17 +418,21 @@ def _fit_line(x, y, xhat=None, fitprobs=None, fitlogs=None, dist=None):
     -------
     xhat, yhat : numpy arrays
         Linear model estimates of ``x`` and ``y``.
-    results : a statmodels result object
-        The object returned by numpy.polyfit
+    results : dict
+        Dictionary of linear fit results. Keys include:
+
+          - slope
+          - intersept
+          - yhat_lo (lower confidence interval of the estimated y-vals)
+          - yhat_hi (upper confidence interval of the estimated y-vals)
 
     """
-
     fitprobs = validate.fit_argument(fitprobs, "fitprobs")
     fitlogs = validate.fit_argument(fitlogs, "fitlogs")
 
     # maybe set xhat to default values
     if xhat is None:
-        xhat = numpy.array([numpy.min(x), numpy.max(x)])
+        xhat = copy.copy(x)
 
     # maybe set dist to default value
     if dist is None:
@@ -399,32 +455,118 @@ def _fit_line(x, y, xhat=None, fitprobs=None, fitlogs=None, dist=None):
     if fitlogs in ['y', 'both']:
         y = numpy.log(y)
 
-    # do the best-fit
-    coeffs = numpy.polyfit(x, y, 1)
+    yhat, results =  _fit_simple(x, y, xhat, fitlogs=fitlogs)
 
-    # estimate y values
-    yhat = _estimate_from_fit(xhat, coeffs[0], coeffs[1],
-                                  xlog=fitlogs in ['x', 'both'],
-                                  ylog=fitlogs in ['y', 'both'])
+    if estimate_ci:
+        yhat_lo, yhat_hi = _fit_ci(x, y, xhat, fitlogs=fitlogs,
+                                   niter=niter, alpha=alpha)
+    else:
+        yhat_lo, yhat_hi = None, None
 
     # maybe undo the ppf transform
     if fitprobs in ['y', 'both']:
-        yhat = 100.* dist.cdf(yhat)
+        yhat = 100. * dist.cdf(yhat)
+        if yhat_lo is not None:
+            yhat_lo = 100. * dist.cdf(yhat_lo)
+            yhat_hi = 100. * dist.cdf(yhat_hi)
 
     # maybe undo ppf transform
     if fitprobs in ['x', 'both']:
-        xhat = 100.* dist.cdf(xhat)
+        xhat = 100. * dist.cdf(xhat)
 
-    return xhat, yhat, coeffs
+    results['yhat_lo'] = yhat_lo
+    results['yhat_hi'] = yhat_hi
+
+    return xhat, yhat, results
 
 
-def _estimate_from_fit(xdata, slope, intercept, xlog=False, ylog=False):
+def _fit_simple(x, y, xhat, fitlogs=None):
+    """
+    Simple linear fit of x and y data using ``numpy.polyfit``.
+
+    Parameters
+    ----------
+    x, y : array-like
+    fitlogs : str, optional.
+        Defines which data should be log-transformed. Valid values are
+        'x', 'y', or 'both'.
+
+    Returns
+    -------
+    xhat, yhat : array-like
+        Estimates of x and y based on the linear fit
+    results : dict
+        Dictionary of the fit coefficients
+
+    See also
+    --------
+    numpy.polyfit
+
+    """
+
+    # do the best-fit
+    coeffs = numpy.polyfit(x, y, 1)
+
+    results = {
+        'slope': coeffs[0],
+        'intercept': coeffs[1]
+    }
+
+    # estimate y values
+    yhat = _estimate_from_fit(xhat, coeffs[0], coeffs[1],
+                              xlog=fitlogs in ['x', 'both'],
+                              ylog=fitlogs in ['y', 'both'])
+
+    return yhat, results
+
+
+def _fit_ci(x, y, xhat, fitlogs=None, niter=10000, alpha=0.05):
+    """
+    Percentile method bootstrapping of linear fit of x and y data using
+    ``numpy.polyfit``.
+
+    Parameters
+    ----------
+    x, y : array-like
+    fitlogs : str, optional.
+        Defines which data should be log-transformed. Valid values are
+        'x', 'y', or 'both'.
+    niter : int, optional (default is 10000)
+        Number of bootstrap iterations to use
+    alpha : float, optional
+        Confidence level of the estimate.
+
+    Returns
+    -------
+    xhat, yhat : array-like
+        Estimates of x and y based on the linear fit
+    results : dict
+        Dictionary of the fit coefficients
+
+    See also
+    --------
+    numpy.polyfit
+
+    """
+
+    index = _make_boot_index(len(x), niter)
+    yhat_array = numpy.array([
+        _fit_simple(x[ii], y[ii], xhat, fitlogs=fitlogs)[0]
+        for ii in index
+    ])
+
+    percentiles = 100 * numpy.array([alpha*0.5, 1 - alpha*0.5])
+    yhat_lo, yhat_hi = numpy.percentile(yhat_array, percentiles, axis=0)
+    return yhat_lo, yhat_hi
+
+
+def _estimate_from_fit(xhat, slope, intercept, xlog=False, ylog=False):
     """ Estimate the dependent variables of a linear fit given x-data
     and linear parameters.
 
     Parameters
     ----------
-    xdata : numpy array or pandas Series/DataFrame
+    xhat : numpy array or pandas Series/DataFrame
         The input independent variable of the fit
     slope : float
         Slope of the best-fit line
@@ -436,23 +578,23 @@ def _estimate_from_fit(xdata, slope, intercept, xlog=False, ylog=False):
 
     Returns
     -------
-    yhat : same type as xdata
+    yhat : numpy array
         Estimate of the dependent variable.
 
     """
 
-    x = numpy.array(xdata)
+    xhat = numpy.asarray(xhat)
     if ylog:
         if xlog:
-            yhat = numpy.exp(intercept) * x  ** slope
+            yhat = numpy.exp(intercept) * xhat  ** slope
         else:
-            yhat = numpy.exp(intercept) * numpy.exp(slope) ** x
+            yhat = numpy.exp(intercept) * numpy.exp(slope) ** xhat
 
     else:
         if xlog:
-            yhat = slope * numpy.log(x) + intercept
+            yhat = slope * numpy.log(xhat) + intercept
 
         else:
-            yhat = slope * x + intercept
+            yhat = slope * xhat + intercept
 
     return yhat
