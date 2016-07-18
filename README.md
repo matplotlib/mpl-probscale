@@ -48,7 +48,7 @@ seaborn.despine(fig=fig)
 
 ## Testing
 
-Testing is generally done via the ``nose`` and ``numpy.testing`` modules.
+Testing is generally done via the ``pytest`` and ``numpy.testing`` modules.
 The best way to run the tests is in an interactive python session:
 
 ```python
