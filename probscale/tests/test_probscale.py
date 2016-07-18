@@ -18,7 +18,7 @@ PY27 = sys.version_info.major == 2
 if PY27:
     TOLERANCE = 25
 else:
-    TOLERANCE = 15
+    TOLERANCE = 22
 
 
 @pytest.fixture
