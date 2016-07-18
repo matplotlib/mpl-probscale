@@ -43,7 +43,7 @@ install:
   - source activate test
   - conda install --yes --channel=${TESTERS}
   - if [ ${COVERAGE} = true ]; then conda install scipy --yes; fi
-  - pip install coveralls
+  - pip install codecov
   - pip install .
 
 script:
@@ -53,5 +53,5 @@ after_success:
   - if [ ${COVERAGE} = true ]; then
       coverage run --source probscale check_probscale.py;
       coverage report -m;
-      coveralls;
+      codecov;
     fi
