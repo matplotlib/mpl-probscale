@@ -1,6 +1,6 @@
 package:
   name: mpl-probscale
-  version: 0.2.1dev
+  version: 0.2.2dev
 
 source:
   path: ../
