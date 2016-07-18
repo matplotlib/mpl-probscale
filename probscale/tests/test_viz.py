@@ -688,7 +688,8 @@ def test_probplot_test_results(plot_data):
 
 @pytest.mark.parametrize('probax', ['x', 'y'])
 @pytest.mark.parametrize(('N', 'minval', 'maxval'), [
-    (8, 10, 90),
+    (5, 10, 90),
+    (8, 5, 95),
     (37, 1, 99),
     (101, 0.1, 99.9),
     (10001, 0.001, 99.999)

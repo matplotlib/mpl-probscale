@@ -361,7 +361,13 @@ def _set_prob_limits(ax, probax, N):
     fig, ax = validate.axes_object(ax)
     which = validate.axis_name(probax, 'probability axis')
 
-    minval = 10 ** (-1 *numpy.ceil(numpy.log10(N) - 2))
+    if N <= 5:
+        minval = 10
+    elif N <= 10:
+        minval = 5
+    else:
+        minval = 10 ** (-1 * numpy.ceil(numpy.log10(N) - 2))
+
     if which in ['x', 'both']:
         ax.set_xlim(left=minval, right=100-minval)
     elif which in ['y', 'both']:
