@@ -3,7 +3,7 @@ Real probability scales for matplotlib
 
 [![Build Status](https://travis-ci.org/phobson/mpl-probscale.svg)](https://travis-ci.org/phobson/mpl-probscale)
 [![codecov](https://codecov.io/gh/phobson/mpl-probscale/branch/master/graph/badge.svg)](https://codecov.io/gh/phobson/mpl-probscale)
-
+[![Code Climate](https://codeclimate.com/github/phobson/mpl-probscale/badges/gpa.svg)](https://codeclimate.com/github/phobson/mpl-probscale)
 
 [Sphinx Docs](http://phobson.github.io/mpl-probscale/)
 
