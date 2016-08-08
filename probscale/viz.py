@@ -10,10 +10,9 @@ from . import algo
 
 def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
              problabel=None, datascale='linear', datalabel=None,
-             bestfit=False, estimate_ci=False,
-             return_best_fit_results=False,
-             scatter_kws=None, line_kws=None, pp_kws=None,
-             **fgkwargs):
+             bestfit=False, return_best_fit_results=False,
+             estimate_ci=False, ci_kws=None, pp_kws=None,
+             scatter_kws=None, line_kws=None, **fgkwargs):
     """
     Probability, percentile, and quantile plots.
 
@@ -21,9 +20,11 @@ def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
     ----------
     data : array-like
         1-dimensional data to be plotted
+
     ax : matplotlib axes, optional
         The Axes on which to plot. If one is not provided, a new Axes
         will be created.
+
     plottype : string (default = 'prob')
         Type of plot to be created. Options are:
 
@@ -31,28 +32,44 @@ def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
            - 'pp': percentile plot
            - 'qq': quantile plot
 
+
     dist : scipy distribution, optional
         A distribtion to compute the scale's tick positions. If not
         specified, a standard normal distribution will be used.
+
     probax : string, optional (default = 'x')
         The axis ('x' or 'y') that will serve as the probability (or
         quantile) axis.
+
     problabel, datalabel : string, optional
         Axis labels for the probability/quantile and data axes
         respectively.
+
     datascale : string, optional (default = 'log')
         Scale for the other axis that is not
+
     bestfit : bool, optional (default is False)
         Specifies whether a best-fit line should be added to the plot.
+
     return_best_fit_results : bool (default is False)
         If True a dictionary of results of is returned along with the
         figure.
-    scatter_kws, line_kws : dictionary, optional
-        Dictionary of keyword arguments passed directly to ``ax.plot``
-        when drawing the scatter points and best-fit line, respectively.
-    pp_kws : dictionary, optional
+
+    estimate_ci : bool, optional (False)
+        Estimate and draw a confidence band around the best-fit line
+        using a percentile bootstrap.
+
+    ci_kws : dict, optional
+        Dictionary of keyword arguments passed directly to
+        ``viz.fit_line`` when computing the best-fit line.
+
+    pp_kws : dict, optional
         Dictionary of keyword arguments passed directly to
         ``viz.plot_pos`` when computing the plotting positions.
+
+    scatter_kws, line_kws : dict, optional
+        Dictionary of keyword arguments passed directly to ``ax.plot``
+        when drawing the scatter points and best-fit line, respectively.
 
     Other Parameters
     ----------------
@@ -82,7 +99,8 @@ def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
     -------
     fig : matplotlib.Figure
         The figure on which the plot was drawn.
-    result : dictionary of linear fit results, optional
+
+    result : dict of linear fit results, optional
         Keys are:
 
            - q : array of quantiles
@@ -93,6 +111,7 @@ def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
     See also
     --------
     viz.plot_pos
+    viz.fit_line
     numpy.polyfit
     scipy.stats.probplot
     scipy.stats.mstats.plotting_positions
@@ -287,7 +306,9 @@ def plot_pos(data, postype=None, alpha=None, beta=None):
     ----------
     data : array-like
         The values whose plotting positions need to be computed.
+
     postype : string, optional (default: "cunnane")
+
     alpha, beta : float, optional
         Custom plotting position parameters is the options available
         through the `postype` parameter are insufficient.
@@ -296,6 +317,7 @@ def plot_pos(data, postype=None, alpha=None, beta=None):
     -------
     plot_pos : numpy.array
         The computed plotting positions, sorted.
+
     data_sorted : numpy.array
         The original data values, sorted.
 
@@ -384,9 +406,11 @@ def fit_line(x, y, xhat=None, fitprobs=None, fitlogs=None, dist=None,
     ----------
     x, y : array-like
         Independent and dependent data, respectively.
+
     xhat : array-like, optional
         The values at which ``yhat`` should should be estimated. If
         not provided, falls back to the sorted values of ``x``.
+
     fitprobs, fitlogs : str, optional.
         Defines how data should be transformed. Valid values are
         'x', 'y', or 'both'. If using ``fitprobs``, variables should
@@ -395,11 +419,22 @@ def fit_line(x, y, xhat=None, fitprobs=None, fitlogs=None, dist=None,
         Log transform = lambda x: numpy.log(x).
         Take care to not pass the same value to both ``fitlogs`` and
         ``figprobs`` as both transforms will be applied.
+
     dist : distribution, optional
         A fully-spec'd scipy.stats distribution-like object
         such that ``dist.ppf`` and ``dist.cdf`` can be called. If not
         provided, defaults to a minimal implementation of
         scipt.stats.norm.
+
+    estimate_ci : bool, optional (False)
+        Estimate and draw a confidence band around the best-fit line
+        using a percentile bootstrap.
+
+    niter : int, optional (default = 10000)
+        Number of bootstrap iterations if ``estimate_ci`` is provided.
+
+    alpha : float, optional (default = 0.05)
+        The confidence level of the bootstrap estimate.
 
     Returns
     -------
@@ -414,6 +449,7 @@ def fit_line(x, y, xhat=None, fitprobs=None, fitlogs=None, dist=None,
           - yhat_hi (upper confidence interval of the estimated y-vals)
 
     """
+
     fitprobs = validate.fit_argument(fitprobs, "fitprobs")
     fitlogs = validate.fit_argument(fitlogs, "fitlogs")
 
@@ -445,7 +481,7 @@ def fit_line(x, y, xhat=None, fitprobs=None, fitlogs=None, dist=None,
     yhat, results =  algo._fit_simple(x, y, xhat, fitlogs=fitlogs)
 
     if estimate_ci:
-        yhat_lo, yhat_hi = algo._fit_ci(x, y, xhat, fitlogs=fitlogs,
+        yhat_lo, yhat_hi = algo._bs_fit(x, y, xhat, fitlogs=fitlogs,
                                         niter=niter, alpha=alpha)
     else:
         yhat_lo, yhat_hi = None, None

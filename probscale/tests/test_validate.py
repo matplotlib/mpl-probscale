@@ -90,14 +90,14 @@ def test_axis_label(value, expected):
     assert result == expected
 
 
-@pytest.mark.parametrize(('value', 'expected'), [
-    ('fit', algo._bs_fit),
-    ('resids', algo._bs_resid),
-    ('junk', None)
+@pytest.mark.parametrize(('value', 'expected', 'error'), [
+    ('fit', algo._bs_fit, None),
+    ('resids', None, NotImplementedError),
+    ('junk', None, ValueError)
 ])
-def test_estimator(value, expected):
-    if expected is None:
-        with pytest.raises(ValueError):
+def test_estimator(value, expected, error):
+    if error is not None:
+        with pytest.raises(error):
             validate.estimator(value)
     else:
         est = validate.estimator(value)

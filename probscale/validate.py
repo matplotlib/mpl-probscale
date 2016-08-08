@@ -1,5 +1,7 @@
 from matplotlib import pyplot
 
+from .algo import _bs_fit
+
 
 def axes_object(ax):
     """ Checks if a value if an Axes. If None, a new one is created.
@@ -85,9 +87,9 @@ def other_options(options):
     return dict() if options is None else options.copy()
 
 def estimator(value):
-    from .algo import _bs_fit, _bs_resid
     if value.lower() in ['res', 'resid', 'resids', 'residual', 'residuals']:
-        est = _bs_resid
+        msg = 'Bootstrapping the residuals is not ready yet'
+        raise NotImplementedError(msg)
     elif value.lower() in ['fit', 'values']:
         est = _bs_fit
     else:
