@@ -10,7 +10,7 @@ from . import algo
 
 def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
              problabel=None, datascale='linear', datalabel=None,
-             bestfit=False, estimate_ci=False,
+             bestfit=False, ci_estimator=None,
              return_best_fit_results=False,
              scatter_kws=None, line_kws=None, pp_kws=None,
              **fgkwargs):
@@ -209,9 +209,9 @@ def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
     if bestfit:
         xhat, yhat, modelres = fit_line(x, y, xhat=sorted(x), dist=dist,
                                         fitprobs=fitprobs, fitlogs=fitlogs,
-                                        estimate_ci=estimate_ci)
+                                        ci_estimator=ci_estimator)
         ax.plot(xhat, yhat, **line_kws)
-        if estimate_ci:
+        if ci_estimator:
             # for alpha, use half of existing or 0.5 * 0.5 = 0.25
             # for zorder, use 1 less than existing or 1 - 1 = 0
             opts = {
@@ -376,7 +376,7 @@ def _set_prob_limits(ax, probax, N):
 
 
 def fit_line(x, y, xhat=None, fitprobs=None, fitlogs=None, dist=None,
-             estimate_ci=False, niter=10000, alpha=0.05):
+             ci_estimator=None, niter=10000, alpha=0.05):
     """
     Fits a line to x-y data in various forms (linear, log, prob scales).
 
@@ -400,6 +400,14 @@ def fit_line(x, y, xhat=None, fitprobs=None, fitlogs=None, dist=None,
         such that ``dist.ppf`` and ``dist.cdf`` can be called. If not
         provided, defaults to a minimal implementation of
         scipt.stats.norm.
+    ci_estimator : string, optional
+        If provided ("fit" or "resid"), the confidence intervals around
+        the best-fit line are estimated by bootstrapping either the data
+        or the residuals. If ``None``, only the line will be estimated.
+    niter : int, optional (default = 10000)
+        Number of bootstrap iterations if ``ci_estimator`` is provided.
+    alpha : float, optional (default = 0.05)
+        The confidence level of the bootstrap estimate.
 
     Returns
     -------
@@ -444,9 +452,10 @@ def fit_line(x, y, xhat=None, fitprobs=None, fitlogs=None, dist=None,
 
     yhat, results =  algo._fit_simple(x, y, xhat, fitlogs=fitlogs)
 
-    if estimate_ci:
-        yhat_lo, yhat_hi = algo._fit_ci(x, y, xhat, fitlogs=fitlogs,
-                                        niter=niter, alpha=alpha)
+    if ci_estimator is not None:
+        estimator = validate.estimator(ci_estimator)
+        yhat_lo, yhat_hi = estimator(x, y, xhat, fitlogs=fitlogs,
+                                     niter=niter, alpha=alpha)
     else:
         yhat_lo, yhat_hi = None, None
 

@@ -133,7 +133,7 @@ class Test_fit_line(object):
     def test_xlinear_ylinear(self):
         scales = {'fitlogs': None, 'fitprobs': None}
         x, y = self.zscores, self.data
-        x_, y_, res = viz.fit_line(x, y, xhat=x[::8], estimate_ci=True, **scales)
+        x_, y_, res = viz.fit_line(x, y, xhat=x[::8], ci_estimator='fit', **scales)
         nptest.assert_allclose(y_, self.known_y_linlin, rtol=0.0001)
         known_res = {
             'slope': 5.3404377026700995,
@@ -147,7 +147,7 @@ class Test_fit_line(object):
     def test_xlinear_ylog(self):
         scales = {'fitlogs': 'y', 'fitprobs': None}
         x, y = self.zscores, self.data
-        x_, y_, res = viz.fit_line(x, y, xhat=x[::8], estimate_ci=True, **scales)
+        x_, y_, res = viz.fit_line(x, y, xhat=x[::8], ci_estimator='fit', **scales)
         nptest.assert_allclose(y_, self.known_y_linlog, rtol=0.0001)
         known_res = {
             'slope': 0.55515014824534514,
@@ -161,7 +161,7 @@ class Test_fit_line(object):
     def test_xlinear_yprob(self):
         scales = {'fitlogs': None, 'fitprobs': 'y'}
         x, y = self.data, self.probs
-        x_, y_, res = viz.fit_line(x, y, xhat=x[::8], estimate_ci=True, **scales)
+        x_, y_, res = viz.fit_line(x, y, xhat=x[::8], ci_estimator='fit', **scales)
         nptest.assert_allclose(y_, self.known_y_linprob, rtol=0.0001)
         known_res = {
             'slope': 0.16920340891421964,
@@ -175,7 +175,7 @@ class Test_fit_line(object):
     def test_xlog_ylinear(self):
         scales = {'fitlogs': 'x', 'fitprobs': None}
         x, y = self.data, self.zscores
-        x_, y_, res = viz.fit_line(x, y, xhat=x[::8], estimate_ci=True, **scales)
+        x_, y_, res = viz.fit_line(x, y, xhat=x[::8], ci_estimator='fit', **scales)
         nptest.assert_allclose(y_, self.known_y_loglin, rtol=0.0001)
         known_res = {
             'slope': 1.7385543724819053,
@@ -189,7 +189,7 @@ class Test_fit_line(object):
     def test_xlog_ylog(self):
         scales = {'fitlogs': 'both', 'fitprobs': None}
         x, y = self.data, self.y
-        x_, y_, res = viz.fit_line(x, y, xhat=x[::8], estimate_ci=True, **scales)
+        x_, y_, res = viz.fit_line(x, y, xhat=x[::8], ci_estimator='fit', **scales)
         nptest.assert_allclose(y_, self.known_y_loglog, rtol=0.0001)
         known_res = {
             'slope': 1.9695339470891058,
@@ -203,7 +203,7 @@ class Test_fit_line(object):
     def test_xlog_yprob(self):
         scales = {'fitlogs': 'x', 'fitprobs': 'y'}
         x, y = self.data, self.probs
-        x_, y_, res = viz.fit_line(x, y, xhat=x[::8], estimate_ci=True, **scales)
+        x_, y_, res = viz.fit_line(x, y, xhat=x[::8], ci_estimator='fit', **scales)
         nptest.assert_allclose(y_, self.known_y_logprob, rtol=0.0001)
         known_res = {
             'slope': 1.7385543724819046,
@@ -217,7 +217,7 @@ class Test_fit_line(object):
     def test_xprob_ylinear(self):
         scales = {'fitlogs': None, 'fitprobs': 'x'}
         x, y = self.probs, self.data
-        x_, y_, res = viz.fit_line(x, y, xhat=x[::8], estimate_ci=True, **scales)
+        x_, y_, res = viz.fit_line(x, y, xhat=x[::8], ci_estimator='fit', **scales)
         nptest.assert_allclose(y_, self.known_y_problin, rtol=0.0001)
         known_res = {
             'slope': 5.3404377026700995,
@@ -231,7 +231,7 @@ class Test_fit_line(object):
     def test_xprob_ylog(self):
         scales = {'fitlogs': 'y', 'fitprobs': 'x'}
         x, y = self.probs, self.data
-        x_, y_, res = viz.fit_line(x, y, xhat=x[::8], estimate_ci=True, **scales)
+        x_, y_, res = viz.fit_line(x, y, xhat=x[::8], ci_estimator='fit', **scales)
         nptest.assert_allclose(y_, self.known_y_problog, rtol=0.0001)
         known_res = {
             'intercept': 2.1749556618678434,
@@ -247,7 +247,7 @@ class Test_fit_line(object):
 
         scales = {'fitlogs': None, 'fitprobs': 'both'}
         x, y = self.probs, p2,
-        x_, y_, res = viz.fit_line(x, y, xhat=x[::8], estimate_ci=True, **scales)
+        x_, y_, res = viz.fit_line(x, y, xhat=x[::8], ci_estimator='fit', **scales)
         nptest.assert_allclose(y_, self.known_y_probprob, rtol=0.0001)
         known_res = {
             'slope': 0.98467862838225351,
@@ -454,7 +454,7 @@ def test_probplot_pp(plot_data):
 def test_probplot_prob_bestfit(plot_data):
     fig, ax = plt.subplots()
     fig = viz.probplot(plot_data, ax=ax, datalabel='Test xlabel', bestfit=True,
-                       datascale='log', estimate_ci=True)
+                       datascale='log', ci_estimator='fit')
     assert isinstance(fig, plt.Figure)
     return fig
 
@@ -464,7 +464,7 @@ def test_probplot_qq_bestfit(plot_data):
     fig, ax = plt.subplots()
     fig = viz.probplot(plot_data, ax=ax, plottype='qq', bestfit=True,
                        problabel='Test label', datascale='log',
-                       estimate_ci=True)
+                       ci_estimator='fit')
     return fig
 
 
@@ -476,7 +476,7 @@ def test_probplot_pp_bestfit(plot_data):
     fig = viz.probplot(plot_data, ax=ax, plottype='pp', datascale='linear',
                        datalabel='test x', bestfit=True, problabel='test y',
                        scatter_kws=scatter_kws, line_kws=line_kws,
-                       estimate_ci=True)
+                       ci_estimator='fit')
     return fig
 
 
@@ -509,7 +509,7 @@ def test_probplot_pp_probax_y(plot_data):
 def test_probplot_prob_bestfit_probax_y(plot_data):
     fig, ax = plt.subplots()
     fig = viz.probplot(plot_data, ax=ax, datalabel='Test xlabel', bestfit=True,
-                       datascale='log', probax='y', estimate_ci=True)
+                       datascale='log', probax='y', ci_estimator='fit')
     assert isinstance(fig, plt.Figure)
     return fig
 
@@ -518,7 +518,7 @@ def test_probplot_prob_bestfit_probax_y(plot_data):
 def test_probplot_qq_bestfit_probax_y(plot_data):
     fig, ax = plt.subplots()
     fig = viz.probplot(plot_data, ax=ax, plottype='qq', bestfit=True, problabel='Test label',
-                       datascale='log', probax='y', estimate_ci=True)
+                       datascale='log', probax='y', ci_estimator='fit')
     return fig
 
 
@@ -529,7 +529,7 @@ def test_probplot_pp_bestfit_probax_y(plot_data):
     line_kws = {'linestyle': '--', 'linewidth': 3}
     fig = viz.probplot(plot_data, ax=ax, plottype='pp', datascale='linear', probax='y',
                        datalabel='test x', bestfit=True, problabel='test y',
-                       scatter_kws=scatter_kws, line_kws=line_kws, estimate_ci=True)
+                       scatter_kws=scatter_kws, line_kws=line_kws, ci_estimator='fit')
     return fig
 
 
@@ -544,7 +544,7 @@ def test_probplot_beta_dist_best_fit_y(plot_data):
 
     fig = viz.probplot(plot_data, ax=ax2, datalabel='Default (norm)',
                        bestfit=True, datascale='log', probax='y',
-                       estimate_ci=True)
+                       ci_estimator='fit')
     ax2.set_ylim(bottom=0.5, top=98)
 
     assert isinstance(fig, plt.Figure)
@@ -562,7 +562,7 @@ def test_probplot_beta_dist_best_fit_x(plot_data):
 
     fig = viz.probplot(plot_data, ax=ax2, problabel='Default (norm)',
                        bestfit=True, datascale='log', probax='x',
-                       estimate_ci=True)
+                       ci_estimator='fit')
     ax2.set_xlim(left=0.5, right=98)
 
     assert isinstance(fig, plt.Figure)
