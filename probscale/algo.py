@@ -64,10 +64,11 @@ def _fit_simple(x, y, xhat, fitlogs=None):
 def _bs_resid(x, y, xhat, fitlogs=None, niter=10000, alpha=0.05):
     index = _make_boot_index(len(x), niter)
     yhat, results = _fit_simple(x, y, xhat, fitlogs=fitlogs)
-    resid = y - yhat[index]
+    resid = y - yhat
+    bs_y = y + resid[index]
 
     percentiles = 100 * numpy.array([alpha*0.5, 1 - alpha*0.5])
-    yhat_lo, yhat_hi = numpy.percentile(yhat_array, percentiles, axis=0) + y
+    yhat_lo, yhat_hi = numpy.percentile(bs_y, percentiles, axis=0)
     return yhat_lo, yhat_hi
 
 
