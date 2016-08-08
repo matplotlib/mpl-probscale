@@ -83,3 +83,14 @@ def other_options(options):
     """
 
     return dict() if options is None else options.copy()
+
+def estimator(value):
+    from .algo import _bs_fit, _bs_resid
+    if value.lower() in ['res', 'resid', 'resids', 'residual', 'residuals']:
+        est = _bs_resid
+    elif value.lower() in ['fit', 'values']:
+        est = _bs_fit
+    else:
+        raise ValueError('estimator must be either "resid" or "fit".')
+
+    return est
