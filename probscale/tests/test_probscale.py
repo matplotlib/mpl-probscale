@@ -58,9 +58,9 @@ def test_minimal_norm__approx_inv_erf(mn, mn_input):
 
 def test_minimal_norm_ppf(mn, mn_input):
     known_ppf = numpy.array([
-        -0.43715354,  0.6495236 , -1.49851307,  0.93847570,
+        -0.43715354,  0.64952360, -1.49851307,  0.93847570,
         -0.36648929, -1.34693863,  0.68713129, -0.40701088,
-         0.71275076,  0.40701088, -0.70952297,  1.34075503,
+        +0.71275076,  0.40701088, -0.70952297,  1.34075503,
     ])
     diff = mn.ppf(mn_input) - known_ppf
     assert numpy.all(numpy.abs(diff) < 0.001)

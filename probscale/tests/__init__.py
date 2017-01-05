@@ -4,6 +4,7 @@ import pytest
 
 import probscale
 
+
 def test(*args):
     options = [resource_filename('probscale', 'tests')]
     options.extend(list(args))

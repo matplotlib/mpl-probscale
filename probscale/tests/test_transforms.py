@@ -8,7 +8,10 @@ from probscale import transforms
 
 
 def test__mask_out_of_bounds():
-    known = numpy.array([numpy.nan, numpy.nan, 0.1, 0.5, 0.9, numpy.nan, numpy.nan])
+    known = numpy.array([
+        numpy.nan, numpy.nan, 0.1, 0.5,
+        0.9, numpy.nan, numpy.nan
+    ])
     x = [-0.1, 0, 0.1, 0.5, 0.9, 1.0, 1.1]
     result = transforms._mask_out_of_bounds(x)
     nptest.assert_array_equal(known, result)
@@ -20,7 +23,6 @@ def test__clip_out_of_bounds():
     result = transforms._clip_out_of_bounds(x)
     diff = numpy.abs(result - known)
     assert numpy.all(diff < 0.0001)
-
 
 
 @pytest.fixture
@@ -80,13 +82,19 @@ def test_transform_inverted(trans, inver_cls):
     assert trans.out_of_bounds == t_inv.out_of_bounds
 
 
-@pytest.mark.parametrize('cls', [transforms.ProbTransform, transforms.QuantileTransform])
+@pytest.mark.parametrize('cls', [
+    transforms.ProbTransform,
+    transforms.QuantileTransform
+])
 def test_bad_out_of_bounds(cls):
     with pytest.raises(ValueError):
         cls(_minimal_norm, out_of_bounds='junk')
 
 
-@pytest.mark.parametrize('cls', [transforms.ProbTransform, transforms.QuantileTransform])
+@pytest.mark.parametrize('cls', [
+    transforms.ProbTransform,
+    transforms.QuantileTransform
+])
 @pytest.mark.parametrize(('method', 'func'), [
     ('clip', transforms._clip_out_of_bounds),
     ('mask', transforms._mask_out_of_bounds),

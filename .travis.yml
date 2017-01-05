@@ -5,23 +5,23 @@ matrix:
     - python: 2.7
       env:
         - COVERAGE=false
-        - TESTERS="conda-forge pytest mock pytest-mpl coverage"
+        - EXTRATESTERS="mock"
         - ARGS="--verbose"
     - python: 3.4
       env:
         - COVERAGE=false
-        - TESTERS="conda-forge pytest pytest-mpl coverage"
+        - EXTRATESTERS=""
         - ARGS="--mpl --verbose"
     - python: 3.5
       env:
         - COVERAGE=false
-        - TESTERS="conda-forge pytest pytest-mpl coverage"
+        - EXTRATESTERS=""
         - ARGS="--mpl --verbose"
     - python: 3.5
       env:
         - COVERAGE=true
-        - TESTERS="conda-forge pytest pytest-mpl coverage"
-        - ARGS="--mpl --verbose"
+        - EXTRATESTERS=""
+        - ARGS="--mpl --verbose --pep8"
 
 before_install:
 
@@ -41,7 +41,7 @@ install:
 
   - conda create --yes -n test python=$TRAVIS_PYTHON_VERSION numpy matplotlib docopt requests pyyaml
   - source activate test
-  - conda install --yes --channel=${TESTERS}
+  - conda install --yes --channel=conda-forge pytest-mpl pytest-cov pytest-pep8 ${EXTRATESTERS}
   - if [ ${COVERAGE} = true ]; then conda install scipy --yes; fi
   - pip install codecov
   - pip install .
