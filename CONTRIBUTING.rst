@@ -119,7 +119,7 @@ Configuring Sublime Text 3 to run the tests
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In Sublime, got to Tools -> Build System -> New Build System.
-Then add the following configuration and save as "wqio.sublime-build"::
+Then add the following configuration and save as "probscale.sublime-build"::
 
     {
         "working_dir": "<path to the git repository>",
@@ -134,7 +134,7 @@ In Atom, install the build_ package, create a new file called ".atom-build.yml" 
 top level of the project directory, and add the following contents::
 
     cmd: "<full path of the python executable>"
-    name: "wqio"
+    name: "probscale"
     args:
       - check_probscale.py
       - --verbose
