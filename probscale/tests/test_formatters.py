@@ -6,7 +6,10 @@ import numpy.testing as nptest
 from probscale import formatters
 
 
-@pytest.mark.parametrize("fmtr", [formatters.PctFormatter, formatters.ProbFormatter])
+@pytest.mark.parametrize("fmtr", [
+    formatters.PctFormatter,
+    formatters.ProbFormatter
+])
 def test_base_class_of_formatter(fmtr):
     assert issubclass(fmtr, formatters._FormatterMixin)
 
