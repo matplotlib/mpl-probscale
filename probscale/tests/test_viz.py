@@ -19,10 +19,12 @@ import numpy.testing as nptest
 PY27 = sys.version_info.major == 2
 if PY27:  # pragma: no cover
     import mock
-    TOLERANCE = 15
+    TIGHT_TOLERANCE = 15
+    LOOSE_TOLERANCE = 18
 else:
     from unittest import mock
-    TOLERANCE = 12
+    TIGHT_TOLERANCE = 13
+    LOOSE_TOLERANCE = 18
 
 
 BASELINE_DIR = 'baseline_images/test_viz'
@@ -513,7 +515,7 @@ def test__fit_ci(plot_data, fitlogs, known_lo, known_hi):
     nptest.assert_allclose(yhat_hi, known_hi, rtol=0.001)
 
 
-@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=TOLERANCE)
+@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=TIGHT_TOLERANCE)
 def test_probplot_prob(plot_data):
     fig, ax = plt.subplots()
     fig = viz.probplot(plot_data, ax=ax, problabel='Test xlabel', datascale='log')
@@ -521,7 +523,7 @@ def test_probplot_prob(plot_data):
     return fig
 
 
-@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=TOLERANCE)
+@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=TIGHT_TOLERANCE)
 def test_probplot_qq(plot_data):
     fig, ax = plt.subplots()
     fig = viz.probplot(plot_data, ax=ax, plottype='qq', datalabel='Test label',
@@ -529,7 +531,7 @@ def test_probplot_qq(plot_data):
     return fig
 
 
-@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=TOLERANCE)
+@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=TIGHT_TOLERANCE)
 @pytest.mark.skipif(stats is None, reason="no scipy")
 def test_probplot_qq_dist(plot_data):
     fig, ax = plt.subplots()
@@ -539,7 +541,7 @@ def test_probplot_qq_dist(plot_data):
     return fig
 
 
-@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=TOLERANCE)
+@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=TIGHT_TOLERANCE)
 def test_probplot_pp(plot_data):
     fig, ax = plt.subplots()
     scatter_kws = dict(color='b', linestyle='--', markeredgecolor='g', markerfacecolor='none')
@@ -549,7 +551,7 @@ def test_probplot_pp(plot_data):
     return fig
 
 
-@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=TOLERANCE)
+@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=TIGHT_TOLERANCE)
 def test_probplot_prob_bestfit(plot_data):
     fig, ax = plt.subplots()
     fig = viz.probplot(plot_data, ax=ax, datalabel='Test xlabel', bestfit=True,
@@ -558,7 +560,7 @@ def test_probplot_prob_bestfit(plot_data):
     return fig
 
 
-@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=TOLERANCE)
+@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=TIGHT_TOLERANCE)
 def test_probplot_qq_bestfit(plot_data):
     fig, ax = plt.subplots()
     fig = viz.probplot(plot_data, ax=ax, plottype='qq', bestfit=True,
@@ -567,7 +569,7 @@ def test_probplot_qq_bestfit(plot_data):
     return fig
 
 
-@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=TOLERANCE)
+@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=TIGHT_TOLERANCE)
 def test_probplot_pp_bestfit(plot_data):
     fig, ax = plt.subplots()
     scatter_kws = {'marker': 's', 'color': 'red'}
@@ -579,7 +581,7 @@ def test_probplot_pp_bestfit(plot_data):
     return fig
 
 
-@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=TOLERANCE)
+@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=TIGHT_TOLERANCE)
 def test_probplot_prob_probax_y(plot_data):
     fig, ax = plt.subplots()
     fig = viz.probplot(plot_data, ax=ax, datalabel='Test xlabel', datascale='log', probax='y')
@@ -587,7 +589,7 @@ def test_probplot_prob_probax_y(plot_data):
     return fig
 
 
-@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=TOLERANCE)
+@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=TIGHT_TOLERANCE)
 def test_probplot_qq_probax_y(plot_data):
     fig, ax = plt.subplots()
     fig = viz.probplot(plot_data, ax=ax, plottype='qq', problabel='Test label', probax='y',
@@ -595,7 +597,7 @@ def test_probplot_qq_probax_y(plot_data):
     return fig
 
 
-@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=TOLERANCE)
+@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=TIGHT_TOLERANCE)
 def test_probplot_pp_probax_y(plot_data):
     fig, ax = plt.subplots()
     scatter_kws = dict(color='b', linestyle='--', markeredgecolor='g', markerfacecolor='none')
@@ -604,7 +606,7 @@ def test_probplot_pp_probax_y(plot_data):
     return fig
 
 
-@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=TOLERANCE)
+@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=TIGHT_TOLERANCE)
 def test_probplot_prob_bestfit_probax_y(plot_data):
     fig, ax = plt.subplots()
     fig = viz.probplot(plot_data, ax=ax, datalabel='Test xlabel', bestfit=True,
@@ -613,7 +615,7 @@ def test_probplot_prob_bestfit_probax_y(plot_data):
     return fig
 
 
-@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=TOLERANCE)
+@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=TIGHT_TOLERANCE)
 def test_probplot_qq_bestfit_probax_y(plot_data):
     fig, ax = plt.subplots()
     fig = viz.probplot(plot_data, ax=ax, plottype='qq', bestfit=True, problabel='Test label',
@@ -621,7 +623,7 @@ def test_probplot_qq_bestfit_probax_y(plot_data):
     return fig
 
 
-@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=TOLERANCE)
+@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=TIGHT_TOLERANCE)
 def test_probplot_pp_bestfit_probax_y(plot_data):
     fig, ax = plt.subplots()
     scatter_kws = {'marker': 's', 'color': 'red'}
@@ -632,7 +634,7 @@ def test_probplot_pp_bestfit_probax_y(plot_data):
     return fig
 
 
-@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=TOLERANCE)
+@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=LOOSE_TOLERANCE)
 @pytest.mark.skipif(stats is None, reason="no scipy")
 def test_probplot_beta_dist_best_fit_y(plot_data):
     fig, (ax1, ax2) = plt.subplots(ncols=2)
@@ -650,7 +652,7 @@ def test_probplot_beta_dist_best_fit_y(plot_data):
     return fig
 
 
-@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=TOLERANCE)
+@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=TIGHT_TOLERANCE)
 @pytest.mark.skipif(stats is None, reason="no scipy")
 def test_probplot_beta_dist_best_fit_x(plot_data):
     fig, (ax1, ax2) = plt.subplots(nrows=2)
@@ -697,7 +699,7 @@ def test__set_prob_limits_x(probax, N, minval, maxval):
             ax.set_ylim.assert_called_once_with(bottom=minval, top=maxval)
 
 
-@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=TOLERANCE)
+@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=TIGHT_TOLERANCE)
 def test_probplot_color_and_label(plot_data):
     fig, ax = plt.subplots()
     fig = viz.probplot(plot_data, ax=ax, color='pink', label='A Top-Level Label')
