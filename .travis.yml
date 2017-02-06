@@ -14,12 +14,12 @@ matrix:
         - ARGS="--mpl --verbose"
     - python: 3.5
       env:
-        - COVERAGE=false
+        - COVERAGE=true
         - EXTRATESTERS=""
         - ARGS="--mpl --verbose"
-    - python: 3.5
+    - python: 3.6
       env:
-        - COVERAGE=true
+        - COVERAGE=false
         - EXTRATESTERS=""
         - ARGS="--mpl --verbose --pep8"
 
