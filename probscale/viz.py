@@ -1,4 +1,4 @@
-﻿import copy
+import copy
 
 import numpy
 from matplotlib import pyplot
@@ -81,8 +81,9 @@ def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
         specified within ``scatter_kws`` and ``line_kws``.
 
         .. note::
-           Users should not specify the parameter. It is inteded to only
-           be used by seaborn when operating within a FacetGrid.
+           Users should not specify this parameter. It is inteded to
+           only be used by seaborn when operating within a
+           ``FacetGrid``.
 
     label : string, optional
         A directly-specified legend label for the data series. This
@@ -91,8 +92,9 @@ def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
         data series label should be specified within ``scatter_kws``.
 
         .. note::
-           Users should not specify the parameter. It is inteded to only
-           be used by seaborn when operating within a FacetGrid.
+           Users should not specify this parameter. It is inteded to
+           only be used by seaborn when operating within a
+           ``FacetGrid``.
 
 
     Returns
@@ -415,16 +417,21 @@ def fit_line(x, y, xhat=None, fitprobs=None, fitlogs=None, dist=None,
         Defines how data should be transformed. Valid values are
         'x', 'y', or 'both'. If using ``fitprobs``, variables should
         be expressed as a percentage, i.e.,
-        Probablility transform = lambda x: ``dist``.ppf(x / 100.).
-        Log transform = lambda x: numpy.log(x).
+        for a probablility transform, data will be transformed with
+        ``lambda x: dist.ppf(x / 100.)``.
+        For a log transform, ``lambda x: numpy.log(x)``.
         Take care to not pass the same value to both ``fitlogs`` and
+<<<<<<< 801b29f5fb36417255ee93a7fe704cc1360cb89c
         ``figprobs`` as both transforms will be applied.
 
+=======
+        ``fitprobs`` as both transforms will be applied.
+>>>>>>> fix minor doc typos
     dist : distribution, optional
         A fully-spec'd scipy.stats distribution-like object
         such that ``dist.ppf`` and ``dist.cdf`` can be called. If not
         provided, defaults to a minimal implementation of
-        scipt.stats.norm.
+        ``scipt.stats.norm``.
 
     estimate_ci : bool, optional (False)
         Estimate and draw a confidence band around the best-fit line
@@ -463,12 +470,12 @@ def fit_line(x, y, xhat=None, fitprobs=None, fitlogs=None, dist=None,
 
     # maybe compute ppf of x
     if fitprobs in ['x', 'both']:
-        x = dist.ppf(x/100.)
+        x = dist.ppf(x / 100.)
         xhat = dist.ppf(numpy.array(xhat)/100.)
 
     # maybe compute ppf of y
     if fitprobs in ['y', 'both']:
-        y  = dist.ppf(y/100.)
+        y  = dist.ppf(y / 100.)
 
     # maybe compute log of x
     if fitlogs in ['x', 'both']:

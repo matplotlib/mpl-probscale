@@ -23,8 +23,9 @@ def axes_object(ax):
 
 def axis_name(axis, axname):
     """
-    Checks that an axis name is either 'x' or 'y'. Raises an error on
-    an invalid value. Returns the lower cased verion of valid values.
+    Checks that an axis name is in ``{'x', 'y'}``. Raises an error on
+    an invalid value. Returns the lower case verion of valid values.
+
     """
 
     valid_args = ['x', 'y']
@@ -37,9 +38,10 @@ def axis_name(axis, axname):
 
 def fit_argument(arg, argname):
     """
-    Checks that an axis options is either 'x', y', 'both', or None.
+    Checks that an axis options is in ``{'x', y', 'both', None}``.
     Raises an error on an invalid value. Returns the lower case verion
     of valid values.
+
     """
 
     valid_args = ['x', 'y', 'both', None]
@@ -55,12 +57,14 @@ def fit_argument(arg, argname):
 def axis_type(axtype):
     """
     Checks that a valid axis type is requested.
-    pp - percentile axis
-    qq - quantile axis
-    prob - probability axis
+
+      - *pp* - percentile axis
+      - *qq* - quantile axis
+      - *prob* - probability axis
 
     Raises an error on an invalid value. Returns the lower case verion
     of valid values.
+
     """
 
     if axtype.lower() not in ['pp', 'qq', 'prob']:
@@ -71,20 +75,20 @@ def axis_type(axtype):
 def axis_label(label):
     """
     Replaces None with an empty string for axis labels.
+
     """
 
-    if label is None:
-        return ''
-    else:
-        return label
+    return '' if label is None else label
 
 
 def other_options(options):
     """
     Replaces None with an empty dict for plotting options.
+
     """
 
     return dict() if options is None else options.copy()
+
 
 def estimator(value):
     if value.lower() in ['res', 'resid', 'resids', 'residual', 'residuals']:
