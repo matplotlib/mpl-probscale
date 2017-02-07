@@ -3,6 +3,7 @@ from matplotlib import pyplot
 import pytest
 
 from probscale import validate
+from probscale import algo
 
 
 def test_axes_object_invalid():
@@ -86,3 +87,17 @@ def test_other_options(value, expected):
 def test_axis_label(value, expected):
     result = validate.axis_label(value)
     assert result == expected
+
+
+@pytest.mark.parametrize(('value', 'expected', 'error'), [
+    ('fit', algo._bs_fit, None),
+    ('resids', None, NotImplementedError),
+    ('junk', None, ValueError)
+])
+def test_estimator(value, expected, error):
+    if error is not None:
+        with pytest.raises(error):
+            validate.estimator(value)
+    else:
+        est = validate.estimator(value)
+        assert est is expected
