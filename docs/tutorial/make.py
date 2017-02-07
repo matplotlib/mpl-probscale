@@ -44,7 +44,7 @@ def convert(nbfile):
     for img_name, img_data in images['outputs'].items():
         img_path = os.path.join(img_folder, img_name)
         with open(img_path, 'wb') as img:
-            print('\twriting' + img_path)
+            print('\twriting ' + img_path)
             img.write(img_data)
 
 
