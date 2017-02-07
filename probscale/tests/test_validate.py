@@ -6,7 +6,6 @@ from probscale import validate
 from probscale import algo
 
 
-
 def test_axes_object_invalid():
     with pytest.raises(ValueError):
         validate.axes_object('junk')

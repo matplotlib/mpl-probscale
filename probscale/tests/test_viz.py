@@ -33,11 +33,11 @@ BASELINE_DIR = 'baseline_images/test_viz'
 @pytest.fixture
 def plot_data():
     data = numpy.array([
-         3.113,   3.606,   4.046,   4.046,   4.710,   6.140,   6.978,
-         2.000,   4.200,   4.620,   5.570,   5.660,   5.860,   6.650,
-         6.780,   6.790,   7.500,   7.500,   7.500,   8.630,   8.710,
-         8.990,   9.850,  10.820,  11.250,  11.250,  12.200,  14.920,
-        16.770,  17.810,  19.160,  19.190,  19.640,  20.180,  22.970,
+        3.113, 3.606, 4.046, 4.046, 4.710, 6.140, 6.978,
+        2.000, 4.200, 4.620, 5.570, 5.660, 5.860, 6.650,
+        6.780, 6.790, 7.500, 7.500, 7.500, 8.630, 8.710,
+        8.990, 9.850, 10.820, 11.250, 11.250, 12.200, 14.920,
+        16.770, 17.810, 19.160, 19.190, 19.640, 20.180, 22.970,
     ])
     return data
 
@@ -45,49 +45,60 @@ def plot_data():
 class Test_fit_line(object):
     def setup(self):
         self.data = numpy.array([
-            2.00,   4.00,   4.62,   5.00,   5.00,   5.50,   5.57,   5.66,
-            5.75,   5.86,   6.65,   6.78,   6.79,   7.50,   7.50,   7.50,
-            8.63,   8.71,   8.99,   9.50,   9.50,   9.85,  10.82,  11.00,
-           11.25,  11.25,  12.20,  14.92,  16.77,  17.81,  19.16,  19.19,
-           19.64,  20.18,  22.97
+            2.00, 4.00, 4.62, 5.00, 5.00, 5.50, 5.57, 5.66,
+            5.75, 5.86, 6.65, 6.78, 6.79, 7.50, 7.50, 7.50,
+            8.63, 8.71, 8.99, 9.50, 9.50, 9.85, 10.82, 11.00,
+            11.25, 11.25, 12.20, 14.92, 16.77, 17.81, 19.16, 19.19,
+            19.64, 20.18, 22.97
         ])
 
         self.zscores = numpy.array([
             -2.06188401, -1.66883254, -1.43353970, -1.25837339, -1.11509471,
             -0.99166098, -0.88174260, -0.78156696, -0.68868392, -0.60139747,
             -0.51847288, -0.43897250, -0.36215721, -0.28742406, -0.21426459,
-            -0.14223572, -0.07093824,  0.00000000,  0.07093824,  0.14223572,
-             0.21426459,  0.28742406,  0.36215721,  0.43897250,  0.51847288,
-             0.60139747,  0.68868392,  0.78156696,  0.88174260,  0.99166098,
-             1.11509471,  1.25837339,  1.43353970,  1.66883254,  2.06188401
+            -0.14223572, -0.07093824, 0.00000000, 0.07093824, 0.14223572,
+            0.21426459, 0.28742406, 0.36215721, 0.43897250, 0.51847288,
+            0.60139747, 0.68868392, 0.78156696, 0.88174260, 0.99166098,
+            1.11509471, 1.25837339, 1.43353970, 1.66883254, 2.06188401
         ])
 
         self.probs = _minimal_norm.cdf(self.zscores) * 100.
 
         self.y = numpy.array([
-            0.07323274,  0.12319301,  0.16771455,  0.17796950,  0.21840761,
-            0.25757016,  0.27402650,  0.40868106,  0.44872637,  0.53673530,
-            0.55169933,  0.56211726,  0.62375442,  0.66631353,  0.68454978,
-            0.72137134,  0.87602096,  0.94651962,  1.01927875,  1.06040448,
-            1.07966792,  1.17969506,  1.21132273,  1.30751428,  1.45371899,
-            1.76381932,  1.98832275,  2.09275652,  2.66552831,  2.86453334,
-            3.23039631,  4.23953492,  4.25892247,  4.58347660,  6.53100725
+            0.07323274, 0.12319301, 0.16771455, 0.17796950, 0.21840761,
+            0.25757016, 0.27402650, 0.40868106, 0.44872637, 0.53673530,
+            0.55169933, 0.56211726, 0.62375442, 0.66631353, 0.68454978,
+            0.72137134, 0.87602096, 0.94651962, 1.01927875, 1.06040448,
+            1.07966792, 1.17969506, 1.21132273, 1.30751428, 1.45371899,
+            1.76381932, 1.98832275, 2.09275652, 2.66552831, 2.86453334,
+            3.23039631, 4.23953492, 4.25892247, 4.58347660, 6.53100725
         ])
 
         self.known_y_linlin_no_ci = numpy.array([-0.896506, 21.12622])
-        self.known_y_linlin = numpy.array([-0.8965, 6.4370, 9.7360, 12.8837, 17.7706])
-        self.known_y_linlog = numpy.array([2.8019, 6.0052, 8.4619, 11.7375, 19.5072])
-        self.known_y_linprob = numpy.array([8.4762, 23.0079, 40.0813, 57.6156, 94.6629])
-        self.known_y_loglin = numpy.array([-2.576205, -0.74020, -0.034269, 0.426663, 1.395386])
-        self.known_y_loglog = numpy.array([0.0468154, 0.37470676, 0.83369069, 1.40533704, 4.21100704])
-        self.known_y_logprob = numpy.array([0.48982206, 22.957763, 48.63313552, 66.518853, 91.86591714])
-        self.known_y_problin = numpy.array([-0.89650596, 6.43698357, 9.73601589, 12.88372926, 17.77058661])
-        self.known_y_problog = numpy.array([2.80190754, 6.00524156, 8.46190468, 11.73746612, 19.50723532])
-        self.known_y_probprob = numpy.array([2.106935, 24.925853, 47.268638, 69.562842, 92.127085])
+        self.known_y_linlin = numpy.array([-0.8965, 6.4370, 9.7360,
+                                           12.8837, 17.7706])
+        self.known_y_linlog = numpy.array([2.8019, 6.0052, 8.4619,
+                                           11.7375, 19.5072])
+        self.known_y_linprob = numpy.array([8.4762, 23.0079, 40.0813,
+                                            57.6156, 94.6629])
+        self.known_y_loglin = numpy.array([-2.576205, -0.74020, -0.034269,
+                                           0.426663, 1.395386])
+        self.known_y_loglog = numpy.array([0.0468154, 0.37470676, 0.83369069,
+                                           1.40533704, 4.21100704])
+        self.known_y_logprob = numpy.array([0.48982206, 22.957763, 48.63313552,
+                                            66.518853, 91.86591714])
+        self.known_y_problin = numpy.array([-0.89650596, 6.43698357,
+                                            9.73601589, 12.88372926,
+                                            17.77058661])
+        self.known_y_problog = numpy.array([2.80190754, 6.00524156, 8.46190468,
+                                            11.73746612, 19.50723532])
+        self.known_y_probprob = numpy.array([2.106935, 24.925853, 47.268638,
+                                             69.562842, 92.127085])
 
         self.custom_xhat = [-2, -1, 0, 1, 2]
-        self.known_custom_yhat = numpy.array([-0.56601826, 4.77441944, 10.11485714,
-                                              15.45529485, 20.79573255])
+        self.known_custom_yhat = numpy.array([-0.56601826, 4.77441944,
+                                              10.11485714, 15.45529485,
+                                              20.79573255])
 
     def check_res(self, res, known_res):
         assert abs(res['intercept'] - known_res['intercept']) < 0.000001
@@ -96,21 +107,23 @@ class Test_fit_line(object):
             assert res['yhat_hi'] is None
             assert res['yhat_lo'] is None
         else:
-            nptest.assert_allclose(res['yhat_lo'], known_res['yhat_lo'], rtol=0.0001)
-            nptest.assert_allclose(res['yhat_hi'], known_res['yhat_hi'], rtol=0.0001)
+            nptest.assert_allclose(res['yhat_lo'], known_res['yhat_lo'],
+                                   rtol=0.0001)
+            nptest.assert_allclose(res['yhat_hi'], known_res['yhat_hi'],
+                                   rtol=0.0001)
 
     @seed
     def test_xlinear_ylinear_no_ci(self):
         known_y_linlin_no_ci = numpy.array([
-            -0.89650596,   1.20256093,   2.45912768,   3.39459245,
-             4.15976331,   4.81895346,   5.40596572,   5.94094748,
-             6.43698357,   6.90313142,   7.34598503,   7.77055185,
-             8.18077912,   8.57988686,   8.97059045,   9.35525614,
-             9.73601589,  10.11485714,  10.49369839,  10.87445814,
-            11.25912384,  11.64982743,  12.04893516,  12.45916243,
-            12.88372926,  13.32658287,  13.79273071,  14.28876680,
-            14.82374857,  15.41076083,  16.06995097,  16.83512184,
-            17.77058661,  19.02715336,  21.12622025
+            -0.89650596, 1.20256093, 2.45912768, 3.39459245,
+            4.15976331, 4.81895346, 5.40596572, 5.94094748,
+            6.43698357, 6.90313142, 7.34598503, 7.77055185,
+            8.18077912, 8.57988686, 8.97059045, 9.35525614,
+            9.73601589, 10.11485714, 10.49369839, 10.87445814,
+            11.25912384, 11.64982743, 12.04893516, 12.45916243,
+            12.88372926, 13.32658287, 13.79273071, 14.28876680,
+            14.82374857, 15.41076083, 16.06995097, 16.83512184,
+            17.77058661, 19.02715336, 21.12622025
         ])
         scales = {'fitlogs': None, 'fitprobs': None}
         x, y = self.zscores, self.data
@@ -128,13 +141,16 @@ class Test_fit_line(object):
     def test_xlinear_ylinear(self):
         scales = {'fitlogs': None, 'fitprobs': None}
         x, y = self.zscores, self.data
-        x_, y_, res = viz.fit_line(x, y, xhat=x[::8], estimate_ci=True, **scales)
+        x_, y_, res = viz.fit_line(x, y, xhat=x[::8], estimate_ci=True,
+                                   **scales)
         nptest.assert_allclose(y_, self.known_y_linlin, rtol=0.0001)
         known_res = {
             'slope': 5.3404377026700995,
             'intercept': 10.114857142857147,
-            'yhat_lo': numpy.array([-2.9223, 5.4807, 9.1090, 12.0198, 16.2376]),
-            'yhat_hi': numpy.array([0.4983, 7.0448, 10.2715, 13.4877, 18.8306]),
+            'yhat_lo': numpy.array([-2.9223, 5.4807, 9.1090,
+                                    12.0198, 16.2376]),
+            'yhat_hi': numpy.array([0.4983, 7.0448, 10.2715,
+                                    13.4877, 18.8306]),
         }
         self.check_res(res, known_res)
 
@@ -142,7 +158,8 @@ class Test_fit_line(object):
     def test_xlinear_ylog(self):
         scales = {'fitlogs': 'y', 'fitprobs': None}
         x, y = self.zscores, self.data
-        x_, y_, res = viz.fit_line(x, y, xhat=x[::8], estimate_ci=True, **scales)
+        x_, y_, res = viz.fit_line(x, y, xhat=x[::8], estimate_ci=True,
+                                   **scales)
         nptest.assert_allclose(y_, self.known_y_linlog, rtol=0.0001)
         known_res = {
             'slope': 0.55515014824534514,
@@ -156,13 +173,16 @@ class Test_fit_line(object):
     def test_xlinear_yprob(self):
         scales = {'fitlogs': None, 'fitprobs': 'y'}
         x, y = self.data, self.probs
-        x_, y_, res = viz.fit_line(x, y, xhat=x[::8], estimate_ci=True, **scales)
+        x_, y_, res = viz.fit_line(x, y, xhat=x[::8], estimate_ci=True,
+                                   **scales)
         nptest.assert_allclose(y_, self.known_y_linprob, rtol=0.0001)
         known_res = {
             'slope': 0.16920340891421964,
             'intercept': -1.7114683092517717,
-            'yhat_lo': numpy.array([5.6382, 18.9842, 36.0326, 54.0282, 92.8391]),
-            'yhat_hi': numpy.array([12.6284, 28.2687, 44.6934, 61.8816, 97.1297]),
+            'yhat_lo': numpy.array([5.6382, 18.9842, 36.0326,
+                                    54.0282, 92.8391]),
+            'yhat_hi': numpy.array([12.6284, 28.2687, 44.6934,
+                                    61.8816, 97.1297]),
         }
         self.check_res(res, known_res)
 
@@ -170,13 +190,16 @@ class Test_fit_line(object):
     def test_xlog_ylinear(self):
         scales = {'fitlogs': 'x', 'fitprobs': None}
         x, y = self.data, self.zscores
-        x_, y_, res = viz.fit_line(x, y, xhat=x[::8], estimate_ci=True, **scales)
+        x_, y_, res = viz.fit_line(x, y, xhat=x[::8], estimate_ci=True,
+                                   **scales)
         nptest.assert_allclose(y_, self.known_y_loglin, rtol=0.0001)
         known_res = {
             'slope': 1.7385543724819053,
             'intercept': -3.7812786758946122,
-            'yhat_lo': numpy.array([-2.889480, -0.846565, -0.093696, 0.360738, 1.255963]),
-            'yhat_hi': numpy.array([-2.310246, -0.637950, 0.024143, 0.494404, 1.561183]),
+            'yhat_lo': numpy.array([-2.889480, -0.846565, -0.093696,
+                                    0.360738, 1.255963]),
+            'yhat_hi': numpy.array([-2.310246, -0.637950, 0.024143,
+                                    0.494404, 1.561183]),
         }
         self.check_res(res, known_res)
 
@@ -184,13 +207,16 @@ class Test_fit_line(object):
     def test_xlog_ylog(self):
         scales = {'fitlogs': 'both', 'fitprobs': None}
         x, y = self.data, self.y
-        x_, y_, res = viz.fit_line(x, y, xhat=x[::8], estimate_ci=True, **scales)
+        x_, y_, res = viz.fit_line(x, y, xhat=x[::8], estimate_ci=True,
+                                   **scales)
         nptest.assert_allclose(y_, self.known_y_loglog, rtol=0.0001)
         known_res = {
             'slope': 1.9695339470891058,
             'intercept': -4.4267200322534261,
-            'yhat_lo': numpy.array([0.033559, 0.327970, 0.777473, 1.331504, 3.811647]),
-            'yhat_hi': numpy.array([0.061867, 0.422956, 0.892383, 1.489530, 4.842235]),
+            'yhat_lo': numpy.array([0.033559, 0.327970, 0.777473,
+                                    1.331504, 3.811647]),
+            'yhat_hi': numpy.array([0.061867, 0.422956, 0.892383,
+                                    1.489530, 4.842235]),
         }
         self.check_res(res, known_res)
 
@@ -198,13 +224,16 @@ class Test_fit_line(object):
     def test_xlog_yprob(self):
         scales = {'fitlogs': 'x', 'fitprobs': 'y'}
         x, y = self.data, self.probs
-        x_, y_, res = viz.fit_line(x, y, xhat=x[::8], estimate_ci=True, **scales)
+        x_, y_, res = viz.fit_line(x, y, xhat=x[::8], estimate_ci=True,
+                                   **scales)
         nptest.assert_allclose(y_, self.known_y_logprob, rtol=0.0001)
         known_res = {
             'slope': 1.7385543724819046,
             'intercept': -3.7812786758946113,
-            'yhat_lo': numpy.array([0.187555, 19.859832, 46.267537, 64.085292, 89.551801]),
-            'yhat_hi': numpy.array([1.030230, 26.174702, 50.963065, 68.949137, 94.089655]),
+            'yhat_lo': numpy.array([0.187555, 19.859832, 46.267537,
+                                    64.085292, 89.551801]),
+            'yhat_hi': numpy.array([1.030230, 26.174702, 50.963065,
+                                    68.949137, 94.089655]),
         }
         self.check_res(res, known_res)
 
@@ -212,13 +241,16 @@ class Test_fit_line(object):
     def test_xprob_ylinear(self):
         scales = {'fitlogs': None, 'fitprobs': 'x'}
         x, y = self.probs, self.data
-        x_, y_, res = viz.fit_line(x, y, xhat=x[::8], estimate_ci=True, **scales)
+        x_, y_, res = viz.fit_line(x, y, xhat=x[::8], estimate_ci=True,
+                                   **scales)
         nptest.assert_allclose(y_, self.known_y_problin, rtol=0.0001)
         known_res = {
             'slope': 5.3404377026700995,
             'intercept': 10.114857142857147,
-            'yhat_lo': numpy.array([-2.92233134, 5.48065673,  9.10901980, 12.01977856, 16.23762957]),
-            'yhat_hi': numpy.array([0.49826723, 7.04480065, 10.27146083, 13.48770383, 18.83061329]),
+            'yhat_lo': numpy.array([-2.92233134, 5.48065673,  9.10901980,
+                                    12.01977856, 16.23762957]),
+            'yhat_hi': numpy.array([0.49826723, 7.04480065, 10.27146083,
+                                    13.48770383, 18.83061329]),
         }
         self.check_res(res, known_res)
 
@@ -226,13 +258,16 @@ class Test_fit_line(object):
     def test_xprob_ylog(self):
         scales = {'fitlogs': 'y', 'fitprobs': 'x'}
         x, y = self.probs, self.data
-        x_, y_, res = viz.fit_line(x, y, xhat=x[::8], estimate_ci=True, **scales)
+        x_, y_, res = viz.fit_line(x, y, xhat=x[::8], estimate_ci=True,
+                                   **scales)
         nptest.assert_allclose(y_, self.known_y_problog, rtol=0.0001)
         known_res = {
             'intercept': 2.1749556618678434,
             'slope': 0.55515014824534525,
-            'yhat_lo': numpy.array([2.43550106, 5.64362030, 8.16525601, 11.31358231, 18.09998664]),
-            'yhat_hi': numpy.array([3.13484803, 6.30722509, 8.74945323, 12.23244498, 21.28240831]),
+            'yhat_lo': numpy.array([2.43550106, 5.64362030, 8.16525601,
+                                    11.31358231, 18.09998664]),
+            'yhat_hi': numpy.array([3.13484803, 6.30722509, 8.74945323,
+                                    12.23244498, 21.28240831]),
         }
         self.check_res(res, known_res)
 
@@ -242,13 +277,16 @@ class Test_fit_line(object):
 
         scales = {'fitlogs': None, 'fitprobs': 'both'}
         x, y = self.probs, p2,
-        x_, y_, res = viz.fit_line(x, y, xhat=x[::8], estimate_ci=True, **scales)
+        x_, y_, res = viz.fit_line(x, y, xhat=x[::8], estimate_ci=True,
+                                   **scales)
         nptest.assert_allclose(y_, self.known_y_probprob, rtol=0.0001)
         known_res = {
             'slope': 0.98467862838225351,
             'intercept': 0.0013327049076583583,
-            'yhat_lo': numpy.array([1.96759603, 24.66922946, 46.88723664, 68.88913508, 91.58436332]),
-            'yhat_hi': numpy.array([2.28593917, 25.24921351, 47.60781632, 70.11543855, 92.54803847]),
+            'yhat_lo': numpy.array([1.96759603, 24.66922946, 46.88723664,
+                                    68.88913508, 91.58436332]),
+            'yhat_hi': numpy.array([2.28593917, 25.24921351, 47.60781632,
+                                    70.11543855, 92.54803847]),
         }
         self.check_res(res, known_res)
 
@@ -411,12 +449,16 @@ class Test_plot_pos(object):
 
 def test_probplot_prob(plot_data):
     fig, ax = plt.subplots()
-    fig = viz.probplot(plot_data, ax=ax, problabel='Test xlabel', datascale='log')
+    fig = viz.probplot(plot_data, ax=ax, problabel='Test xlabel',
+                       datascale='log')
     assert isinstance(fig, plt.Figure)
     return fig
 
 
-@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=TIGHT_TOLERANCE)
+@pytest.mark.mpl_image_compare(
+    baseline_dir=BASELINE_DIR,
+    tolerance=TIGHT_TOLERANCE
+)
 def test_probplot_qq(plot_data):
     fig, ax = plt.subplots()
     fig = viz.probplot(plot_data, ax=ax, plottype='qq', datalabel='Test label',
@@ -424,7 +466,10 @@ def test_probplot_qq(plot_data):
     return fig
 
 
-@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=TIGHT_TOLERANCE)
+@pytest.mark.mpl_image_compare(
+    baseline_dir=BASELINE_DIR,
+    tolerance=TIGHT_TOLERANCE
+)
 @pytest.mark.skipif(stats is None, reason="no scipy")
 def test_probplot_qq_dist(plot_data):
     fig, ax = plt.subplots()
@@ -434,17 +479,25 @@ def test_probplot_qq_dist(plot_data):
     return fig
 
 
-@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=TIGHT_TOLERANCE)
+@pytest.mark.mpl_image_compare(
+    baseline_dir=BASELINE_DIR,
+    tolerance=TIGHT_TOLERANCE
+)
 def test_probplot_pp(plot_data):
     fig, ax = plt.subplots()
-    scatter_kws = dict(color='b', linestyle='--', markeredgecolor='g', markerfacecolor='none')
+    scatter_kws = dict(color='b', linestyle='--',
+                       markeredgecolor='g',
+                       markerfacecolor='none')
     fig = viz.probplot(plot_data, ax=ax, plottype='pp', datascale='linear',
                        datalabel='test x', problabel='test y',
                        scatter_kws=scatter_kws)
     return fig
 
 
-@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=TIGHT_TOLERANCE)
+@pytest.mark.mpl_image_compare(
+    baseline_dir=BASELINE_DIR,
+    tolerance=TIGHT_TOLERANCE
+)
 def test_probplot_prob_bestfit(plot_data):
     fig, ax = plt.subplots()
     fig = viz.probplot(plot_data, ax=ax, datalabel='Test xlabel', bestfit=True,
@@ -453,7 +506,10 @@ def test_probplot_prob_bestfit(plot_data):
     return fig
 
 
-@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=TIGHT_TOLERANCE)
+@pytest.mark.mpl_image_compare(
+    baseline_dir=BASELINE_DIR,
+    tolerance=TIGHT_TOLERANCE
+)
 def test_probplot_qq_bestfit(plot_data):
     fig, ax = plt.subplots()
     fig = viz.probplot(plot_data, ax=ax, plottype='qq', bestfit=True,
@@ -462,7 +518,10 @@ def test_probplot_qq_bestfit(plot_data):
     return fig
 
 
-@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=TIGHT_TOLERANCE)
+@pytest.mark.mpl_image_compare(
+    baseline_dir=BASELINE_DIR,
+    tolerance=TIGHT_TOLERANCE
+)
 def test_probplot_pp_bestfit(plot_data):
     fig, ax = plt.subplots()
     scatter_kws = {'marker': 's', 'color': 'red'}
@@ -474,32 +533,51 @@ def test_probplot_pp_bestfit(plot_data):
     return fig
 
 
-@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=TIGHT_TOLERANCE)
+@pytest.mark.mpl_image_compare(
+    baseline_dir=BASELINE_DIR,
+    tolerance=TIGHT_TOLERANCE
+)
 def test_probplot_prob_probax_y(plot_data):
     fig, ax = plt.subplots()
-    fig = viz.probplot(plot_data, ax=ax, datalabel='Test xlabel', datascale='log', probax='y')
+    fig = viz.probplot(plot_data, ax=ax, datalabel='Test xlabel',
+                       datascale='log', probax='y')
     assert isinstance(fig, plt.Figure)
     return fig
 
 
-@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=TIGHT_TOLERANCE)
+@pytest.mark.mpl_image_compare(
+    baseline_dir=BASELINE_DIR,
+    tolerance=TIGHT_TOLERANCE
+)
 def test_probplot_qq_probax_y(plot_data):
     fig, ax = plt.subplots()
-    fig = viz.probplot(plot_data, ax=ax, plottype='qq', problabel='Test label', probax='y',
-                       datascale='log', scatter_kws=dict(color='r'))
+    fig = viz.probplot(plot_data, ax=ax, plottype='qq',
+                       problabel='Test label',
+                       probax='y', datascale='log',
+                       scatter_kws=dict(color='r'))
     return fig
 
 
-@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=TIGHT_TOLERANCE)
+@pytest.mark.mpl_image_compare(
+    baseline_dir=BASELINE_DIR,
+    tolerance=TIGHT_TOLERANCE
+)
 def test_probplot_pp_probax_y(plot_data):
     fig, ax = plt.subplots()
-    scatter_kws = dict(color='b', linestyle='--', markeredgecolor='g', markerfacecolor='none')
-    fig = viz.probplot(plot_data, ax=ax, plottype='pp', datascale='linear', probax='y',
-                       datalabel='test x', problabel='test y', scatter_kws=scatter_kws)
+    scatter_kws = dict(color='b', linestyle='--',
+                       markeredgecolor='g',
+                       markerfacecolor='none')
+    fig = viz.probplot(plot_data, ax=ax, plottype='pp',
+                       datascale='linear', probax='y',
+                       datalabel='test x', problabel='test y',
+                       scatter_kws=scatter_kws)
     return fig
 
 
-@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=TIGHT_TOLERANCE)
+@pytest.mark.mpl_image_compare(
+    baseline_dir=BASELINE_DIR,
+    tolerance=TIGHT_TOLERANCE
+)
 def test_probplot_prob_bestfit_probax_y(plot_data):
     fig, ax = plt.subplots()
     fig = viz.probplot(plot_data, ax=ax, datalabel='Test xlabel', bestfit=True,
@@ -508,26 +586,38 @@ def test_probplot_prob_bestfit_probax_y(plot_data):
     return fig
 
 
-@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=TIGHT_TOLERANCE)
+@pytest.mark.mpl_image_compare(
+    baseline_dir=BASELINE_DIR,
+    tolerance=TIGHT_TOLERANCE
+)
 def test_probplot_qq_bestfit_probax_y(plot_data):
     fig, ax = plt.subplots()
-    fig = viz.probplot(plot_data, ax=ax, plottype='qq', bestfit=True, problabel='Test label',
-                       datascale='log', probax='y', estimate_ci=True)
+    fig = viz.probplot(plot_data, ax=ax, plottype='qq', bestfit=True,
+                       problabel='Test label', probax='y',
+                       datascale='log', estimate_ci=True)
     return fig
 
 
-@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=TIGHT_TOLERANCE)
+@pytest.mark.mpl_image_compare(
+    baseline_dir=BASELINE_DIR,
+    tolerance=TIGHT_TOLERANCE
+)
 def test_probplot_pp_bestfit_probax_y(plot_data):
     fig, ax = plt.subplots()
     scatter_kws = {'marker': 's', 'color': 'red'}
     line_kws = {'linestyle': '--', 'linewidth': 3}
-    fig = viz.probplot(plot_data, ax=ax, plottype='pp', datascale='linear', probax='y',
-                       datalabel='test x', bestfit=True, problabel='test y',
-                       scatter_kws=scatter_kws, line_kws=line_kws, estimate_ci=True)
+    fig = viz.probplot(plot_data, ax=ax, plottype='pp',
+                       datascale='linear', datalabel='test x',
+                       probax='y', problabel='test y',
+                       bestfit=True, estimate_ci=True,
+                       scatter_kws=scatter_kws, line_kws=line_kws)
     return fig
 
 
-@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=LOOSE_TOLERANCE)
+@pytest.mark.mpl_image_compare(
+    baseline_dir=BASELINE_DIR,
+    tolerance=LOOSE_TOLERANCE
+)
 @pytest.mark.skipif(stats is None, reason="no scipy")
 def test_probplot_beta_dist_best_fit_y(plot_data):
     fig, (ax1, ax2) = plt.subplots(ncols=2)
@@ -545,7 +635,10 @@ def test_probplot_beta_dist_best_fit_y(plot_data):
     return fig
 
 
-@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=TIGHT_TOLERANCE)
+@pytest.mark.mpl_image_compare(
+    baseline_dir=BASELINE_DIR,
+    tolerance=TIGHT_TOLERANCE
+)
 @pytest.mark.skipif(stats is None, reason="no scipy")
 def test_probplot_beta_dist_best_fit_x(plot_data):
     fig, (ax1, ax2) = plt.subplots(nrows=2)
@@ -592,9 +685,13 @@ def test__set_prob_limits_x(probax, N, minval, maxval):
             ax.set_ylim.assert_called_once_with(bottom=minval, top=maxval)
 
 
-@pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=TIGHT_TOLERANCE)
+@pytest.mark.mpl_image_compare(
+    baseline_dir=BASELINE_DIR,
+    tolerance=TIGHT_TOLERANCE
+)
 def test_probplot_color_and_label(plot_data):
     fig, ax = plt.subplots()
-    fig = viz.probplot(plot_data, ax=ax, color='pink', label='A Top-Level Label')
+    fig = viz.probplot(plot_data, ax=ax, color='pink',
+                       label='A Top-Level Label')
     ax.legend(loc='lower right')
     return fig
