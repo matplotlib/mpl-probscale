@@ -421,12 +421,8 @@ def fit_line(x, y, xhat=None, fitprobs=None, fitlogs=None, dist=None,
         ``lambda x: dist.ppf(x / 100.)``.
         For a log transform, ``lambda x: numpy.log(x)``.
         Take care to not pass the same value to both ``fitlogs`` and
-<<<<<<< 801b29f5fb36417255ee93a7fe704cc1360cb89c
         ``figprobs`` as both transforms will be applied.
 
-=======
-        ``fitprobs`` as both transforms will be applied.
->>>>>>> fix minor doc typos
     dist : distribution, optional
         A fully-spec'd scipy.stats distribution-like object
         such that ``dist.ppf`` and ``dist.cdf`` can be called. If not
