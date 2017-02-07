@@ -1,13 +1,13 @@
 package:
   name: mpl-probscale
-  version: 0.2.2dev
+  version: 0.2.3
 
 source:
   path: ../
 
 build:
   script: python setup.py install
-  number: 1
+  number: 0
 
 requirements:
   build:
