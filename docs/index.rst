@@ -7,13 +7,13 @@
 mpl-probscale: Real probability scales for matplotlib
 =====================================================
 
-.. image:: https://travis-ci.org/phobson/watershed.svg?branch=master
-    :target: https://travis-ci.org/phobson/watershed
+.. image:: https://travis-ci.org/matplotlib/mpl-probscale.svg?branch=master
+    :target: https://travis-ci.org/matplotlib/mpl-probscale
 
-.. image:: https://coveralls.io/repos/phobson/mpl-probscale/badge.svg?branch=master&service=github
-  :target: https://coveralls.io/github/phobson/mpl-probscale?branch=master
+.. image:: https://coveralls.io/repos/matplotlib/mpl-probscale/badge.svg?branch=master&service=github
+  :target: https://coveralls.io/github/matplotlib/mpl-probscale?branch=master
 
-https://github.com/phobson/mpl-probscale
+https://github.com/matplotlib/mpl-probscale
 
 Installation
 ------------
@@ -34,7 +34,7 @@ Development builds
 
 Development builds are available through my conda channel:
 
-``conda install mpl-probscale --channel=phobson``
+``conda install mpl-probscale --channel=conda-forge``
 
 
 Quickstart
