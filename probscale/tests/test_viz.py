@@ -20,7 +20,7 @@ PY27 = sys.version_info.major == 2
 if PY27:  # pragma: no cover
     import mock
     TIGHT_TOLERANCE = 15
-    LOOSE_TOLERANCE = 18
+    LOOSE_TOLERANCE = 20
 else:
     from unittest import mock
     TIGHT_TOLERANCE = 13

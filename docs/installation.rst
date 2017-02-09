@@ -32,13 +32,13 @@ You can either clone the public repository:
 
 .. code-block:: console
 
-    $ git clone git://github.com/phobson/probscale
+    $ git clone git://github.com/matplotlib/mpl-probscale
 
 Or download the `tarball`_:
 
 .. code-block:: console
 
-    $ curl  -OL https://github.com/phobson/probscale/tarball/master
+    $ curl  -OL https://github.com/matplotlib/mpl-probscale/tarball/master
 
 Once you have a copy of the source, you can install it with:
 
@@ -47,5 +47,5 @@ Once you have a copy of the source, you can install it with:
     $ pip install .
 
 
-.. _Github repo: https://github.com/phobson/probscale
-.. _tarball: https://github.com/phobson/probscale/tarball/master
+.. _Github repo: https://github.com/matplotlib/mpl-probscale
+.. _tarball: https://github.com/matplotlib/mpl-probscale/tarball/master
