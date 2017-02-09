@@ -1,28 +1,30 @@
 # mpl-probscale
 Real probability scales for matplotlib
 
-[![Build Status](https://travis-ci.org/phobson/mpl-probscale.svg)](https://travis-ci.org/phobson/mpl-probscale)
-[![codecov](https://codecov.io/gh/phobson/mpl-probscale/branch/master/graph/badge.svg)](https://codecov.io/gh/phobson/mpl-probscale)
-[![Code Climate](https://codeclimate.com/github/phobson/mpl-probscale/badges/gpa.svg)](https://codeclimate.com/github/phobson/mpl-probscale)
+[![Build Status](https://travis-ci.org/matplotlib/mpl-probscale.svg)](https://travis-ci.org/matplotlib/mpl-probscale)
+[![codecov](https://codecov.io/gh/matplotlib/mpl-probscale/branch/master/graph/badge.svg)](https://codecov.io/gh/matplotlib/mpl-probscale)
 
-[Sphinx Docs](http://phobson.github.io/mpl-probscale/)
+[Sphinx Docs](http://matplotlib.org/mpl-probscale/)
 
 ## Installation
 
 ### Official releases
 
-Official releases are available through the conda-forge channel or pip"
+Official releases are available through the conda-forge channel or pip
+
 `conda install mpl-probscale --channel=conda-forge`
 
 `pip install probscale`
 
 ### Development builds
 
-Development builds are available through my conda channel:
+This is a pure-python package, so building from source is easy on all platforms:
 
-`conda install mpl-probscale --channel=phobson`
-
-
+```
+git clone git@github.com:matplotlib/mpl-probscale.git
+cd mpl-probscale
+pip install -e .
+```
 
 ## Quick start
 
