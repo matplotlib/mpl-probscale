@@ -32,9 +32,13 @@ or
 Development builds
 ~~~~~~~~~~~~~~~~~~
 
-Development builds are available through my conda channel:
+This is a pure-python package, so building from source is easy on all platforms:
 
-``conda install mpl-probscale --channel=conda-forge``
+::
+
+    git clone git@github.com:matplotlib/mpl-probscale.git
+    cd mpl-probscale
+    pip install -e .
 
 
 Quickstart
