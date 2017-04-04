@@ -237,7 +237,7 @@ def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
             # for zorder, use 1 less than existing or 1 - 1 = 0
             opts = {
                 'facecolor': line_kws.get('color', 'k'),
-                'edgecolor': line_kws.get('color', 'None'),
+                'edgecolor': 'None',
                 'alpha': line_kws.get('alpha', 0.5) * 0.5,
                 'zorder': line_kws.get('zorder', 1) - 1,
                 'label': '95% conf. interval'
@@ -259,7 +259,7 @@ def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
         return fig
 
 
-def plot_pos(data, postype=None, alpha=None, beta=None):
+def plot_pos(data, postype=None, alpha=None, beta=None, exceedance=False):
     """
     Compute the plotting positions for a dataset. Heavily borrows from
     ``scipy.stats.mstats.plotting_positions``.
@@ -315,6 +315,15 @@ def plot_pos(data, postype=None, alpha=None, beta=None):
         Custom plotting position parameters is the options available
         through the `postype` parameter are insufficient.
 
+    exceedance : bool, optional (default: False)
+        Toggles "exceedance" vs "non-exceedance" probabilily plots.
+        By default, non-exceedance plots are drawn where the plot
+        generally slopes from the lower left to the upper right,
+        and show the probability that a new observation will be
+        less than a given point. By contrast, exceedance plots show
+        the probabilty that a new observation will be greater than
+        a given point.
+
     Returns
     -------
     plot_pos : numpy.array
@@ -360,6 +369,9 @@ def plot_pos(data, postype=None, alpha=None, beta=None):
 
     sorted_index = data.argsort()
     pos[sorted_index[:n]] = (numpy.arange(1, n+1) - alpha) / (n + 1.0 - alpha - beta)
+
+    if exceedance:
+        return pos[sorted_index[::-1]], data[sorted_index]
 
     return pos[sorted_index], data[sorted_index]
 

@@ -510,6 +510,19 @@ def test_probplot_prob_bestfit(plot_data):
     baseline_dir=BASELINE_DIR,
     tolerance=TIGHT_TOLERANCE
 )
+def test_probplot_prob_bestfit_exceedance(plot_data):
+    fig, ax = plt.subplots()
+    fig = viz.probplot(plot_data, ax=ax, datalabel='Test xlabel', bestfit=True,
+                       datascale='log', estimate_ci=True,
+                       pp_kws={'exceedance': True})
+    assert isinstance(fig, plt.Figure)
+    return fig
+
+
+@pytest.mark.mpl_image_compare(
+    baseline_dir=BASELINE_DIR,
+    tolerance=TIGHT_TOLERANCE
+)
 def test_probplot_qq_bestfit(plot_data):
     fig, ax = plt.subplots()
     fig = viz.probplot(plot_data, ax=ax, plottype='qq', bestfit=True,
