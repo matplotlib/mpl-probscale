@@ -63,5 +63,9 @@ target/
 
 # VS
 .vs
+.vscode
 *.pyproj
 *.sln
+
+# other text editors
+.atom-build.yml
