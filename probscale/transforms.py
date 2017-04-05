@@ -84,7 +84,8 @@ class ProbTransform(_ProbTransformMixin):
         return q
 
     def inverted(self):
-        return QuantileTransform(self.dist, as_pct=self.as_pct, out_of_bounds=self.out_of_bounds)
+        return QuantileTransform(self.dist, as_pct=self.as_pct,
+                                 out_of_bounds=self.out_of_bounds)
 
 
 class QuantileTransform(_ProbTransformMixin):
@@ -113,4 +114,5 @@ class QuantileTransform(_ProbTransformMixin):
         return prob
 
     def inverted(self):
-        return ProbTransform(self.dist, as_pct=self.as_pct, out_of_bounds=self.out_of_bounds)
+        return ProbTransform(self.dist, as_pct=self.as_pct,
+                             out_of_bounds=self.out_of_bounds)
