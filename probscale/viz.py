@@ -369,7 +369,7 @@ def plot_pos(data, postype=None, alpha=None, beta=None, exceedance=False):
 
     sorted_index = data.argsort()
     pos[sorted_index[:n]] = (
-        (numpy.arange(1, n + 1) - alpha) / (n + 1 - alpha - beta)
+        (numpy.arange(1.0, n + 1.0) - alpha) / (n + 1.0 - alpha - beta)
     )
 
     if exceedance:
