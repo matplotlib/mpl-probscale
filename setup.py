@@ -47,7 +47,6 @@ setup(
     license=LICENSE,
     packages=PACKAGES,
     package_data=PACKAGE_DATA,
-    #data_files=DATA_FILES,
     platforms=PLATFORMS,
     classifiers=CLASSIFIERS,
     install_requires=INSTALL_REQUIRES,

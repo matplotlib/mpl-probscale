@@ -50,7 +50,7 @@ class _minimal_norm(object):
         Wikipedia: https://goo.gl/Rtxjme
 
         """
-        return numpy.sqrt(2) * cls._approx_inv_erf(2*q - 1)
+        return numpy.sqrt(2) * cls._approx_inv_erf(2 * q - 1)
 
     @classmethod
     def cdf(cls, x):
@@ -59,7 +59,7 @@ class _minimal_norm(object):
         Wikipedia: https://goo.gl/ciUNLx
 
         """
-        return 0.5 * (1 + cls._approx_erf(x/numpy.sqrt(2)))
+        return 0.5 * (1 + cls._approx_erf(x / numpy.sqrt(2)))
 
 
 class ProbScale(ScaleBase):

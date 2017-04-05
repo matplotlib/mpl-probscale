@@ -96,7 +96,7 @@ def _bs_fit(x, y, xhat, fitlogs=None, niter=10000, alpha=0.05):
         for ii in index
     ])
 
-    percentiles = 100 * numpy.array([alpha*0.5, 1 - alpha*0.5])
+    percentiles = 100 * numpy.array([alpha * 0.5, 1 - alpha * 0.5])
     yhat_lo, yhat_hi = numpy.percentile(yhat_array, percentiles, axis=0)
     return yhat_lo, yhat_hi
 
@@ -127,7 +127,7 @@ def _estimate_from_fit(xhat, slope, intercept, xlog=False, ylog=False):
     xhat = numpy.asarray(xhat)
     if ylog:
         if xlog:
-            yhat = numpy.exp(intercept) * xhat  ** slope
+            yhat = numpy.exp(intercept) * xhat ** slope
         else:
             yhat = numpy.exp(intercept) * numpy.exp(slope) ** xhat
 
