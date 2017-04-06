@@ -23,8 +23,11 @@ seaborn.set(style='ticks', context='talk', color_codes=True, rc=clear_bkgd)
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
-# documentation root, use os.path.abspath to make it absolute, like shown here.
-#sys.path.insert(0, os.path.abspath('.'))
+# # documentation root, use os.path.abspath to make it absolute, like shown here.
+sys.path.insert(0, os.path.abspath('C:/Users/phobson/sources/mpl-probscale'))
+# sys.path.insert(0, os.path.abspath('.'))
+# sys.path.insert(0, os.path.abspath('..'))
+# sys.path.insert(0, os.path.abspath('../probscale'))
 
 # -- General configuration ------------------------------------------------
 
@@ -50,9 +53,9 @@ extensions = [
     'sphinx.ext.viewcode',
     'plot_generator',
     'plot_directive',
+    'IPython.sphinxext.ipython_console_highlighting',
     'numpydoc',
-    'ipython_directive',
-    'ipython_console_highlighting',
+    'nbsphinx',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -104,7 +107,8 @@ language = None
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
-exclude_patterns = ['_build']
+exclude_patterns = ['_build', '**.ipynb_checkpoints']
+
 
 # The reST default role (used for this markup: `text`) to use for all
 # documents.

@@ -72,9 +72,9 @@ Tutorials
 .. toctree::
    :maxdepth: 2
 
-   tutorial/getting_started.rst
-   tutorial/closer_look_at_viz.rst
-   tutorial/closer_look_at_plot_pos.rst
+   tutorial/getting_started.ipynb
+   tutorial/closer_look_at_viz.ipynb
+   tutorial/closer_look_at_plot_pos.ipynb
 
 Testing
 =======
