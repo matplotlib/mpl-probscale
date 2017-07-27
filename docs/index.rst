@@ -85,8 +85,8 @@ It's easiest to run the tests from an interactive python session:
 
     import matplotlib
     matplotlib.use('agg')
-    import probscale
-    probscale.test()
+    from probscale import tests
+    tests.test()
 
 API References
 ==============

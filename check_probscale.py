@@ -5,6 +5,6 @@ matplotlib.use('agg')
 from matplotlib.pyplot import style
 style.use('classic')
 
-import probscale
-status = probscale.test(*sys.argv[1:])
+from probscale import tests
+status = tests.test(*sys.argv[1:])
 sys.exit(status)
