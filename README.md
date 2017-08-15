@@ -56,6 +56,6 @@ The best way to run the tests is in an interactive python session:
 ```python
 import matplotlib
 matplotib.use('agg')
-import probscale
-probscale.test()
+from probscale import tests
+tests.test()
 ```
