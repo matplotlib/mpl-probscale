@@ -79,8 +79,11 @@ class ProbTransform(_ProbTransformMixin):
     """
 
     def transform_non_affine(self, prob):
-        prob = self._handle_out_of_bounds(numpy.asarray(prob) / self.factor)
-        q = self.dist.ppf(prob)
+        with numpy.errstate(divide="ignore", invalid="ignore"):
+            prob = self._handle_out_of_bounds(
+                numpy.asarray(prob) / self.factor
+            )
+            q = self.dist.ppf(prob)
         return q
 
     def inverted(self):
@@ -110,7 +113,8 @@ class QuantileTransform(_ProbTransformMixin):
     """
 
     def transform_non_affine(self, q):
-        prob = self.dist.cdf(q) * self.factor
+        with numpy.errstate(divide="ignore", invalid="ignore"):
+            prob = self.dist.cdf(q) * self.factor
         return prob
 
     def inverted(self):
