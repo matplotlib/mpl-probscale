@@ -26,6 +26,19 @@ cd mpl-probscale
 pip install -e .
 ```
 
+### Additional Dependecies
+
+This library depends on **pytest** framework.
+The current release version does not have it listed as a hard dependency, however.
+So for now you will need to install ``pytest`` yourself to use mpl-probscale:
+
+`pip install pytest`
+
+or 
+
+`conda install pytest --channel=conda-forge`
+
+
 ## Quick start
 
 Simply importing `probscale` lets you use probability scales in your matplotlib figures:
