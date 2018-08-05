@@ -26,7 +26,7 @@ cd mpl-probscale
 pip install -e .
 ```
 
-### Additional Dependecies
+### Additional Depedencies
 
 This library depends on **pytest** framework.
 The current release version does not have it listed as a hard dependency, however.
@@ -37,6 +37,8 @@ So for now you will need to install ``pytest`` yourself to use mpl-probscale:
 or 
 
 `conda install pytest --channel=conda-forge`
+
+In the next release, this depedency will be made optional.
 
 
 ## Quick start
