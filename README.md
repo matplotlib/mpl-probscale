@@ -8,37 +8,6 @@ Real probability scales for matplotlib
 
 ## Installation
 
-### Dependecies
-This library depends on **pytest** framework. If you don't have this installed you may wind up getting dependcy error like
-> File "", line 1, in 
-File "/usr/local/lib/python3.5/dist-packages/probscale/init.py", line 5, in 
-from .tests import test
-File "/usr/local/lib/python3.5/dist-packages/probscale/tests/init.py", line 3, in 
-import pytest
-ImportError: No module named 'pytest'
-
-So install **pytest** before installing **probscale**
-
-### How to install pyteset?
-You can install **pytest** with **pip** package manager. 
-
-For Python 3 version
-`pip3 install pytest`
- 
-or
-
-for Python 2 version
-`pip install pytest`
-
-If you need **superuser** mode, you can do,
-For Python 3 version
-`sudo -H pip3 install pytest`
- 
-or
-
-for Python 2 version
-`sudo -H pip install pytest`
-
 ### Official releases
 
 Official releases are available through the conda-forge channel or pip
@@ -56,6 +25,19 @@ git clone git@github.com:matplotlib/mpl-probscale.git
 cd mpl-probscale
 pip install -e .
 ```
+
+### Additional Dependecies
+
+This library depends on **pytest** framework.
+The current release version does not have it listed as a hard dependency, however.
+So for now you will need to install ``pytest`` yourself to use mpl-probscale:
+
+`pip install pytest`
+
+or 
+
+`conda install pytest --channel=conda-forge`
+
 
 ## Quick start
 
