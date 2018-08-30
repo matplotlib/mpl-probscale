@@ -40,11 +40,10 @@ install:
   - pip install .
 
 script:
-  - python check_probscale.py --verbose ${ARGS}
+  - coverage run --source probscale check_probscale.py --verbose ${ARGS}
 
 after_success:
   - if [ ${COVERAGE} = true ]; then
-      coverage run --source probscale check_probscale.py;
       coverage report -m;
       codecov;
     fi
