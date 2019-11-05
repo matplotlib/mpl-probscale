@@ -16,17 +16,11 @@ from .helpers import seed
 import pytest
 import numpy.testing as nptest
 
-PY27 = sys.version_info.major == 2
-if PY27:  # pragma: no cover
-    import mock
-    TIGHT_TOLERANCE = 15
-    LOOSE_TOLERANCE = 20
-else:
-    from unittest import mock
-    TIGHT_TOLERANCE = 13
-    LOOSE_TOLERANCE = 18
+from unittest import mock
 
 
+TIGHT_TOLERANCE = 13
+LOOSE_TOLERANCE = 18
 BASELINE_DIR = 'baseline_images/test_viz'
 
 
@@ -496,7 +490,8 @@ def test_probplot_pp(plot_data):
 
 @pytest.mark.mpl_image_compare(
     baseline_dir=BASELINE_DIR,
-    tolerance=TIGHT_TOLERANCE
+    tolerance=TIGHT_TOLERANCE,
+    remove_text=True,
 )
 def test_probplot_prob_bestfit(plot_data):
     fig, ax = plt.subplots()
@@ -650,7 +645,8 @@ def test_probplot_beta_dist_best_fit_y(plot_data):
 
 @pytest.mark.mpl_image_compare(
     baseline_dir=BASELINE_DIR,
-    tolerance=TIGHT_TOLERANCE
+    tolerance=TIGHT_TOLERANCE,
+    remove_text=True,
 )
 @pytest.mark.skipif(stats is None, reason="no scipy")
 def test_probplot_beta_dist_best_fit_x(plot_data):
