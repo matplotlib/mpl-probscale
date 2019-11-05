@@ -2,26 +2,21 @@ language: python
 
 matrix:
   include:
-    - python: 2.7
-      env:
-        - COVERAGE=false
-        - EXTRATESTERS="mock"
-        - ARGS=""
-    - python: 3.4
+    - python: 3.5
       env:
         - COVERAGE=false
         - EXTRATESTERS=""
         - ARGS=""
-    - python: 3.5
-      env:
-        - COVERAGE=false
-        - EXTRATESTERS="freetype=2.7"
-        - ARGS="--mpl"
     - python: 3.6
       env:
         - COVERAGE=true
         - EXTRATESTERS=""
-        - ARGS="--pep8"
+        - ARGS=""
+    - python: 3.7
+      env:
+        - COVERAGE=true
+        - EXTRATESTERS=""
+        - ARGS="--pep8 --mpl"
 
 before_install:
   - wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh

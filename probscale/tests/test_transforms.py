@@ -25,45 +25,49 @@ def test__clip_out_of_bounds():
     assert numpy.all(diff < 0.0001)
 
 
-@pytest.fixture
-def prob_trans():
-    cls = transforms.ProbTransform
-    return cls(_minimal_norm)
-
-
-@pytest.fixture
-def quant_trans():
-    cls = transforms.QuantileTransform
-    return cls(_minimal_norm)
-
-
-@pytest.mark.parametrize('trans', [prob_trans(), quant_trans()])
+@pytest.mark.parametrize('trans', [
+    transforms.ProbTransform(_minimal_norm),
+    transforms.QuantileTransform(_minimal_norm)
+])
 def test_transform_input_dims(trans):
     assert trans.input_dims == 1
 
 
-@pytest.mark.parametrize('trans', [prob_trans(), quant_trans()])
+@pytest.mark.parametrize('trans', [
+    transforms.ProbTransform(_minimal_norm),
+    transforms.QuantileTransform(_minimal_norm)
+])
 def test_transform_output_dims(trans):
     assert trans.output_dims == 1
 
 
-@pytest.mark.parametrize('trans', [prob_trans(), quant_trans()])
+@pytest.mark.parametrize('trans', [
+    transforms.ProbTransform(_minimal_norm),
+    transforms.QuantileTransform(_minimal_norm)
+])
 def test_transform_is_separable(trans):
     assert trans.is_separable
 
 
-@pytest.mark.parametrize('trans', [prob_trans(), quant_trans()])
+@pytest.mark.parametrize('trans', [
+    transforms.ProbTransform(_minimal_norm),
+    transforms.QuantileTransform(_minimal_norm)
+])
 def test_transform_has_inverse(trans):
     assert trans.has_inverse
 
 
-@pytest.mark.parametrize('trans', [prob_trans(), quant_trans()])
+@pytest.mark.parametrize('trans', [
+    transforms.ProbTransform(_minimal_norm),
+    transforms.QuantileTransform(_minimal_norm)
+])
 def test_transform_dist(trans):
     trans.dist == _minimal_norm
 
 
 @pytest.mark.parametrize(('trans', 'known_trans_na'), [
-    (prob_trans(), -2.569150498), (quant_trans(), 69.1464492)
+    (transforms.ProbTransform(_minimal_norm), -2.569150498),
+    (transforms.QuantileTransform(_minimal_norm), 69.1464492)
 ])
 def test_transform_non_affine(trans, known_trans_na):
     diff = numpy.abs(trans.transform_non_affine([0.5]) - known_trans_na)
@@ -71,8 +75,8 @@ def test_transform_non_affine(trans, known_trans_na):
 
 
 @pytest.mark.parametrize(('trans', 'inver_cls'), [
-    (prob_trans(), transforms.QuantileTransform),
-    (quant_trans(), transforms.ProbTransform),
+    (transforms.ProbTransform(_minimal_norm), transforms.QuantileTransform),
+    (transforms.QuantileTransform(_minimal_norm), transforms.ProbTransform),
 ])
 def test_transform_inverted(trans, inver_cls):
     t_inv = trans.inverted()
