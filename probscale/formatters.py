@@ -15,7 +15,7 @@ class _FormatterMixin(Formatter):
         x : int or float
             The number you want to format.
         n : int
-            The number of significan figures it should have.
+            The number of significant figures it should have.
         expthresh : int, optional (default = 5)
             The absolute value of the order of magnitude at which numbers
             are formatted in exponential notation.
@@ -97,7 +97,7 @@ class _FormatterMixin(Formatter):
 
 class PctFormatter(_FormatterMixin):
     """
-    Formatter class for MPL axes to display probalities as percentages.
+    Formatter class for MPL axes to display probabilities as percentages.
 
     Examples
     --------
@@ -119,7 +119,7 @@ class PctFormatter(_FormatterMixin):
 
 class ProbFormatter(_FormatterMixin):
     """
-    Formatter class for MPL axes to display probalities as decimals.
+    Formatter class for MPL axes to display probabilities as decimals.
 
     Examples
     --------

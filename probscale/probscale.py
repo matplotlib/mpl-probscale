@@ -13,8 +13,8 @@ from .formatters import PctFormatter, ProbFormatter
 
 class _minimal_norm(object):
     """
-    A basic implmentation of a normal distribution, minimally
-    API-complient with scipt.stats.norm
+    A basic implementation of a normal distribution, minimally
+    API-compliant with scipy.stats.norm
 
     """
 
@@ -71,7 +71,7 @@ class ProbScale(ScaleBase):
         The axis whose scale will be set.
     dist : scipy.stats probability distribution, optional
         The distribution whose ppf/cdf methods should be used to compute
-        the tick positions. By default, a minimal implimentation of the
+        the tick positions. By default, a minimal implementation of the
         ``scipy.stats.norm`` class is used so that scipy is not a
         requirement.
 
