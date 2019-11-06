@@ -72,6 +72,20 @@ def test_minimal_norm_cdf(mn, mn_input):
     assert numpy.all(numpy.abs(diff) < 0.001)
 
 
+def test_sign_with_nan_no_warning(mn):
+    with pytest.warns(None) as record:
+        res = mn._approx_erf(numpy.nan)
+    assert not record
+    assert numpy.isnan(res)
+
+
+def test_sign_with_nan_no_warning(mn):
+    with pytest.warns(None) as record:
+        res = mn._approx_inv_erf(numpy.nan)
+    assert not record
+    assert numpy.isnan(res)
+
+
 @pytest.mark.mpl_image_compare(
     baseline_dir='baseline_images/test_probscale',
     tolerance=TOLERANCE,
