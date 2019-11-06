@@ -2,12 +2,18 @@ import sys
 from functools import wraps
 
 import numpy
+import matplotlib.lines
 import matplotlib.pyplot as plt
 
 try:
     from scipy import stats
 except:  # pragma: no cover
     stats = None
+
+try:
+    import seaborn
+except:  # pragma: no cover
+    seaborn = None
 
 from probscale import viz
 from probscale.probscale import _minimal_norm
@@ -704,3 +710,31 @@ def test_probplot_color_and_label(plot_data):
                        label='A Top-Level Label')
     ax.legend(loc='lower right')
     return fig
+
+
+@pytest.mark.skipif(seaborn is None, reason="no seaborn")
+@pytest.mark.parametrize('usemarkers', [True, False])
+def test_probplot_with_FacetGrid_with_markers(usemarkers):
+    iris = seaborn.load_dataset("iris")
+
+    hue_kws = None
+    species = sorted(iris['species'].unique())
+    markers = ['o', 'o', 'o']
+    if usemarkers:
+        markers = ['o', 's', '^']
+        hue_kws = {'marker': markers}
+
+    fg = (
+        seaborn.FacetGrid(data=iris, hue='species', hue_kws=hue_kws)
+            .map(viz.probplot, 'sepal_length')
+            .set_axis_labels(x_var='Probability', y_var='Sepal Length')
+            .add_legend()
+    )
+
+    _lines = filter(lambda x: isinstance(x, matplotlib.lines.Line2D), fg.ax.get_children())
+    result_markers = {
+        l.get_label(): l.get_marker()
+        for l in _lines
+    }
+    expected_markers = dict(zip(species, markers))
+    assert expected_markers == result_markers
