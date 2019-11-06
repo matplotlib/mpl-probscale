@@ -179,6 +179,11 @@ def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
     if _label is not None:
         scatter_kws['label'] = _label
 
+    # !-- kwarg that only seaborn should use --!
+    _marker = fgkwargs.get('marker', None)
+    if _marker is not None:
+        scatter_kws['marker'] = _marker
+
     # compute the plotting positions and sort the data
     probs, datavals = plot_pos(data, **pp_kws)
     qntls = dist.ppf(probs)
