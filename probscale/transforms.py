@@ -59,18 +59,18 @@ class _ProbTransformMixin(Transform):
 
 class ProbTransform(_ProbTransformMixin):
     """
-    MPL axes tranform class to convert quantiles to probabilities
+    MPL axes transform class to convert quantiles to probabilities
     or percents.
 
     Parameters
     ----------
     dist : scipy.stats distribution
-        The distribution whose ``cdf`` and ``pdf`` methods wiil set the
+        The distribution whose ``cdf`` and ``pdf`` methods will set the
         scale of the axis.
     as_pct : bool, optional (True)
         Toggles the formatting of the probabilities associated with the
-        tick labels as percentanges (0 - 100) or fractions (0 - 1).
-    out_of_bounds : string, optionals ('mask' or 'clip')
+        tick labels as percentages (0 - 100) or fractions (0 - 1).
+    out_of_bounds : string, optional ('mask' or 'clip')
         Determines how data outside the range of valid values is
         handled. The default behavior is to mask the data.
         Alternatively, the data can be clipped to values arbitrarily
@@ -93,18 +93,18 @@ class ProbTransform(_ProbTransformMixin):
 
 class QuantileTransform(_ProbTransformMixin):
     """
-    MPL axes tranform class to convert probabilities or percents to
+    MPL axes transform class to convert probabilities or percents to
     quantiles.
 
     Parameters
     ----------
     dist : scipy.stats distribution
-        The distribution whose ``cdf`` and ``pdf`` methods wiil set the
+        The distribution whose ``cdf`` and ``pdf`` methods will set the
         scale of the axis.
     as_pct : bool, optional (True)
         Toggles the formatting of the probabilities associated with the
-        tick labels as percentanges (0 - 100) or fractions (0 - 1).
-    out_of_bounds : string, optionals ('mask' or 'clip')
+        tick labels as percentages (0 - 100) or fractions (0 - 1).
+    out_of_bounds : string, optional ('mask' or 'clip')
         Determines how data outside the range of valid values is
         handled. The default behavior is to mask the data.
         Alternatively, the data can be clipped to values arbitrarily

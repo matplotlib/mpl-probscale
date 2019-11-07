@@ -28,13 +28,13 @@ def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
     plottype : string (default = 'prob')
         Type of plot to be created. Options are:
 
-           - 'prob': probabilty plot
+           - 'prob': probability plot
            - 'pp': percentile plot
            - 'qq': quantile plot
 
 
     dist : scipy distribution, optional
-        A distribtion to compute the scale's tick positions. If not
+        A distribution to compute the scale's tick positions. If not
         specified, a standard normal distribution will be used.
 
     probax : string, optional (default = 'x')
@@ -46,7 +46,8 @@ def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
         respectively.
 
     datascale : string, optional (default = 'log')
-        Scale for the other axis that is not
+        Scale for the other axis that is not the probability (or
+        quantile) axis.
 
     bestfit : bool, optional (default is False)
         Specifies whether a best-fit line should be added to the plot.
@@ -81,7 +82,7 @@ def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
         specified within ``scatter_kws`` and ``line_kws``.
 
         .. note::
-           Users should not specify this parameter. It is inteded to
+           Users should not specify this parameter. It is intended to
            only be used by seaborn when operating within a
            ``FacetGrid``.
 
@@ -92,7 +93,7 @@ def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
         data series label should be specified within ``scatter_kws``.
 
         .. note::
-           Users should not specify this parameter. It is inteded to
+           Users should not specify this parameter. It is intended to
            only be used by seaborn when operating within a
            ``FacetGrid``.
 
@@ -108,7 +109,7 @@ def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
            - q : array of quantiles
            - x, y : arrays of data passed to function
            - xhat, yhat : arrays of modeled data plotted in best-fit line
-           - res : array of coeffcients of the best-fit line.
+           - res : array of coefficients of the best-fit line.
 
     See also
     --------
@@ -269,7 +270,7 @@ def plot_pos(data, postype=None, alpha=None, beta=None, exceedance=False):
     Compute the plotting positions for a dataset. Heavily borrows from
     ``scipy.stats.mstats.plotting_positions``.
 
-    A plottiting position is defined as: ``(i-alpha)/(n+1-alpha-beta)``
+    A plotting position is defined as: ``(i-alpha)/(n+1-alpha-beta)``
     where:
 
         - ``i`` is the rank order
@@ -326,7 +327,7 @@ def plot_pos(data, postype=None, alpha=None, beta=None, exceedance=False):
         generally slopes from the lower left to the upper right,
         and show the probability that a new observation will be
         less than a given point. By contrast, exceedance plots show
-        the probabilty that a new observation will be greater than
+        the probability that a new observation will be greater than
         a given point.
 
     Returns
@@ -339,7 +340,7 @@ def plot_pos(data, postype=None, alpha=None, beta=None, exceedance=False):
 
     References
     ----------
-    http://artax.karlin.mff.cuni.cz/r-help/library/lmomco/html/pp.html
+    https://rdrr.io/cran/lmomco/man/pp.html
     http://astrostatistics.psu.edu/su07/R/html/stats/html/quantile.html
     http://docs.scipy.org/doc/scipy-0.17.0/reference/generated/scipy.stats.probplot.html
     http://docs.scipy.org/doc/scipy-0.17.0/reference/generated/scipy.stats.mstats.plotting_positions.html
@@ -384,7 +385,7 @@ def plot_pos(data, postype=None, alpha=None, beta=None, exceedance=False):
 
 
 def _set_prob_limits(ax, probax, N):
-    """ Sets the limits of a probabilty axis based the number of point.
+    """ Sets the limits of a probability axis based the number of point.
 
     Parameters
     ----------
@@ -436,7 +437,7 @@ def fit_line(x, y, xhat=None, fitprobs=None, fitlogs=None, dist=None,
         Defines how data should be transformed. Valid values are
         'x', 'y', or 'both'. If using ``fitprobs``, variables should
         be expressed as a percentage, i.e.,
-        for a probablility transform, data will be transformed with
+        for a probability transform, data will be transformed with
         ``lambda x: dist.ppf(x / 100.)``.
         For a log transform, ``lambda x: numpy.log(x)``.
         Take care to not pass the same value to both ``fitlogs`` and
@@ -446,7 +447,7 @@ def fit_line(x, y, xhat=None, fitprobs=None, fitlogs=None, dist=None,
         A fully-spec'd scipy.stats distribution-like object
         such that ``dist.ppf`` and ``dist.cdf`` can be called. If not
         provided, defaults to a minimal implementation of
-        ``scipt.stats.norm``.
+        ``scipy.stats.norm``.
 
     estimate_ci : bool, optional (False)
         Estimate and draw a confidence band around the best-fit line
@@ -466,7 +467,7 @@ def fit_line(x, y, xhat=None, fitprobs=None, fitlogs=None, dist=None,
         Dictionary of linear fit results. Keys include:
 
           - slope
-          - intersept
+          - intercept
           - yhat_lo (lower confidence interval of the estimated y-vals)
           - yhat_hi (upper confidence interval of the estimated y-vals)
 

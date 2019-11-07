@@ -24,7 +24,7 @@ def axes_object(ax):
 def axis_name(axis, axname):
     """
     Checks that an axis name is in ``{'x', 'y'}``. Raises an error on
-    an invalid value. Returns the lower case verion of valid values.
+    an invalid value. Returns the lower case version of valid values.
 
     """
 
@@ -39,7 +39,7 @@ def axis_name(axis, axname):
 def fit_argument(arg, argname):
     """
     Checks that an axis options is in ``{'x', y', 'both', None}``.
-    Raises an error on an invalid value. Returns the lower case verion
+    Raises an error on an invalid value. Returns the lower case version
     of valid values.
 
     """
@@ -62,7 +62,7 @@ def axis_type(axtype):
       - *qq* - quantile axis
       - *prob* - probability axis
 
-    Raises an error on an invalid value. Returns the lower case verion
+    Raises an error on an invalid value. Returns the lower case version
     of valid values.
 
     """
