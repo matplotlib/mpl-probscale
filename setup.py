@@ -10,24 +10,23 @@ from setuptools import setup, find_packages
 DESCRIPTION = "mpl-probscale: Probabily scales for matplotlib"
 LONG_DESCRIPTION = DESCRIPTION
 NAME = "probscale"
-VERSION = "0.2.3"
+VERSION = "0.2.4"
 AUTHOR = "Paul Hobson (Geosyntec Consultants)"
 AUTHOR_EMAIL = "phobson@geosyntec.com"
 URL = "https://github.com/matplotlib/mpl-probscale"
 DOWNLOAD_URL = "https://github.com/matplotlib/mpl-probscale/archive/master.zip"
 LICENSE = "BSD 3-clause"
 PACKAGES = find_packages()
-PLATFORMS = "Python 2.7, 3.4 and later."
+PLATFORMS = "Python 3.5 and later."
 CLASSIFIERS = [
     "License :: OSI Approved :: BSD License",
     "Operating System :: OS Independent",
     "Programming Language :: Python",
     "Intended Audience :: Science/Research",
     "Topic :: Software Development :: Libraries :: Python Modules",
-    'Programming Language :: Python :: 2.7',
-    'Programming Language :: Python :: 3.4',
     'Programming Language :: Python :: 3.5',
     'Programming Language :: Python :: 3.6',
+    'Programming Language :: Python :: 3.7',
 ]
 INSTALL_REQUIRES = ['numpy', 'matplotlib']
 PACKAGE_DATA = {
