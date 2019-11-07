@@ -340,7 +340,7 @@ def plot_pos(data, postype=None, alpha=None, beta=None, exceedance=False):
 
     References
     ----------
-    http://artax.karlin.mff.cuni.cz/r-help/library/lmomco/html/pp.html
+    https://rdrr.io/cran/lmomco/man/pp.html
     http://astrostatistics.psu.edu/su07/R/html/stats/html/quantile.html
     http://docs.scipy.org/doc/scipy-0.17.0/reference/generated/scipy.stats.probplot.html
     http://docs.scipy.org/doc/scipy-0.17.0/reference/generated/scipy.stats.mstats.plotting_positions.html
