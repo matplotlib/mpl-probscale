@@ -195,6 +195,10 @@ def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
     else:
         probvals = probs * 100
 
+    # set the probability axes limits
+    if plottype == 'prob':
+        _set_prob_limits(ax, probax, len(probs))
+
     # set up x, y, Axes for probabilities on the x
     if probax == 'x':
         x, y = probvals, datavals
@@ -252,10 +256,6 @@ def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
                             **opts)
     else:
         xhat, yhat, model = (None, None, None)
-
-    # set the probability axes limits
-    if plottype == 'prob':
-        _set_prob_limits(ax, probax, len(probs))
 
     # return the figure and maybe results of the best-fit
     if return_best_fit_results:
