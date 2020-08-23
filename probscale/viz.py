@@ -8,11 +8,24 @@ from . import validate
 from . import algo
 
 
-def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
-             problabel=None, datascale='linear', datalabel=None,
-             bestfit=False, return_best_fit_results=False,
-             estimate_ci=False, ci_kws=None, pp_kws=None,
-             scatter_kws=None, line_kws=None, **fgkwargs):
+def probplot(
+    data,
+    ax=None,
+    plottype="prob",
+    dist=None,
+    probax="x",
+    problabel=None,
+    datascale="linear",
+    datalabel=None,
+    bestfit=False,
+    return_best_fit_results=False,
+    estimate_ci=False,
+    ci_kws=None,
+    pp_kws=None,
+    scatter_kws=None,
+    line_kws=None,
+    **fgkwargs
+):
     """
     Probability, percentile, and quantile plots.
 
@@ -157,7 +170,7 @@ def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
 
     # check input values
     fig, ax = validate.axes_object(ax)
-    probax = validate.axis_name(probax, 'probability axis')
+    probax = validate.axis_name(probax, "probability axis")
     problabel = validate.axis_label(problabel)
     datalabel = validate.axis_label(datalabel)
 
@@ -170,91 +183,96 @@ def probplot(data, ax=None, plottype='prob', dist=None, probax='x',
     plottype = validate.axis_type(plottype)
 
     # !-- kwarg that only seaborn should use --!
-    _color = fgkwargs.get('color', None)
+    _color = fgkwargs.get("color", None)
     if _color is not None:
-        scatter_kws['color'] = _color
-        line_kws['color'] = _color
+        scatter_kws["color"] = _color
+        line_kws["color"] = _color
 
     # !-- kwarg that only seaborn should use --!
-    _label = fgkwargs.get('label', None)
+    _label = fgkwargs.get("label", None)
     if _label is not None:
-        scatter_kws['label'] = _label
+        scatter_kws["label"] = _label
 
     # !-- kwarg that only seaborn should use --!
-    _marker = fgkwargs.get('marker', None)
+    _marker = fgkwargs.get("marker", None)
     if _marker is not None:
-        scatter_kws['marker'] = _marker
+        scatter_kws["marker"] = _marker
 
     # compute the plotting positions and sort the data
     probs, datavals = plot_pos(data, **pp_kws)
     qntls = dist.ppf(probs)
 
     # determine how the probability values should be expressed
-    if plottype == 'qq':
+    if plottype == "qq":
         probvals = qntls
     else:
         probvals = probs * 100
 
     # set up x, y, Axes for probabilities on the x
-    if probax == 'x':
+    if probax == "x":
         x, y = probvals, datavals
         ax.set_xlabel(problabel)
         ax.set_ylabel(datalabel)
-        if plottype == 'prob':
-            ax.set_xscale('prob', dist=dist)
-            fitprobs = 'x'
+        if plottype == "prob":
+            ax.set_xscale("prob", dist=dist)
+            fitprobs = "x"
         else:
             fitprobs = None
-            if plottype == 'pp':
+            if plottype == "pp":
                 ax.set_xlim(left=0, right=100)
 
         ax.set_yscale(datascale)
-        fitlogs = 'y' if datascale == 'log' else None
+        fitlogs = "y" if datascale == "log" else None
 
     # setup x, y, Axes for probabilities on the y
-    elif probax == 'y':
+    elif probax == "y":
         y, x = probvals, datavals
         ax.set_xlabel(datalabel)
         ax.set_ylabel(problabel)
-        if plottype == 'prob':
-            ax.set_yscale('prob', dist=dist)
-            fitprobs = 'y'
+        if plottype == "prob":
+            ax.set_yscale("prob", dist=dist)
+            fitprobs = "y"
         else:
             fitprobs = None
-            if plottype == 'pp':
+            if plottype == "pp":
                 ax.set_ylim(bottom=0, top=100)
 
         ax.set_xscale(datascale)
-        fitlogs = 'x' if datascale == 'log' else None
+        fitlogs = "x" if datascale == "log" else None
 
     # finally plot the data
-    linestyle = scatter_kws.pop('linestyle', 'none')
-    marker = scatter_kws.pop('marker', 'o')
+    linestyle = scatter_kws.pop("linestyle", "none")
+    marker = scatter_kws.pop("marker", "o")
     ax.plot(x, y, linestyle=linestyle, marker=marker, **scatter_kws)
 
     # maybe do a best-fit and plot
     if bestfit:
-        xhat, yhat, model = fit_line(x, y, xhat=sorted(x), dist=dist,
-                                     fitprobs=fitprobs, fitlogs=fitlogs,
-                                     estimate_ci=estimate_ci)
+        xhat, yhat, model = fit_line(
+            x,
+            y,
+            xhat=sorted(x),
+            dist=dist,
+            fitprobs=fitprobs,
+            fitlogs=fitlogs,
+            estimate_ci=estimate_ci,
+        )
         ax.plot(xhat, yhat, **line_kws)
         if estimate_ci:
             # for alpha, use half of existing or 0.5 * 0.5 = 0.25
             # for zorder, use 1 less than existing or 1 - 1 = 0
             opts = {
-                'facecolor': line_kws.get('color', 'k'),
-                'edgecolor': 'None',
-                'alpha': line_kws.get('alpha', 0.5) * 0.5,
-                'zorder': line_kws.get('zorder', 1) - 1,
-                'label': '95% conf. interval'
+                "facecolor": line_kws.get("color", "k"),
+                "edgecolor": "None",
+                "alpha": line_kws.get("alpha", 0.5) * 0.5,
+                "zorder": line_kws.get("zorder", 1) - 1,
+                "label": "95% conf. interval",
             }
-            ax.fill_between(xhat, y1=model['yhat_hi'], y2=model['yhat_lo'],
-                            **opts)
+            ax.fill_between(xhat, y1=model["yhat_hi"], y2=model["yhat_lo"], **opts)
     else:
         xhat, yhat, model = (None, None, None)
 
     # set the probability axes limits
-    if plottype == 'prob':
+    if plottype == "prob":
         _set_prob_limits(ax, probax, len(probs))
 
     # return the figure and maybe results of the best-fit
@@ -348,23 +366,23 @@ def plot_pos(data, postype=None, alpha=None, beta=None, exceedance=False):
     """
 
     pos_params = {
-        'type 4': (0, 1),
-        'type 5': (0.5, 0.5),
-        'type 6': (0, 0),
-        'type 7': (1, 1),
-        'type 8': (1.0 / 3.0, 1.0 / 3.0),
-        'type 9': (0.375, 0.375),
-        'weibull': (0, 0),
-        'median': (0.3175, 0.3175),
-        'apl': (0.35, 0.35),
-        'pwm': (0.35, 0.35),
-        'blom': (0.375, 0.375),
-        'hazen': (0.5, 0.5),
-        'cunnane': (0.4, 0.4),
-        'gringorten': (0.44, 0.44),  # Gumble
+        "type 4": (0, 1),
+        "type 5": (0.5, 0.5),
+        "type 6": (0, 0),
+        "type 7": (1, 1),
+        "type 8": (1.0 / 3.0, 1.0 / 3.0),
+        "type 9": (0.375, 0.375),
+        "weibull": (0, 0),
+        "median": (0.3175, 0.3175),
+        "apl": (0.35, 0.35),
+        "pwm": (0.35, 0.35),
+        "blom": (0.375, 0.375),
+        "hazen": (0.5, 0.5),
+        "cunnane": (0.4, 0.4),
+        "gringorten": (0.44, 0.44),  # Gumble
     }
 
-    postype = 'cunnane' if postype is None else postype
+    postype = "cunnane" if postype is None else postype
     if alpha is None and beta is None:
         alpha, beta = pos_params[postype.lower()]
 
@@ -374,8 +392,8 @@ def plot_pos(data, postype=None, alpha=None, beta=None, exceedance=False):
     pos[n:] = 0
 
     sorted_index = data.argsort()
-    pos[sorted_index[:n]] = (
-        (numpy.arange(1.0, n + 1.0) - alpha) / (n + 1.0 - alpha - beta)
+    pos[sorted_index[:n]] = (numpy.arange(1.0, n + 1.0) - alpha) / (
+        n + 1.0 - alpha - beta
     )
 
     if exceedance:
@@ -404,7 +422,7 @@ def _set_prob_limits(ax, probax, N):
     """
 
     fig, ax = validate.axes_object(ax)
-    which = validate.axis_name(probax, 'probability axis')
+    which = validate.axis_name(probax, "probability axis")
 
     if N <= 5:
         minval = 10
@@ -413,14 +431,23 @@ def _set_prob_limits(ax, probax, N):
     else:
         minval = 10 ** (-1 * numpy.ceil(numpy.log10(N) - 2))
 
-    if which in ['x', 'both']:
+    if which in ["x", "both"]:
         ax.set_xlim(left=minval, right=100 - minval)
-    elif which in ['y', 'both']:
+    elif which in ["y", "both"]:
         ax.set_ylim(bottom=minval, top=100 - minval)
 
 
-def fit_line(x, y, xhat=None, fitprobs=None, fitlogs=None, dist=None,
-             estimate_ci=False, niter=10000, alpha=0.05):
+def fit_line(
+    x,
+    y,
+    xhat=None,
+    fitprobs=None,
+    fitlogs=None,
+    dist=None,
+    estimate_ci=False,
+    niter=10000,
+    alpha=0.05,
+):
     """
     Fits a line to x-y data in various forms (linear, log, prob scales).
 
@@ -485,42 +512,43 @@ def fit_line(x, y, xhat=None, fitprobs=None, fitlogs=None, dist=None,
         dist = _minimal_norm
 
     # maybe compute ppf of x
-    if fitprobs in ['x', 'both']:
-        x = dist.ppf(x / 100.)
-        xhat = dist.ppf(numpy.array(xhat) / 100.)
+    if fitprobs in ["x", "both"]:
+        x = dist.ppf(x / 100.0)
+        xhat = dist.ppf(numpy.array(xhat) / 100.0)
 
     # maybe compute ppf of y
-    if fitprobs in ['y', 'both']:
-        y = dist.ppf(y / 100.)
+    if fitprobs in ["y", "both"]:
+        y = dist.ppf(y / 100.0)
 
     # maybe compute log of x
-    if fitlogs in ['x', 'both']:
+    if fitlogs in ["x", "both"]:
         x = numpy.log(x)
 
     # maybe compute log of y
-    if fitlogs in ['y', 'both']:
+    if fitlogs in ["y", "both"]:
         y = numpy.log(y)
 
     yhat, results = algo._fit_simple(x, y, xhat, fitlogs=fitlogs)
 
     if estimate_ci:
-        yhat_lo, yhat_hi = algo._bs_fit(x, y, xhat, fitlogs=fitlogs,
-                                        niter=niter, alpha=alpha)
+        yhat_lo, yhat_hi = algo._bs_fit(
+            x, y, xhat, fitlogs=fitlogs, niter=niter, alpha=alpha
+        )
     else:
         yhat_lo, yhat_hi = None, None
 
     # maybe undo the ppf transform
-    if fitprobs in ['y', 'both']:
-        yhat = 100. * dist.cdf(yhat)
+    if fitprobs in ["y", "both"]:
+        yhat = 100.0 * dist.cdf(yhat)
         if yhat_lo is not None:
-            yhat_lo = 100. * dist.cdf(yhat_lo)
-            yhat_hi = 100. * dist.cdf(yhat_hi)
+            yhat_lo = 100.0 * dist.cdf(yhat_lo)
+            yhat_hi = 100.0 * dist.cdf(yhat_hi)
 
     # maybe undo ppf transform
-    if fitprobs in ['x', 'both']:
-        xhat = 100. * dist.cdf(xhat)
+    if fitprobs in ["x", "both"]:
+        xhat = 100.0 * dist.cdf(xhat)
 
-    results['yhat_lo'] = yhat_lo
-    results['yhat_hi'] = yhat_hi
+    results["yhat_lo"] = yhat_lo
+    results["yhat_hi"] = yhat_hi
 
     return xhat, yhat, results

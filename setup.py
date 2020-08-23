@@ -24,15 +24,15 @@ CLASSIFIERS = [
     "Programming Language :: Python",
     "Intended Audience :: Science/Research",
     "Topic :: Software Development :: Libraries :: Python Modules",
-    'Programming Language :: Python :: 2.7',
-    'Programming Language :: Python :: 3.4',
-    'Programming Language :: Python :: 3.5',
-    'Programming Language :: Python :: 3.6',
+    "Programming Language :: Python :: 2.7",
+    "Programming Language :: Python :: 3.4",
+    "Programming Language :: Python :: 3.5",
+    "Programming Language :: Python :: 3.6",
 ]
-INSTALL_REQUIRES = ['numpy', 'matplotlib']
+INSTALL_REQUIRES = ["numpy", "matplotlib"]
 PACKAGE_DATA = {
-    'probscale.tests.baseline_images.test_viz': ['*png'],
-    'probscale.tests.baseline_images.test_probscale': ['*png'],
+    "probscale.tests.baseline_images.test_viz": ["*png"],
+    "probscale.tests.baseline_images.test_probscale": ["*png"],
 }
 
 setup(
