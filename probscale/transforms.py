@@ -39,7 +39,7 @@ class _ProbTransformMixin(Transform):
     is_separable = True
     has_inverse = True
 
-    def __init__(self, dist, as_pct=True, out_of_bounds='mask'):
+    def __init__(self, dist, as_pct=True, out_of_bounds="mask"):
         Transform.__init__(self)
         self.dist = dist
         self.as_pct = as_pct
@@ -49,9 +49,9 @@ class _ProbTransformMixin(Transform):
         else:
             self.factor = 1.0
 
-        if self.out_of_bounds == 'mask':
+        if self.out_of_bounds == "mask":
             self._handle_out_of_bounds = _mask_out_of_bounds
-        elif self.out_of_bounds == 'clip':
+        elif self.out_of_bounds == "clip":
             self._handle_out_of_bounds = _clip_out_of_bounds
         else:
             raise ValueError("`out_of_bounds` muse be either 'mask' or 'clip'")
@@ -80,15 +80,14 @@ class ProbTransform(_ProbTransformMixin):
 
     def transform_non_affine(self, prob):
         with numpy.errstate(divide="ignore", invalid="ignore"):
-            prob = self._handle_out_of_bounds(
-                numpy.asarray(prob) / self.factor
-            )
+            prob = self._handle_out_of_bounds(numpy.asarray(prob) / self.factor)
             q = self.dist.ppf(prob)
         return q
 
     def inverted(self):
-        return QuantileTransform(self.dist, as_pct=self.as_pct,
-                                 out_of_bounds=self.out_of_bounds)
+        return QuantileTransform(
+            self.dist, as_pct=self.as_pct, out_of_bounds=self.out_of_bounds
+        )
 
 
 class QuantileTransform(_ProbTransformMixin):
@@ -118,5 +117,6 @@ class QuantileTransform(_ProbTransformMixin):
         return prob
 
     def inverted(self):
-        return ProbTransform(self.dist, as_pct=self.as_pct,
-                             out_of_bounds=self.out_of_bounds)
+        return ProbTransform(
+            self.dist, as_pct=self.as_pct, out_of_bounds=self.out_of_bounds
+        )

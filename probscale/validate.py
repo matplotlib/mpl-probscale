@@ -28,9 +28,9 @@ def axis_name(axis, axname):
 
     """
 
-    valid_args = ['x', 'y']
+    valid_args = ["x", "y"]
     if axis.lower() not in valid_args:
-        msg = 'Invalid value for {} ({}). Must be on of {}.'
+        msg = "Invalid value for {} ({}). Must be on of {}."
         raise ValueError(msg.format(axname, axis, valid_args))
 
     return axis.lower()
@@ -44,9 +44,9 @@ def fit_argument(arg, argname):
 
     """
 
-    valid_args = ['x', 'y', 'both', None]
+    valid_args = ["x", "y", "both", None]
     if arg not in valid_args:
-        msg = 'Invalid value for {} ({}). Must be on of {}.'
+        msg = "Invalid value for {} ({}). Must be on of {}."
         raise ValueError(msg.format(argname, arg, valid_args))
     elif arg is not None:
         arg = arg.lower()
@@ -67,7 +67,7 @@ def axis_type(axtype):
 
     """
 
-    if axtype.lower() not in ['pp', 'qq', 'prob']:
+    if axtype.lower() not in ["pp", "qq", "prob"]:
         raise ValueError("invalid axtype: {}".format(axtype))
     return axtype.lower()
 
@@ -78,7 +78,7 @@ def axis_label(label):
 
     """
 
-    return '' if label is None else label
+    return "" if label is None else label
 
 
 def other_options(options):
@@ -91,10 +91,10 @@ def other_options(options):
 
 
 def estimator(value):
-    if value.lower() in ['res', 'resid', 'resids', 'residual', 'residuals']:
-        msg = 'Bootstrapping the residuals is not ready yet'
+    if value.lower() in ["res", "resid", "resids", "residual", "residuals"]:
+        msg = "Bootstrapping the residuals is not ready yet"
         raise NotImplementedError(msg)
-    elif value.lower() in ['fit', 'values']:
+    elif value.lower() in ["fit", "values"]:
         est = _bs_fit
     else:
         raise ValueError('estimator must be either "resid" or "fit".')
