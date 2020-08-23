@@ -1,12 +1,11 @@
 import os
-import sys
 
 import numpy
 import matplotlib.pyplot as plt
 
 try:
     from scipy import stats
-except:  # pragma: no cover
+except ImportError:  # pragma: no cover
     stats = None
 
 import pytest
@@ -127,7 +126,7 @@ def test_sign_with_nan_no_warning(mn):
     assert numpy.isnan(res)
 
 
-def test_sign_with_nan_no_warning(mn):
+def test_sign_with_nan_no_warning_inv(mn):
     with pytest.warns(None) as record:
         res = mn._approx_inv_erf(numpy.nan)
     assert not record

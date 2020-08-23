@@ -43,7 +43,7 @@ def test_fit_arguments_valid(which, kwarg):
     assert result == which
 
 
-@pytest.mark.parametrize(("kwarg",), [("fitprobs",), ("fitlogs",),])
+@pytest.mark.parametrize("kwarg", ["fitprobs", "fitlogs"])
 def test_fit_arguments_invalid(kwarg):
     with pytest.raises(ValueError):
         validate.fit_argument("junk", kwarg)
