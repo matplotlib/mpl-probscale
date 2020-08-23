@@ -6,7 +6,7 @@ import probscale
 def test(*args):
     try:
         import pytest
-    except ImportError as e:
+    except ImportError:
         raise ImportError("`pytest` is required to run the test suite")
 
     options = [resource_filename("probscale", "tests")]

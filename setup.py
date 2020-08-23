@@ -2,8 +2,6 @@
 #
 # Usage: python setup.py install
 
-
-import os
 from setuptools import setup, find_packages
 
 

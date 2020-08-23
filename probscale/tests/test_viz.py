@@ -1,18 +1,15 @@
-import sys
-from functools import wraps
-
 import numpy
 import matplotlib.lines
 import matplotlib.pyplot as plt
 
 try:
     from scipy import stats
-except:  # pragma: no cover
+except ImportError:  # pragma: no cover
     stats = None
 
 try:
     import seaborn
-except:  # pragma: no cover
+except ImportError:  # pragma: no cover
     seaborn = None
 
 from probscale import viz
@@ -1075,6 +1072,6 @@ def test_probplot_with_FacetGrid_with_markers(usemarkers):
     _lines = filter(
         lambda x: isinstance(x, matplotlib.lines.Line2D), fg.ax.get_children()
     )
-    result_markers = {l.get_label(): l.get_marker() for l in _lines}
+    result_markers = {line.get_label(): line.get_marker() for line in _lines}
     expected_markers = dict(zip(species, markers))
     assert expected_markers == result_markers

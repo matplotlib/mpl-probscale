@@ -1,7 +1,6 @@
 import numpy
 
 import pytest
-import numpy.testing as nptest
 
 from probscale import formatters
 

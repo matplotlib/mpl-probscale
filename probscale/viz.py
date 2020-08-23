@@ -1,7 +1,6 @@
 import copy
 
 import numpy
-from matplotlib import pyplot
 
 from .probscale import _minimal_norm
 from . import validate
