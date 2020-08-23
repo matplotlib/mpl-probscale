@@ -15,8 +15,13 @@ matrix:
     - python: 3.7
       env:
         - COVERAGE=true
+        - EXTRATESTERS=""
+        - ARGS=""
+    - python: 3.8
+      env:
+        - COVERAGE=true
         - EXTRATESTERS="seaborn"
-        - ARGS="--pep8 --mpl"
+        - ARGS="--mpl"
 
 before_install:
   - wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh
@@ -29,7 +34,7 @@ before_install:
 install:
   - conda create --yes -n test python=$TRAVIS_PYTHON_VERSION numpy matplotlib docopt requests pyyaml
   - source activate test
-  - conda install --yes --channel=conda-forge pytest-mpl pytest-cov pytest-pep8 ${EXTRATESTERS}
+  - conda install --yes --channel=conda-forge pytest-mpl pytest-cov ${EXTRATESTERS}
   - if [ ${COVERAGE} = true ]; then conda install scipy --yes; fi
   - pip install codecov
   - pip install .
