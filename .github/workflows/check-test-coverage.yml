@@ -1,4 +1,4 @@
-name: Run coverage via codecov
+name: Coverage via codecov
 on:
   push:
     branches: [ master ]

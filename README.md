@@ -1,8 +1,12 @@
 # mpl-probscale
 Real probability scales for matplotlib
 
-[![Build Status](https://travis-ci.org/matplotlib/mpl-probscale.svg)](https://travis-ci.org/matplotlib/mpl-probscale)
-[![codecov](https://codecov.io/gh/matplotlib/mpl-probscale/branch/master/graph/badge.svg)](https://codecov.io/gh/matplotlib/mpl-probscale)
+![Code Style](https://github.com/matplotlib/mpl-probscale/workflows/black/badge.svg)
+![Coverage](https://github.com/matplotlib/mpl-probscale/workflows/Coverage%20via%20codecov/badge.svg)
+![Linter](https://github.com/matplotlib/mpl-probscale/workflows/Lint%20with%20flake8/badge.svg)
+![Basic Tests](https://github.com/matplotlib/mpl-probscale/workflows/Basic%20unit%20tests/badge.svg)
+![Image Comparisons](https://github.com/matplotlib/mpl-probscale/workflows/Image%20comparison%20tests/badge.svg)
+
 
 [Sphinx Docs](http://matplotlib.org/mpl-probscale/)
 
@@ -34,7 +38,7 @@ So for now you will need to install ``pytest`` yourself to use mpl-probscale:
 
 `pip install pytest`
 
-or 
+or
 
 `conda install pytest --channel=conda-forge`
 
