@@ -402,7 +402,7 @@ def plot_pos(data, postype=None, alpha=None, beta=None, exceedance=False):
 
 
 def _set_prob_limits(ax, probax, N):
-    """ Sets the limits of a probability axis based the number of point.
+    """Sets the limits of a probability axis based the number of point.
 
     Parameters
     ----------

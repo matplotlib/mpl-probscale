@@ -4,7 +4,7 @@ from .algo import _bs_fit
 
 
 def axes_object(ax):
-    """ Checks if a value if an Axes. If None, a new one is created.
+    """Checks if a value if an Axes. If None, a new one is created.
     Both the figure and axes are returned (in that order).
 
     """

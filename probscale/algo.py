@@ -2,7 +2,7 @@ import numpy
 
 
 def _make_boot_index(elements, niter):
-    """ Generate an array of bootstrap sample sets
+    """Generate an array of bootstrap sample sets
 
     Parameters
     ----------
@@ -102,7 +102,7 @@ def _bs_fit(x, y, xhat, fitlogs=None, niter=10000, alpha=0.05):
 
 
 def _estimate_from_fit(xhat, slope, intercept, xlog=False, ylog=False):
-    """ Estimate the dependent variables of a linear fit given x-data
+    """Estimate the dependent variables of a linear fit given x-data
     and linear parameters.
 
     Parameters

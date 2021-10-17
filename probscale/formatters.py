@@ -3,7 +3,7 @@ from matplotlib.ticker import Formatter
 
 
 class _FormatterMixin(Formatter):
-    """ A mpl-axes formatter mixin class """
+    """A mpl-axes formatter mixin class"""
 
     @classmethod
     def _sig_figs(cls, x, n, expthresh=5, forceint=False):

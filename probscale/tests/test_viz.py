@@ -787,7 +787,9 @@ def test_probplot_pp(plot_data):
 
 
 @pytest.mark.mpl_image_compare(
-    baseline_dir=BASELINE_DIR, tolerance=TIGHT_TOLERANCE, remove_text=True,
+    baseline_dir=BASELINE_DIR,
+    tolerance=TIGHT_TOLERANCE,
+    remove_text=True,
 )
 def test_probplot_prob_bestfit(plot_data):
     fig, ax = plt.subplots()
@@ -983,7 +985,9 @@ def test_probplot_beta_dist_best_fit_y(plot_data):
 
 
 @pytest.mark.mpl_image_compare(
-    baseline_dir=BASELINE_DIR, tolerance=TIGHT_TOLERANCE, remove_text=True,
+    baseline_dir=BASELINE_DIR,
+    tolerance=TIGHT_TOLERANCE,
+    remove_text=True,
 )
 @pytest.mark.skipif(stats is None, reason="no scipy")
 def test_probplot_beta_dist_best_fit_x(plot_data):

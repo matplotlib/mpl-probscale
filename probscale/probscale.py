@@ -23,7 +23,7 @@ class _minimal_norm(object):
 
     @classmethod
     def _approx_erf(cls, x):
-        """ Approximate solution to the error function
+        """Approximate solution to the error function
 
         http://en.wikipedia.org/wiki/Error_function
 
@@ -36,7 +36,7 @@ class _minimal_norm(object):
 
     @classmethod
     def _approx_inv_erf(cls, z):
-        """ Approximate solution to the inverse error function
+        """Approximate solution to the inverse error function
 
         http://en.wikipedia.org/wiki/Error_function
 
@@ -50,7 +50,7 @@ class _minimal_norm(object):
 
     @classmethod
     def ppf(cls, q):
-        """ Percent point function (inverse of cdf)
+        """Percent point function (inverse of cdf)
 
         Wikipedia: https://goo.gl/Rtxjme
 
@@ -59,7 +59,7 @@ class _minimal_norm(object):
 
     @classmethod
     def cdf(cls, x):
-        """ Cumulative density function
+        """Cumulative density function
 
         Wikipedia: https://goo.gl/ciUNLx
 
@@ -68,7 +68,7 @@ class _minimal_norm(object):
 
 
 class ProbScale(ScaleBase):
-    """ A probability scale for matplotlib Axes.
+    """A probability scale for matplotlib Axes.
 
     Parameters
     ----------
@@ -105,7 +105,7 @@ class ProbScale(ScaleBase):
 
     @classmethod
     def _get_probs(cls, nobs, as_pct):
-        """ Returns the x-axis labels for a probability plot based on
+        """Returns the x-axis labels for a probability plot based on
         the number of observations (`nobs`).
         """
         if as_pct:
