@@ -4,7 +4,7 @@ import numpy
 
 
 def seed(func):
-    """ Decorator to seed the RNG before any function. """
+    """Decorator to seed the RNG before any function."""
 
     @wraps(func)
     def wrapper(*args, **kwargs):
