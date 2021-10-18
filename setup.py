@@ -8,7 +8,7 @@ from setuptools import setup, find_packages
 DESCRIPTION = "mpl-probscale: Probabily scales for matplotlib"
 LONG_DESCRIPTION = DESCRIPTION
 NAME = "probscale"
-VERSION = "0.2.4"
+VERSION = "0.2.5"
 AUTHOR = "Paul Hobson (Geosyntec Consultants)"
 AUTHOR_EMAIL = "phobson@geosyntec.com"
 URL = "https://github.com/matplotlib/mpl-probscale"
