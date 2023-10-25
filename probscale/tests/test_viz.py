@@ -72,7 +72,7 @@ def plot_data():
 
 
 class Test_fit_line(object):
-    def setup(self):
+    def setup_method(self):
         self.data = numpy.array(
             [
                 2.00,
@@ -454,7 +454,7 @@ class Test_fit_line(object):
 
 
 class Test_plot_pos(object):
-    def setup(self):
+    def setup_method(self):
         self.data = numpy.arange(16)
 
         self.known_type4 = numpy.array(
@@ -740,7 +740,6 @@ def test_probplot_prob(plot_data):
     fig, ax = plt.subplots()
     fig = viz.probplot(plot_data, ax=ax, problabel="Test xlabel", datascale="log")
     assert isinstance(fig, plt.Figure)
-    return fig
 
 
 @pytest.mark.mpl_image_compare(baseline_dir=BASELINE_DIR, tolerance=TIGHT_TOLERANCE)
@@ -1026,7 +1025,6 @@ def test_probplot_test_results(plot_data):
     assert isinstance(results, dict)
     known_keys = sorted(["q", "x", "y", "xhat", "yhat", "res"])
     assert sorted(list(results.keys())) == known_keys
-    return fig
 
 
 @pytest.mark.parametrize("probax", ["x", "y"])

@@ -121,7 +121,7 @@ def test__bs_fit(plot_data, fitlogs, known_lo, known_hi):
 
 
 class Test__estimate_from_fit(object):
-    def setup(self):
+    def setup_method(self):
         self.x = numpy.arange(1, 11, 0.5)
         self.slope = 2
         self.intercept = 3.5
