@@ -29,7 +29,7 @@ class _minimal_norm(object):
 
         """
 
-        guts = -(x ** 2) * (4.0 / numpy.pi + cls._A * x ** 2) / (1.0 + cls._A * x ** 2)
+        guts = -(x**2) * (4.0 / numpy.pi + cls._A * x**2) / (1.0 + cls._A * x**2)
         with warnings.catch_warnings():
             warnings.filterwarnings("ignore", "invalid value encountered in sign")
             return numpy.sign(x) * numpy.sqrt(1.0 - numpy.exp(guts))
@@ -42,11 +42,11 @@ class _minimal_norm(object):
 
         """
 
-        _b = (2 / numpy.pi / cls._A) + (0.5 * numpy.log(1 - z ** 2))
-        _c = numpy.log(1 - z ** 2) / cls._A
+        _b = (2 / numpy.pi / cls._A) + (0.5 * numpy.log(1 - z**2))
+        _c = numpy.log(1 - z**2) / cls._A
         with warnings.catch_warnings():
             warnings.filterwarnings("ignore", "invalid value encountered in sign")
-            return numpy.sign(z) * numpy.sqrt(numpy.sqrt(_b ** 2 - _c) - _b)
+            return numpy.sign(z) * numpy.sqrt(numpy.sqrt(_b**2 - _c) - _b)
 
     @classmethod
     def ppf(cls, q):
