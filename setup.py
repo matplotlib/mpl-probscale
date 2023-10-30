@@ -4,6 +4,7 @@
 import re
 from setuptools import setup, find_packages
 
+
 def search(substr: str, content: str):
     found = re.search(substr, content)
     if found:
