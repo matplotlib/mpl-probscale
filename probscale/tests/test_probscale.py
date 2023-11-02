@@ -1,4 +1,5 @@
 import os
+import warnings
 
 import numpy
 import matplotlib.pyplot as plt
@@ -120,16 +121,16 @@ def test_minimal_norm_cdf(mn, mn_input):
 
 
 def test_sign_with_nan_no_warning(mn):
-    with pytest.warns(None) as record:
+    with warnings.catch_warnings():
+        warnings.simplefilter("error")
         res = mn._approx_erf(numpy.nan)
-    assert not record
     assert numpy.isnan(res)
 
 
 def test_sign_with_nan_no_warning_inv(mn):
-    with pytest.warns(None) as record:
+    with warnings.catch_warnings():
+        warnings.simplefilter("error")
         res = mn._approx_inv_erf(numpy.nan)
-    assert not record
     assert numpy.isnan(res)
 
 

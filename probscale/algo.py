@@ -127,7 +127,7 @@ def _estimate_from_fit(xhat, slope, intercept, xlog=False, ylog=False):
     xhat = numpy.asarray(xhat)
     if ylog:
         if xlog:
-            yhat = numpy.exp(intercept) * xhat ** slope
+            yhat = numpy.exp(intercept) * xhat**slope
         else:
             yhat = numpy.exp(intercept) * numpy.exp(slope) ** xhat
 

@@ -1,4 +1,5 @@
 # mpl-probscale
+
 Real probability scales for matplotlib
 
 ![Code Style](https://github.com/matplotlib/mpl-probscale/workflows/black/badge.svg)
@@ -6,7 +7,6 @@ Real probability scales for matplotlib
 ![Linter](https://github.com/matplotlib/mpl-probscale/workflows/Lint%20with%20flake8/badge.svg)
 ![Basic Tests](https://github.com/matplotlib/mpl-probscale/workflows/Basic%20unit%20tests/badge.svg)
 ![Image Comparisons](https://github.com/matplotlib/mpl-probscale/workflows/Image%20comparison%20tests/badge.svg)
-
 
 [Sphinx Docs](http://matplotlib.org/mpl-probscale/)
 
@@ -24,7 +24,7 @@ Official releases are available through the conda-forge channel or pip
 
 This is a pure-python package, so building from source is easy on all platforms:
 
-```
+```shell
 git clone git@github.com:matplotlib/mpl-probscale.git
 cd mpl-probscale
 pip install -e .
@@ -43,7 +43,6 @@ or
 `conda install pytest --channel=conda-forge`
 
 In the next release, this depedency will be made optional.
-
 
 ## Quick start
 

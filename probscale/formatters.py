@@ -45,7 +45,6 @@ class _FormatterMixin(Formatter):
 
         # check on the number provided
         elif x is not None and numpy.isfinite(x):
-
             # check on the _sig_figs
             if n < 1:
                 raise ValueError("number of sig figs (n) must be greater " "than zero")
