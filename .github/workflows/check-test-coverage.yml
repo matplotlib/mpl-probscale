@@ -19,7 +19,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install pytest pytest-cov pytest-mpl coverage docopt
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-        pip install scipy
+        pip install scipy seaborn
         export MPL_IMGCOMP_TOLERANCE=20
         coverage run -m pytest --mpl --doctest-glob="probscale/*.py" --cov-report=xml
     - name: Upload coverage to Codecov
