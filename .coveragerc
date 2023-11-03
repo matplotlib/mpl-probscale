@@ -2,7 +2,6 @@
 [run]
 source = probscale
 branch = True
-include = probscale/*.py
 omit =
     probscale/tests/*
 

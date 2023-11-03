@@ -164,10 +164,8 @@ class ExampleGenerator(object):
         if not op.exists(outfilename) or (
             op.getmtime(outfilename) < op.getmtime(filename)
         ):
-
             self.exec_file()
         else:
-
             print("skipping {0}".format(self.filename))
 
     @property
@@ -226,8 +224,7 @@ class ExampleGenerator(object):
         return ""
 
     def extract_docstring(self):
-        """ Extract a module-level docstring
-        """
+        """Extract a module-level docstring"""
         lines = open(self.filename).readlines()
         start_row = 0
         if lines[0].startswith("#!"):
@@ -332,7 +329,6 @@ def main(app):
 
     # Write individual example files
     for filename in glob.glob(op.join(source_dir, "*.py")):
-
         ex = ExampleGenerator(filename, target_dir)
 
         banner_data.append(
