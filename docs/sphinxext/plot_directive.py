@@ -158,7 +158,6 @@ try:
     def format_template(template, **kw):
         return jinja2.Template(template).render(**kw)
 
-
 except ImportError:
     import jinja
 
@@ -652,7 +651,6 @@ def render_figures(
     close_figs = not context or close_figs
 
     for i, code_piece in enumerate(code_pieces):
-
         if not context or config.plot_apply_rcparams:
             clear_state(config.plot_rcparams, close_figs)
         elif close_figs:

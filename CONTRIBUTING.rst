@@ -79,7 +79,7 @@ Ready to contribute? Here's how to set up `probscale` for local development.
 
 5. When you're done making changes, check that your changes pass flake8 and the tests, including testing other Python versions with tox::
 
-    $ python check_probscale.py --mpl --pep8 --cov
+    $ python -m pytest --mpl --pep8 --cov
 
 6. Commit your changes and push your branch to GitHub::
 
@@ -114,35 +114,6 @@ To run a subset of tests::
 
 $ py.test tests.test_probscale
 
-
-Configuring Sublime Text 3 to run the tests
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-In Sublime, got to Tools -> Build System -> New Build System.
-Then add the following configuration and save as "probscale.sublime-build"::
-
-    {
-        "working_dir": "<path to the git repository>",
-        "cmd": "<full path of the python executable> check_probscale.py --verbose <other pytest options>",
-    }
-
-
-Configuring Atom to run the tests
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-In Atom, install the build_ package, create a new file called ".atom-build.yml" in the
-top level of the project directory, and add the following contents::
-
-    cmd: "<full path of the python executable>"
-    name: "probscale"
-    args:
-      - check_probscale.py
-      - --verbose
-      - <other pytest options ...>
-    cwd: <path to the git repository>
-    sh: false
-    keymap: ctrl-b
-    atomCommandName: namespace:testprobscale
 
 After this, hitting ctrl+b in either text editor will run the test suite.
 

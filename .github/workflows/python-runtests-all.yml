@@ -31,4 +31,4 @@ jobs:
     - name: Test with pytest
       run: |
         export MPL_IMGCOMP_TOLERANCE=20
-        python check_probscale.py --mpl --doctest-modules
+        python -m pytest --mpl --doctest-modules

@@ -180,7 +180,6 @@ def block_parser(part, rgxin, rgxout, fmtin, fmtout):
     i = 0
     decorator = None
     while 1:
-
         if i == N:
             # nothing left to parse -- the last line
             break
@@ -215,7 +214,6 @@ def block_parser(part, rgxin, rgxout, fmtin, fmtout):
 
             rest = []
             while i < N:
-
                 # look ahead; if the next line is blank, or a comment, or
                 # an output line, we're done
 
@@ -278,7 +276,6 @@ class EmbeddedSphinxShell(object):
     """An embedded IPython instance to run inside Sphinx"""
 
     def __init__(self, exec_lines=None, state=None):
-
         self.cout = DecodingStringIO("")
 
         if exec_lines is None:
@@ -526,7 +523,6 @@ class EmbeddedSphinxShell(object):
         TAB = " " * 4
 
         if is_doctest and output is not None:
-
             found = output
             found = found.strip()
             submitted = data.strip()
@@ -693,7 +689,6 @@ class EmbeddedSphinxShell(object):
         ct = 0
 
         for lineno, line in enumerate(content):
-
             line_stripped = line.strip()
             if not len(line):
                 output.append(line)
@@ -770,7 +765,6 @@ class EmbeddedSphinxShell(object):
 
 
 class IPythonDirective(Directive):
-
     has_content = True
     required_arguments = 0
     optional_arguments = 4  # python, suppress, verbatim, doctest
@@ -973,7 +967,6 @@ def setup(app):
 
 # Simple smoke test, needs to be converted to a proper automatic test.
 def test():
-
     examples = [
         r"""
 In [9]: pwd
