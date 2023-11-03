@@ -1,4 +1,4 @@
-name: Coverage via codecov
+name: Coverage (with doctests)
 on:
   push:
     branches: [ master ]
