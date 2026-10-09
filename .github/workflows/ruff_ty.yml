@@ -8,7 +8,7 @@ jobs:
         matrix:
           tool:
             - ruff
-            # - ty
+            - ty
       steps:
         - uses: actions/checkout@v4
         - name: Install uv
