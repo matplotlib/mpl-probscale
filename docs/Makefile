@@ -5,7 +5,9 @@
 SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
 PAPER         =
-BUILDDIR      = ../../mpl-probscale-docs
+BUILDDIR      = _build
+
+# Tip: run the build with uv, e.g.  make html SPHINXBUILD='uv run --group docs sphinx-build'
 
 # User-friendly check for sphinx-build
 ifeq ($(shell which $(SPHINXBUILD) >/dev/null 2>&1; echo $$?), 1)

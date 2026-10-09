@@ -1,7 +1,5 @@
 .. _validate_auto:
 
-   The ``validate`` API
-
 ``validate`` API Reference
 ============================
 

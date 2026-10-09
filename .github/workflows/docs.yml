@@ -1,0 +1,50 @@
+# Build the Sphinx documentation. The tutorial notebooks and example gallery
+# are executed during the build by myst-nb and sphinx-gallery. On pushes to
+# the default branch, publish the built HTML to the gh-pages branch, which
+# matplotlib.org serves at https://matplotlib.org/mpl-probscale (see
+# https://github.com/matplotlib/matplotlib.org#adding-a-new-subproject).
+
+name: Build and deploy docs
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+      - name: Install dependencies
+        run: uv sync --group docs
+      - name: Build documentation
+        run: uv run --group docs sphinx-build -W --keep-going -b html docs docs/_build/html
+      - name: Upload built docs
+        uses: actions/upload-artifact@v4
+        with:
+          name: probscale-docs
+          path: docs/_build/html
+
+  deploy:
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    concurrency:
+      group: gh-pages-deploy
+      cancel-in-progress: false
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: probscale-docs
+          path: html
+      - name: Publish to gh-pages branch
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: html

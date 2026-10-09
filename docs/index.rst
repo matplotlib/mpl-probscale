@@ -1,104 +1,91 @@
-.. probscale documentation master file, created by
-   sphinx-quickstart on Thu Nov 19 23:14:08 2015.
+.. probscale documentation master file.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
-
 
 mpl-probscale: Real probability scales for matplotlib
 =====================================================
 
-.. image:: https://travis-ci.org/matplotlib/mpl-probscale.svg?branch=master
-    :target: https://travis-ci.org/matplotlib/mpl-probscale
+.. image:: https://github.com/matplotlib/mpl-probscale/actions/workflows/python-runtests-all.yml/badge.svg
+    :target: https://github.com/matplotlib/mpl-probscale/actions/workflows/python-runtests-all.yml
 
-.. image:: https://coveralls.io/repos/matplotlib/mpl-probscale/badge.svg?branch=master&service=github
-  :target: https://coveralls.io/github/matplotlib/mpl-probscale?branch=master
-
-https://github.com/matplotlib/mpl-probscale
+.. image:: https://github.com/matplotlib/mpl-probscale/actions/workflows/ruff_ty.yml/badge.svg
+    :target: https://github.com/matplotlib/mpl-probscale/actions/workflows/ruff_ty.yml
 
 Installation
 ------------
 
-Official releases
-~~~~~~~~~~~~~~~~~
-
-Official releases are available through the conda-forge channel or pip:
-
-``conda install mpl-probscale --channel=conda-forge``
-
-or
-
-``pip install probscale``
-
-Development builds
-~~~~~~~~~~~~~~~~~~
-
-This is a pure-python package, so building from source is easy on all platforms:
-
-::
-
-    git clone git@github.com:matplotlib/mpl-probscale.git
-    cd mpl-probscale
-    pip install -e .
-
+Install the latest release with ``pip install probscale`` (also available on
+conda-forge as ``mpl-probscale``). See the :doc:`installation` page for
+details.
 
 Quickstart
 ----------
 
-Simply importing ``probscale`` lets you use probability scales in your matplotlib figures:
+Simply importing ``probscale`` lets you use probability scales in your
+matplotlib figures:
 
 .. code-block:: python
 
     import matplotlib.pyplot as plt
     import probscale
-    import seaborn
-    clear_bkgd = {'axes.facecolor':'none', 'figure.facecolor':'none'}
-    seaborn.set(style='ticks', context='notebook', rc=clear_bkgd)
 
     fig, ax = plt.subplots(figsize=(8, 4))
-    ax.set_ylim(1e-2, 1e2)
-    ax.set_yscale('log')
-
     ax.set_xlim(0.5, 99.5)
-    ax.set_xscale('prob')
-    seaborn.despine(fig=fig)
-
+    ax.set_xscale("prob")
+    ax.set_ylim(1e-2, 1e2)
+    ax.set_yscale("log")
 
 .. image:: /img/example.png
 
-
 Tutorials
-=========
+---------
 
 .. toctree::
    :maxdepth: 2
 
-   tutorial/getting_started.rst
-   tutorial/closer_look_at_viz.rst
-   tutorial/closer_look_at_plot_pos.rst
+   tutorial/getting_started.ipynb
+   tutorial/closer_look_at_viz.ipynb
+   tutorial/closer_look_at_plot_pos.ipynb
 
-Testing
-=======
+Examples
+--------
 
-It's easiest to run the tests from an interactive python session:
+.. toctree::
+   :maxdepth: 2
 
-.. code-block:: python
+   auto_examples/index
 
-    import matplotlib
-    matplotlib.use('agg')
-    from probscale import tests
-    tests.test()
-
-API References
-==============
+API Reference
+-------------
 
 .. toctree::
    :maxdepth: 2
 
    api.rst
 
+Testing
+-------
+
+Run the test suite (including the image comparison tests) from the repository
+root:
+
+.. code-block:: console
+
+    $ uv run pytest --mpl
+
 Indices and tables
-==================
+------------------
 
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+
+.. toctree::
+   :maxdepth: 1
+   :hidden:
+   :caption: Project
+
+   readme.md
+   installation.rst
+   authors.rst
+   contributing.rst
