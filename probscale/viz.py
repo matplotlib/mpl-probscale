@@ -72,6 +72,9 @@ def probplot(
         specified, a minimal implementation of the standard normal
         distribution will be used.
 
+        .. note::
+           This parameter is ignore when ``plottype="pp"``.
+
     probax : string, optional (default = 'x')
         The axis ('x' or 'y') that will serve as the probability (or
         quantile) axis.
