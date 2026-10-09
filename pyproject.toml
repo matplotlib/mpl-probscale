@@ -29,12 +29,12 @@ dependencies = [
     "matplotlib",
 ]
 
-[project.optional-dependencies]
-test = [
-    "pytest",
-    "pytest-mpl",
-    "docopt",
-    "scipy",
+[dependency-groups]
+dev = [
+    "docopt>=0.6.2",
+    "pytest>=9.1.1",
+    "pytest-mpl>=0.19.0",
+    "scipy>=1.17.1",
 ]
 
 [project.urls]
@@ -58,3 +58,4 @@ include = ["probscale*"]
 markers = [
     "mpl_image_compare",
 ]
+
