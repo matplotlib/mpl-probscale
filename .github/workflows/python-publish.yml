@@ -2,6 +2,8 @@
 # For more information see: https://docs.astral.sh/uv/guides/publish/
 
 name: Publish Python Package
+permissions:
+  contents: read
 
 on:
   release:
@@ -14,6 +16,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        persist-credentials: false
     - name: Install uv
       uses: astral-sh/setup-uv@v6
     - name: Build
