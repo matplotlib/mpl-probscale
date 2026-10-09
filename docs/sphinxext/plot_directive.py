@@ -128,17 +128,15 @@ The plot directive has the following configuration options:
     plot_template
         Provide a customized template for preparing restructured text.
 """
-from __future__ import absolute_import, division, print_function, unicode_literals
 
-import six
-from six.moves import xrange
-
-import sys, os, shutil, io, re, textwrap
-from os.path import relpath
+import io
+import os
+import re
+import shutil
+import sys
+import textwrap
 import traceback
-
-if not six.PY3:
-    import cStringIO
+from os.path import relpath
 
 from docutils.parsers.rst import directives
 from docutils.parsers.rst.directives.images import Image
@@ -166,7 +164,7 @@ except ImportError:
 
 
 import matplotlib
-import matplotlib.cbook as cbook
+from matplotlib import cbook
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -230,7 +228,7 @@ def mark_plot_labels(app, document):
     the "htmlonly" (or "latexonly") node to the actual figure node
     itself.
     """
-    for name, explicit in six.iteritems(document.nametypes):
+    for name, explicit in document.nametypes.items():
         if not explicit:
             continue
         labelid = document.nameids[name]
@@ -289,7 +287,7 @@ def setup(app):
     app.add_config_value("plot_working_directory", None, True)
     app.add_config_value("plot_template", None, True)
 
-    app.connect(str("doctree-read"), mark_plot_labels)
+    app.connect("doctree-read", mark_plot_labels)
 
 
 # ------------------------------------------------------------------------------
@@ -304,7 +302,7 @@ def contains_doctest(text):
         return False
     except SyntaxError:
         pass
-    r = re.compile(r"^\s*>>>", re.M)
+    r = re.compile(r"^\s*>>>", re.MULTILINE)
     m = r.search(text)
     return bool(m)
 
@@ -358,7 +356,7 @@ def remove_coding(text):
     """
     Remove the coding comment, which six.exec_ doesn't like.
     """
-    sub_re = re.compile("^#\s*-\*-\s*coding:\s*.*-\*-$", flags=re.MULTILINE)
+    sub_re = re.compile(r"^#\s*-\*-\s*coding:\s*.*-\*-$", flags=re.MULTILINE)
     return sub_re.sub("", text)
 
 
@@ -440,14 +438,14 @@ Exception occurred rendering plot.
 plot_context = dict()
 
 
-class ImageFile(object):
+class ImageFile:
     def __init__(self, basename, dirname):
         self.basename = basename
         self.dirname = dirname
         self.formats = []
 
     def filename(self, format):
-        return os.path.join(self.dirname, "%s.%s" % (self.basename, format))
+        return os.path.join(self.dirname, f"{self.basename}.{format}")
 
     def filenames(self):
         return [self.filename(fmt) for fmt in self.formats]
@@ -477,10 +475,7 @@ def run_code(code, code_path, ns=None, function_name=None):
     # Change the working directory to the directory of the example, so
     # it can get at its data files, if any.  Add its path to sys.path
     # so it can import any helper modules sitting beside it.
-    if six.PY2:
-        pwd = os.getcwdu()
-    else:
-        pwd = os.getcwd()
+    pwd = os.getcwd()
     old_sys_path = list(sys.path)
     if setup.config.plot_working_directory is not None:
         try:
@@ -509,10 +504,7 @@ def run_code(code, code_path, ns=None, function_name=None):
 
     # Redirect stdout
     stdout = sys.stdout
-    if six.PY3:
-        sys.stdout = io.StringIO()
-    else:
-        sys.stdout = cStringIO.StringIO()
+    sys.stdout = io.StringIO()
 
     # Assign a do-nothing print function to the namespace.  There
     # doesn't seem to be any other way to provide a way to (not) print
@@ -527,23 +519,23 @@ def run_code(code, code_path, ns=None, function_name=None):
                 ns = {}
             if not ns:
                 if setup.config.plot_pre_code is None:
-                    six.exec_(
-                        six.text_type(
+                    exec(
+                        str(
                             "import numpy as np\n"
                             + "from matplotlib import pyplot as plt\n"
                         ),
                         ns,
                     )
                 else:
-                    six.exec_(six.text_type(setup.config.plot_pre_code), ns)
+                    exec(str(setup.config.plot_pre_code), ns)
             ns["print"] = _dummy_print
             if "__main__" in code:
-                six.exec_("__name__ = '__main__'", ns)
+                exec("__name__ = '__main__'", ns)
             code = remove_coding(code)
-            six.exec_(code, ns)
+            exec(code, ns)
             if function_name is not None:
-                six.exec_(function_name + "()", ns)
-        except (Exception, SystemExit) as err:
+                exec(function_name + "()", ns)
+        except (Exception, SystemExit):
             raise PlotError(traceback.format_exc())
     finally:
         os.chdir(pwd)
@@ -582,10 +574,10 @@ def render_figures(
     default_dpi = {"png": 80, "hires.png": 200, "pdf": 200}
     formats = []
     plot_formats = config.plot_formats
-    if isinstance(plot_formats, six.string_types):
+    if isinstance(plot_formats, str):
         plot_formats = eval(plot_formats)
     for fmt in plot_formats:
-        if isinstance(fmt, six.string_types):
+        if isinstance(fmt, str):
             formats.append((fmt, default_dpi.get(fmt, 80)))
         elif type(fmt) in (tuple, list) and len(fmt) == 2:
             formats.append((str(fmt[0]), int(fmt[1])))
@@ -613,7 +605,7 @@ def render_figures(
     all_exists = True
     for i, code_piece in enumerate(code_pieces):
         images = []
-        for j in xrange(1000):
+        for j in range(1000):
             if len(code_pieces) > 1:
                 img = ImageFile("%s_%02d_%02d" % (output_base, i, j), output_dir)
             else:
@@ -673,7 +665,7 @@ def render_figures(
                     figman.canvas.figure.savefig(
                         img.filename(format), dpi=dpi, bbox_inches="tight"
                     )
-                except Exception as err:
+                except Exception:
                     raise PlotError(traceback.format_exc())
                 img.formats.append(format)
 
@@ -720,7 +712,7 @@ def run(arguments, content, options, state_machine, state, lineno):
         else:
             function_name = None
 
-        with io.open(source_file_name, "r", encoding="utf-8") as fd:
+        with open(source_file_name, encoding="utf-8") as fd:
             code = fd.read()
         output_base = os.path.basename(source_file_name)
     else:
@@ -826,8 +818,8 @@ def run(arguments, content, options, state_machine, state, lineno):
             images = []
 
         opts = [
-            ":%s: %s" % (key, val)
-            for key, val in six.iteritems(options)
+            f":{key}: {val}"
+            for key, val in options.items()
             if key in ("alt", "height", "width", "scale", "align", "class")
         ]
 
@@ -877,7 +869,7 @@ def run(arguments, content, options, state_machine, state, lineno):
 
     # copy script (if necessary)
     target_name = os.path.join(dest_dir, output_base + source_ext)
-    with io.open(target_name, "w", encoding="utf-8") as f:
+    with open(target_name, "w", encoding="utf-8") as f:
         if source_file_name == rst_file:
             code_escaped = unescape_doctest(code)
         else:

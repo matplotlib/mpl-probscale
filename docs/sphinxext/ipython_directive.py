@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-"""
+r"""
 Sphinx directive to support embedded IPython code.
 
 This directive allows pasting of entire interactive IPython sessions, prompts
@@ -98,40 +97,37 @@ Authors
 - VáclavŠmilauer <eudoxos-AT-arcig.cz>: Prompt generalizations.
 - Skipper Seabold, refactoring, cleanups, pure python addition
 """
-from __future__ import print_function
-from __future__ import unicode_literals
 
 # -----------------------------------------------------------------------------
 # Imports
 # -----------------------------------------------------------------------------
 
 # Stdlib
+import ast
 import os
 import re
 import sys
 import tempfile
-import ast
-from pandas.compat import zip, range, map, lmap, u, cStringIO as StringIO
 import warnings
+
+from pandas.compat import cStringIO as StringIO
+from pandas.compat import range
 
 # To keep compatibility with various python versions
 try:
     from hashlib import md5
 except ImportError:
-    from md5 import md5
+    pass
 
 # Third-party
-import sphinx
 from docutils.parsers.rst import directives
-from docutils import nodes
-from sphinx.util.compat import Directive
-
-# Our own
-from traitlets.config import Config
 from IPython import InteractiveShell
 from IPython.core.profiledir import ProfileDir
 from IPython.utils import io
 from IPython.utils.py3compat import PY3
+from sphinx.util.compat import Directive
+# Our own
+from traitlets.config import Config
 
 if PY3:
     from io import StringIO
@@ -250,9 +246,9 @@ def block_parser(part, rgxin, rgxout, fmtin, fmtout):
     return block
 
 
-class DecodingStringIO(StringIO, object):
+class DecodingStringIO(StringIO):
     def __init__(self, buf="", encodings=("utf8",), *args, **kwds):
-        super(DecodingStringIO, self).__init__(buf, *args, **kwds)
+        super().__init__(buf, *args, **kwds)
         self.set_encodings(encodings)
 
     def set_encodings(self, encodings):
@@ -260,19 +256,19 @@ class DecodingStringIO(StringIO, object):
 
     def write(self, data):
         if isinstance(data, text_type):
-            return super(DecodingStringIO, self).write(data)
+            return super().write(data)
         else:
             for enc in self.encodings:
                 try:
                     data = data.decode(enc)
-                    return super(DecodingStringIO, self).write(data)
+                    return super().write(data)
                 except:
                     pass
             # default to brute utf8 if no encoding succeded
-            return super(DecodingStringIO, self).write(data.decode("utf8", "replace"))
+            return super().write(data.decode("utf8", "replace"))
 
 
-class EmbeddedSphinxShell(object):
+class EmbeddedSphinxShell:
     """An embedded IPython instance to run inside Sphinx"""
 
     def __init__(self, exec_lines=None, state=None):
@@ -376,7 +372,7 @@ class EmbeddedSphinxShell(object):
             arg, val = kwarg.split("=")
             arg = arg.strip()
             val = val.strip()
-            imagerows.append("   :%s: %s" % (arg, val))
+            imagerows.append(f"   :{arg}: {val}")
 
         image_file = os.path.basename(outfile)  # only return file name
         image_directive = "\n".join(imagerows)
@@ -442,13 +438,13 @@ class EmbeddedSphinxShell(object):
                     else:
                         # only submit the line in non-verbatim mode
                         self.process_input_line(line, store_history=store_history)
-                    formatted_line = "%s %s" % (input_prompt, line)
+                    formatted_line = f"{input_prompt} {line}"
                 else:
                     # process a continuation line
                     if not is_verbatim:
                         self.process_input_line(line, store_history=store_history)
 
-                    formatted_line = "%s %s" % (continuation, line)
+                    formatted_line = f"{continuation} {line}"
 
                 if not is_suppress:
                     ret.append(formatted_line)
@@ -473,7 +469,7 @@ class EmbeddedSphinxShell(object):
         # output any exceptions raised during execution to stdout
         # unless :okexcept: has been specified.
         if not is_okexcept and "Traceback" in output:
-            s = "\nException in %s at block ending on line %s\n" % (filename, lineno)
+            s = f"\nException in {filename} at block ending on line {lineno}\n"
             s += "Specify :okexcept: as an option in the ipython:: block to suppress this message\n"
             sys.stdout.write("\n\n>>>" + ("-" * 73))
             sys.stdout.write(s)
@@ -484,7 +480,7 @@ class EmbeddedSphinxShell(object):
         # unless :okwarning: has been specified.
         if not is_okwarning:
             for w in ws:
-                s = "\nWarning in %s at block ending on line %s\n" % (filename, lineno)
+                s = f"\nWarning in {filename} at block ending on line {lineno}\n"
                 s += "Specify :okwarning: as an option in the ipython:: block to suppress this message\n"
                 sys.stdout.write("\n\n>>>" + ("-" * 73))
                 sys.stdout.write(s)
@@ -586,9 +582,7 @@ class EmbeddedSphinxShell(object):
         Saves the image file to disk.
         """
         self.ensure_pyplot()
-        command = (
-            'plt.gcf().savefig("%s", bbox_inches="tight", ' "dpi=100)" % image_file
-        )
+        command = 'plt.gcf().savefig("%s", bbox_inches="tight", dpi=100)' % image_file
 
         # print 'SAVEFIG', command  # dbg
         self.process_input_line("bookmark ipy_thisdir", store_history=False)
@@ -709,7 +703,7 @@ class EmbeddedSphinxShell(object):
             # deal with lines checking for multiline
             continuation = "   %s:" % "".join(["."] * (len(str(ct)) + 2))
             if not multiline:
-                modified = "%s %s" % (fmtin % ct, line_stripped)
+                modified = f"{fmtin % ct} {line_stripped}"
                 output.append(modified)
                 ct += 1
                 try:
@@ -719,7 +713,7 @@ class EmbeddedSphinxShell(object):
                     multiline = True
                     multiline_start = lineno
             else:  # still on a multiline
-                modified = "%s %s" % (continuation, line)
+                modified = f"{continuation} {line}"
                 output.append(modified)
 
                 # if the next line is indented, it should be part of multiline
@@ -760,7 +754,7 @@ class EmbeddedSphinxShell(object):
         if doctest_type in doctests:
             doctests[doctest_type](self, args, input_lines, found, submitted)
         else:
-            e = "Invalid option to @doctest: {0}".format(doctest_type)
+            e = f"Invalid option to @doctest: {doctest_type}"
             raise Exception(e)
 
 
@@ -946,8 +940,10 @@ def setup(app):
 
     app.add_directive("ipython", IPythonDirective)
     app.add_config_value("ipython_savefig_dir", None, "env")
-    app.add_config_value("ipython_rgxin", re.compile("In \[(\d+)\]:\s?(.*)\s*"), "env")
-    app.add_config_value("ipython_rgxout", re.compile("Out\[(\d+)\]:\s?(.*)\s*"), "env")
+    app.add_config_value("ipython_rgxin", re.compile(r"In \[(\d+)\]:\s?(.*)\s*"), "env")
+    app.add_config_value(
+        "ipython_rgxout", re.compile(r"Out\[(\d+)\]:\s?(.*)\s*"), "env"
+    )
     app.add_config_value("ipython_promptin", "In [%d]:", "env")
     app.add_config_value("ipython_promptout", "Out[%d]:", "env")
 

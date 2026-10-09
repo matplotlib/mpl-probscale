@@ -1,6 +1,6 @@
-import numpy
 import matplotlib.lines
 import matplotlib.pyplot as plt
+import numpy
 
 try:
     from scipy import stats
@@ -12,15 +12,15 @@ try:
 except ImportError:  # pragma: no cover
     seaborn = None
 
-from probscale import viz
-from probscale.probscale import _minimal_norm
-from .helpers import seed
-
-import pytest
-import numpy.testing as nptest
-
 from unittest import mock
 
+import numpy.testing as nptest
+import pytest
+
+from probscale import viz
+from probscale.probscale import _minimal_norm
+
+from .helpers import seed
 
 TIGHT_TOLERANCE = 13
 LOOSE_TOLERANCE = 18
@@ -71,7 +71,7 @@ def plot_data():
     return data
 
 
-class Test_fit_line(object):
+class Test_fit_line:
     def setup_method(self):
         self.data = numpy.array(
             [
@@ -276,7 +276,7 @@ class Test_fit_line(object):
         )
         scales = {"fitlogs": None, "fitprobs": None}
         x, y = self.zscores, self.data
-        x_, y_, res = viz.fit_line(x, y, **scales)
+        _, y_, res = viz.fit_line(x, y, **scales)
         nptest.assert_array_almost_equal(y_, known_y_linlin_no_ci)
         known_res = {
             "slope": 5.3404377026700995,
@@ -290,7 +290,7 @@ class Test_fit_line(object):
     def test_xlinear_ylinear(self):
         scales = {"fitlogs": None, "fitprobs": None}
         x, y = self.zscores, self.data
-        x_, y_, res = viz.fit_line(x, y, xhat=x[::8], estimate_ci=True, **scales)
+        _, y_, res = viz.fit_line(x, y, xhat=x[::8], estimate_ci=True, **scales)
         nptest.assert_allclose(y_, self.known_y_linlin, rtol=0.0001)
         known_res = {
             "slope": 5.3404377026700995,
@@ -304,7 +304,7 @@ class Test_fit_line(object):
     def test_xlinear_ylog(self):
         scales = {"fitlogs": "y", "fitprobs": None}
         x, y = self.zscores, self.data
-        x_, y_, res = viz.fit_line(x, y, xhat=x[::8], estimate_ci=True, **scales)
+        _, y_, res = viz.fit_line(x, y, xhat=x[::8], estimate_ci=True, **scales)
         nptest.assert_allclose(y_, self.known_y_linlog, rtol=0.0001)
         known_res = {
             "slope": 0.55515014824534514,
@@ -318,7 +318,7 @@ class Test_fit_line(object):
     def test_xlinear_yprob(self):
         scales = {"fitlogs": None, "fitprobs": "y"}
         x, y = self.data, self.probs
-        x_, y_, res = viz.fit_line(x, y, xhat=x[::8], estimate_ci=True, **scales)
+        _, y_, res = viz.fit_line(x, y, xhat=x[::8], estimate_ci=True, **scales)
         nptest.assert_allclose(y_, self.known_y_linprob, rtol=0.0001)
         known_res = {
             "slope": 0.16920340891421964,
@@ -332,7 +332,7 @@ class Test_fit_line(object):
     def test_xlog_ylinear(self):
         scales = {"fitlogs": "x", "fitprobs": None}
         x, y = self.data, self.zscores
-        x_, y_, res = viz.fit_line(x, y, xhat=x[::8], estimate_ci=True, **scales)
+        _, y_, res = viz.fit_line(x, y, xhat=x[::8], estimate_ci=True, **scales)
         nptest.assert_allclose(y_, self.known_y_loglin, rtol=0.0001)
         known_res = {
             "slope": 1.7385543724819053,
@@ -350,7 +350,7 @@ class Test_fit_line(object):
     def test_xlog_ylog(self):
         scales = {"fitlogs": "both", "fitprobs": None}
         x, y = self.data, self.y
-        x_, y_, res = viz.fit_line(x, y, xhat=x[::8], estimate_ci=True, **scales)
+        _, y_, res = viz.fit_line(x, y, xhat=x[::8], estimate_ci=True, **scales)
         nptest.assert_allclose(y_, self.known_y_loglog, rtol=0.0001)
         known_res = {
             "slope": 1.9695339470891058,
@@ -364,7 +364,7 @@ class Test_fit_line(object):
     def test_xlog_yprob(self):
         scales = {"fitlogs": "x", "fitprobs": "y"}
         x, y = self.data, self.probs
-        x_, y_, res = viz.fit_line(x, y, xhat=x[::8], estimate_ci=True, **scales)
+        _, y_, res = viz.fit_line(x, y, xhat=x[::8], estimate_ci=True, **scales)
         nptest.assert_allclose(y_, self.known_y_logprob, rtol=0.0001)
         known_res = {
             "slope": 1.7385543724819046,
@@ -382,7 +382,7 @@ class Test_fit_line(object):
     def test_xprob_ylinear(self):
         scales = {"fitlogs": None, "fitprobs": "x"}
         x, y = self.probs, self.data
-        x_, y_, res = viz.fit_line(x, y, xhat=x[::8], estimate_ci=True, **scales)
+        _, y_, res = viz.fit_line(x, y, xhat=x[::8], estimate_ci=True, **scales)
         nptest.assert_allclose(y_, self.known_y_problin, rtol=0.0001)
         known_res = {
             "slope": 5.3404377026700995,
@@ -400,7 +400,7 @@ class Test_fit_line(object):
     def test_xprob_ylog(self):
         scales = {"fitlogs": "y", "fitprobs": "x"}
         x, y = self.probs, self.data
-        x_, y_, res = viz.fit_line(x, y, xhat=x[::8], estimate_ci=True, **scales)
+        _, y_, res = viz.fit_line(x, y, xhat=x[::8], estimate_ci=True, **scales)
         nptest.assert_allclose(y_, self.known_y_problog, rtol=0.0001)
         known_res = {
             "intercept": 2.1749556618678434,
@@ -423,7 +423,7 @@ class Test_fit_line(object):
             self.probs,
             p2,
         )
-        x_, y_, res = viz.fit_line(x, y, xhat=x[::8], estimate_ci=True, **scales)
+        _, y_, res = viz.fit_line(x, y, xhat=x[::8], estimate_ci=True, **scales)
         nptest.assert_allclose(y_, self.known_y_probprob, rtol=0.0001)
         known_res = {
             "slope": 0.98467862838225351,
@@ -440,20 +440,20 @@ class Test_fit_line(object):
     def test_bad_fitlogs(self):
         with pytest.raises(ValueError):
             x, y = self.zscores, self.data
-            x_, y_, res = viz.fit_line(x, y, fitlogs="junk")
+            _ = viz.fit_line(x, y, fitlogs="junk")
 
     def test_bad_fitprobs(self):
         with pytest.raises(ValueError):
             x, y = self.zscores, self.data
-            x_, y_, res = viz.fit_line(x, y, fitprobs="junk")
+            _ = viz.fit_line(x, y, fitprobs="junk")
 
     def test_custom_xhat(self):
         x, y = self.zscores, self.data
-        x_, y_, res = viz.fit_line(x, y, xhat=self.custom_xhat)
+        _, y_, _ = viz.fit_line(x, y, xhat=self.custom_xhat)
         nptest.assert_array_almost_equal(y_, self.known_custom_yhat)
 
 
-class Test_plot_pos(object):
+class Test_plot_pos:
     def setup_method(self):
         self.data = numpy.arange(16)
 
@@ -676,59 +676,59 @@ class Test_plot_pos(object):
         )
 
     def test_type4(self):
-        pp, yy = viz.plot_pos(self.data, postype="type 4")
+        pp, _yy = viz.plot_pos(self.data, postype="type 4")
         nptest.assert_array_almost_equal(pp, self.known_type4)
 
     def test_type5(self):
-        pp, yy = viz.plot_pos(self.data, postype="type 5")
+        pp, _yy = viz.plot_pos(self.data, postype="type 5")
         nptest.assert_array_almost_equal(pp, self.known_type5)
 
     def test_type6(self):
-        pp, yy = viz.plot_pos(self.data, postype="type 6")
+        pp, _yy = viz.plot_pos(self.data, postype="type 6")
         nptest.assert_array_almost_equal(pp, self.known_type6)
 
     def test_type7(self):
-        pp, yy = viz.plot_pos(self.data, postype="type 7")
+        pp, _yy = viz.plot_pos(self.data, postype="type 7")
         nptest.assert_array_almost_equal(pp, self.known_type7)
 
     def test_type8(self):
-        pp, yy = viz.plot_pos(self.data, postype="type 8")
+        pp, _yy = viz.plot_pos(self.data, postype="type 8")
         nptest.assert_array_almost_equal(pp, self.known_type8)
 
     def test_type9(self):
-        pp, yy = viz.plot_pos(self.data, postype="type 9")
+        pp, _yy = viz.plot_pos(self.data, postype="type 9")
         nptest.assert_array_almost_equal(pp, self.known_type9)
 
     def test_weibull(self):
-        pp, yy = viz.plot_pos(self.data, postype="weibull")
+        pp, _yy = viz.plot_pos(self.data, postype="weibull")
         nptest.assert_array_almost_equal(pp, self.known_weibull)
 
     def test_median(self):
-        pp, yy = viz.plot_pos(self.data, postype="median")
+        pp, _yy = viz.plot_pos(self.data, postype="median")
         nptest.assert_array_almost_equal(pp, self.known_median)
 
     def test_apl(self):
-        pp, yy = viz.plot_pos(self.data, postype="apl")
+        pp, _yy = viz.plot_pos(self.data, postype="apl")
         nptest.assert_array_almost_equal(pp, self.known_apl)
 
     def test_pwm(self):
-        pp, yy = viz.plot_pos(self.data, postype="pwm")
+        pp, _yy = viz.plot_pos(self.data, postype="pwm")
         nptest.assert_array_almost_equal(pp, self.known_pwm)
 
     def test_blom(self):
-        pp, yy = viz.plot_pos(self.data, postype="blom")
+        pp, _yy = viz.plot_pos(self.data, postype="blom")
         nptest.assert_array_almost_equal(pp, self.known_blom)
 
     def test_hazen(self):
-        pp, yy = viz.plot_pos(self.data, postype="hazen")
+        pp, _yy = viz.plot_pos(self.data, postype="hazen")
         nptest.assert_array_almost_equal(pp, self.known_hazen)
 
     def test_cunnane(self):
-        pp, yy = viz.plot_pos(self.data, postype="cunnane")
+        pp, _yy = viz.plot_pos(self.data, postype="cunnane")
         nptest.assert_array_almost_equal(pp, self.known_cunnane)
 
     def test_gringorten(self):
-        pp, yy = viz.plot_pos(self.data, postype="gringorten")
+        pp, _yy = viz.plot_pos(self.data, postype="gringorten")
         nptest.assert_array_almost_equal(pp, self.known_gringorten)
 
     def test_bad_postype(self):
@@ -752,7 +752,7 @@ def test_probplot_qq(plot_data):
         plottype="qq",
         datalabel="Test label",
         datascale="log",
-        scatter_kws=dict(color="r"),
+        scatter_kws={"color": "r"},
     )
     return fig
 
@@ -773,9 +773,12 @@ def test_probplot_qq_dist(plot_data):
 def test_probplot_pp(plot_data):
     plt.close("all")
     fig, ax = plt.subplots()
-    scatter_kws = dict(
-        color="b", linestyle="--", markeredgecolor="g", markerfacecolor="none"
-    )
+    scatter_kws = {
+        "color": "b",
+        "linestyle": "--",
+        "markeredgecolor": "g",
+        "markerfacecolor": "none",
+    }
     fig = viz.probplot(
         plot_data,
         ax=ax,
@@ -884,7 +887,7 @@ def test_probplot_qq_probax_y(plot_data):
         problabel="Test label",
         probax="y",
         datascale="log",
-        scatter_kws=dict(color="r"),
+        scatter_kws={"color": "r"},
     )
     return fig
 
@@ -893,9 +896,12 @@ def test_probplot_qq_probax_y(plot_data):
 def test_probplot_pp_probax_y(plot_data):
     plt.close("all")
     fig, ax = plt.subplots()
-    scatter_kws = dict(
-        color="b", linestyle="--", markeredgecolor="g", markerfacecolor="none"
-    )
+    scatter_kws = {
+        "color": "b",
+        "linestyle": "--",
+        "markeredgecolor": "g",
+        "markerfacecolor": "none",
+    }
     fig = viz.probplot(
         plot_data,
         ax=ax,
@@ -1035,12 +1041,11 @@ def test_probplot_beta_dist_best_fit_x(plot_data):
 
 def test_probplot_test_results(plot_data):
     plt.close("all")
-    fig, ax = plt.subplots()
-    fig, results = viz.probplot(plot_data, return_best_fit_results=True)
+    _, results = viz.probplot(plot_data, return_best_fit_results=True)
 
     assert isinstance(results, dict)
     known_keys = sorted(["q", "x", "y", "xhat", "yhat", "res"])
-    assert sorted(list(results.keys())) == known_keys
+    assert sorted(results.keys()) == known_keys
 
 
 @pytest.mark.parametrize("probax", ["x", "y"])

@@ -3,7 +3,6 @@ from pathlib import Path
 
 from matplotlib import pyplot
 from scipy import stats
-import probscale  # nothing else needed
 
 beta = stats.beta(a=3, b=4)
 weibull = stats.weibull_min(c=5)

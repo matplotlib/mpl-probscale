@@ -1,18 +1,19 @@
-import numpy
 import warnings
+from typing import cast
+
+import numpy
+from matplotlib.axis import Axis
 from matplotlib.scale import ScaleBase
-from matplotlib.ticker import (
-    FixedLocator,
-    NullLocator,
-    NullFormatter,
-    FuncFormatter,
-)
+from matplotlib.ticker import FixedLocator, FuncFormatter, NullFormatter, NullLocator
+from matplotlib.transforms import Transform
+from numpy.typing import ArrayLike
 
-from .transforms import ProbTransform
+from ._typing import DistLike, FloatingArray
 from .formatters import PctFormatter, ProbFormatter
+from .transforms import ProbTransform
 
 
-class _minimal_norm(object):
+class _minimal_norm:
     """
     A basic implementation of a normal distribution, minimally
     API-compliant with scipy.stats.norm
@@ -22,25 +23,52 @@ class _minimal_norm(object):
     _A = -(8 * (numpy.pi - 3.0) / (3.0 * numpy.pi * (numpy.pi - 4.0)))
 
     @classmethod
-    def _approx_erf(cls, x):
-        """Approximate solution to the error function
+    def _approx_erf(cls, x: ArrayLike) -> FloatingArray:
+        """Approximate solution to the error function.
 
+        Parameters
+        ----------
+        x : array-like
+            The values at which to evaluate the error function.
+
+        Returns
+        -------
+        erf : numpy array
+            The approximate error function evaluated at ``x``.
+
+        References
+        ----------
         http://en.wikipedia.org/wiki/Error_function
 
         """
 
+        x = numpy.asarray(x)
         guts = -(x**2) * (4.0 / numpy.pi + cls._A * x**2) / (1.0 + cls._A * x**2)
         with warnings.catch_warnings():
             warnings.filterwarnings("ignore", "invalid value encountered in sign")
             return numpy.sign(x) * numpy.sqrt(1.0 - numpy.exp(guts))
 
     @classmethod
-    def _approx_inv_erf(cls, z):
-        """Approximate solution to the inverse error function
+    def _approx_inv_erf(cls, z: ArrayLike) -> FloatingArray:
+        """Approximate solution to the inverse error function.
 
+        Parameters
+        ----------
+        z : array-like
+            The values at which to evaluate the inverse error function.
+
+        Returns
+        -------
+        inv_erf : numpy array
+            The approximate inverse error function evaluated at ``z``.
+
+        References
+        ----------
         http://en.wikipedia.org/wiki/Error_function
 
         """
+
+        z = numpy.asarray(z)
 
         _b = (2 / numpy.pi / cls._A) + (0.5 * numpy.log(1 - z**2))
         _c = numpy.log(1 - z**2) / cls._A
@@ -49,21 +77,47 @@ class _minimal_norm(object):
             return numpy.sign(z) * numpy.sqrt(numpy.sqrt(_b**2 - _c) - _b)
 
     @classmethod
-    def ppf(cls, q):
-        """Percent point function (inverse of cdf)
+    def ppf(cls, q: ArrayLike) -> FloatingArray:
+        """Percent point function (inverse of the cdf).
 
-        Wikipedia: https://goo.gl/Rtxjme
+        Parameters
+        ----------
+        q : array-like
+            Probabilities at which to evaluate the inverse CDF.
+
+        Returns
+        -------
+        x : numpy array
+            The quantiles corresponding to ``q``.
+
+        References
+        ----------
+        https://goo.gl/Rtxjme
 
         """
+        q = numpy.asarray(q)
         return numpy.sqrt(2) * cls._approx_inv_erf(2 * q - 1)
 
     @classmethod
-    def cdf(cls, x):
-        """Cumulative density function
+    def cdf(cls, x: ArrayLike) -> FloatingArray:
+        """Cumulative distribution function.
 
-        Wikipedia: https://goo.gl/ciUNLx
+        Parameters
+        ----------
+        x : array-like
+            The values at which to evaluate the CDF.
+
+        Returns
+        -------
+        p : numpy array
+            The CDF evaluated at ``x``.
+
+        References
+        ----------
+        https://goo.gl/ciUNLx
 
         """
+        x = numpy.asarray(x)
         return 0.5 * (1 + cls._approx_erf(x / numpy.sqrt(2)))
 
 
@@ -72,13 +126,20 @@ class ProbScale(ScaleBase):
 
     Parameters
     ----------
-    axis : a matplotlib axis artist
+    axis : matplotlib axis or None
         The axis whose scale will be set.
     dist : scipy.stats probability distribution, optional
-        The distribution whose ppf/cdf methods should be used to compute
-        the tick positions. By default, a minimal implementation of the
-        ``scipy.stats.norm`` class is used so that scipy is not a
+        The distribution whose ``ppf``/``cdf`` methods should be used to
+        compute the tick positions. By default, a minimal implementation
+        of the ``scipy.stats.norm`` class is used so that scipy is not a
         requirement.
+    as_pct : bool, optional (default = True)
+        Toggles the formatting of the probabilities associated with the
+        tick labels as percentages (0 - 100) or fractions (0 - 1).
+    nonpos : {'mask', 'clip'}, optional (default = 'mask')
+        How to handle non-positive axis limits. Accepted for
+        compatibility with matplotlib's log scales and stored on the
+        scale instance, but not currently applied to the transform.
 
     Examples
     --------
@@ -91,22 +152,37 @@ class ProbScale(ScaleBase):
         >>> import probscale
         >>> fig, ax = pyplot.subplots(figsize=(4, 7))
         >>> ax.set_ylim(bottom=0.5, top=99.5)
+        (0.5, 99.5)
         >>> ax.set_yscale('prob')
 
     """
 
     name = "prob"
 
-    def __init__(self, axis, **kwargs):
-        self.dist = kwargs.pop("dist", _minimal_norm)
-        self.as_pct = kwargs.pop("as_pct", True)
-        self.nonpos = kwargs.pop("nonpos", "mask")
+    def __init__(self, axis: Axis | None, **kwargs: object) -> None:
+        self.dist = cast(DistLike, kwargs.pop("dist", _minimal_norm))
+        self.as_pct = cast(bool, kwargs.pop("as_pct", True))
+        self.nonpos = cast(str, kwargs.pop("nonpos", "mask"))
         self._transform = ProbTransform(self.dist, as_pct=self.as_pct)
 
     @classmethod
-    def _get_probs(cls, nobs, as_pct):
-        """Returns the x-axis labels for a probability plot based on
-        the number of observations (`nobs`).
+    def _get_probs(cls, nobs: int, as_pct: bool) -> FloatingArray:
+        """Return the tick locations for a probability plot based on the
+        number of observations.
+
+        Parameters
+        ----------
+        nobs : int
+            The number of observations in the dataset.
+        as_pct : bool
+            If True, the tick locations are expressed as percentages
+            (0 - 100); otherwise they are expressed as fractions (0 - 1).
+
+        Returns
+        -------
+        locs : numpy array
+            The tick locations for the probability axis.
+
         """
         if as_pct:
             factor = 1.0
@@ -132,13 +208,21 @@ class ProbScale(ScaleBase):
         locs = axis_probs / factor
         return locs
 
-    def set_default_locators_and_formatters(self, axis):
+    def set_default_locators_and_formatters(self, axis: Axis) -> None:
         """
         Set the locators and formatters to specialized versions for
-        log scaling.
+        probability scaling.
+
+        Parameters
+        ----------
+        axis : matplotlib.axis.Axis
+            The axis whose locators and formatters will be set.
+
         """
 
-        axis.set_major_locator(FixedLocator(self._get_probs(1e8, self.as_pct)))
+        axis.set_major_locator(
+            FixedLocator(self._get_probs(10**8, self.as_pct).tolist())
+        )
         if self.as_pct:
             axis.set_major_formatter(FuncFormatter(PctFormatter()))
         else:
@@ -146,15 +230,37 @@ class ProbScale(ScaleBase):
         axis.set_minor_locator(NullLocator())
         axis.set_minor_formatter(NullFormatter())
 
-    def get_transform(self):
+    def get_transform(self) -> Transform:
         """
-        Return a :class:`~matplotlib.transforms.Transform` instance
-        appropriate for the given logarithm base.
+        Return the :class:`~matplotlib.transforms.Transform` instance
+        that maps probabilities or percentages to display coordinates.
+
         """
         return self._transform
 
-    def limit_range_for_scale(self, vmin, vmax, minpos):
+    def limit_range_for_scale(
+        self, vmin: float, vmax: float, minpos: float
+    ) -> tuple[float, float]:
         """
         Limit the domain to positive values.
+
+        Non-positive limits are replaced with the smallest positive
+        value in the data, ``minpos``.
+
+        Parameters
+        ----------
+        vmin, vmax : float
+            The current data limits.
+        minpos : float
+            The smallest positive value in the data.
+
+        Returns
+        -------
+        vmin, vmax : float
+            The adjusted data limits.
+
         """
-        return (vmin <= 0.0 and minpos or vmin, vmax <= 0.0 and minpos or vmax)
+        return (
+            minpos if (vmin <= 0.0 and minpos) else vmin,
+            minpos if (vmax <= 0.0 and minpos) else vmax,
+        )

@@ -13,9 +13,8 @@ import re
 
 # Third party
 from pygments.lexer import Lexer, do_insertions
-from pygments.lexers.agile import PythonConsoleLexer, PythonLexer, PythonTracebackLexer
+from pygments.lexers.agile import PythonLexer, PythonTracebackLexer
 from pygments.token import Comment, Generic
-
 from sphinx import highlighting
 
 # -----------------------------------------------------------------------------
@@ -27,7 +26,6 @@ line_re = re.compile(".*?\n")
 
 
 class IPythonConsoleLexer(Lexer):
-
     """
     For IPython console output or doctests, such as:
 
@@ -53,10 +51,10 @@ class IPythonConsoleLexer(Lexer):
     name = "IPython console session"
     aliases = ["ipython"]
     mimetypes = ["text/x-ipython-console"]
-    input_prompt = re.compile("(In \[[0-9]+\]: )|(   \.\.\.+:)")
-    output_prompt = re.compile("(Out\[[0-9]+\]: )|(   \.\.\.+:)")
-    continue_prompt = re.compile("   \.\.\.+:")
-    tb_start = re.compile("\-+")
+    input_prompt = re.compile(r"(In \[[0-9]+\]: )|(   \.\.\.+:)")
+    output_prompt = re.compile(r"(Out\[[0-9]+\]: )|(   \.\.\.+:)")
+    continue_prompt = re.compile(r"   \.\.\.+:")
+    tb_start = re.compile(r"\-+")
 
     def get_tokens_unprocessed(self, text):
         pylexer = PythonLexer(**self.options)
@@ -112,7 +110,6 @@ def setup(app):
     # But if somebody knows that the right API usage should be to do that via
     # sphinx, by all means fix it here.  At least having this setup.py
     # suppresses the sphinx warning we'd get without it.
-    pass
 
 
 # -----------------------------------------------------------------------------

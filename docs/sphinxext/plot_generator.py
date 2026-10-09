@@ -4,23 +4,20 @@ Sphinx plugin to run example scripts and create a gallery page.
 Lightly modified from the mpld3 project.
 
 """
-from __future__ import division
+
+import glob
 import os
 import os.path as op
 import re
-import glob
+import shutil
 import token
 import tokenize
-import shutil
-import json
 
 import matplotlib
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-
 from matplotlib import image
-
 
 RST_TEMPLATE = """
 .. _{sphinx_tag}:
@@ -146,7 +143,7 @@ def indent(s, N=4):
     return s.replace("\n", "\n" + N * " ")
 
 
-class ExampleGenerator(object):
+class ExampleGenerator:
     """Tools for generating an example page from a file"""
 
     def __init__(self, filename, target_dir):
@@ -154,7 +151,7 @@ class ExampleGenerator(object):
         self.target_dir = target_dir
         self.thumbloc = 0.5, 0.5
         self.extract_docstring()
-        with open(filename, "r") as fid:
+        with open(filename) as fid:
             self.filetext = fid.read()
 
         outfilename = op.join(target_dir, self.rstfilename)
@@ -166,7 +163,7 @@ class ExampleGenerator(object):
         ):
             self.exec_file()
         else:
-            print("skipping {0}".format(self.filename))
+            print(f"skipping {self.filename}")
 
     @property
     def dirname(self):
@@ -266,7 +263,7 @@ class ExampleGenerator(object):
         self.end_line = erow + 1 + start_row
 
     def exec_file(self):
-        print("running {0}".format(self.filename))
+        print(f"running {self.filename}")
 
         plt.close("all")
         my_globals = {"pl": plt, "plt": plt}
@@ -289,15 +286,14 @@ class ExampleGenerator(object):
         return (
             ".. raw:: html\n\n"
             "    <div class='figure align-center'>\n"
-            "    <a href=./{0}>\n"
-            "    <img src=../_static/{1}>\n"
+            f"    <a href=./{self.htmlfilename}>\n"
+            f"    <img src=../_static/{self.thumbfilename}>\n"
             "    <span class='figure-label'>\n"
-            "    <p>{2}</p>\n"
+            f"    <p>{self.plotfunc}</p>\n"
             "    </span>\n"
             "    </a>\n"
             "    </div>\n\n"
             "\n\n"
-            "".format(self.htmlfilename, self.thumbfilename, self.plotfunc)
         )
 
 
@@ -324,7 +320,7 @@ def main(app):
 
     banner_data = []
 
-    toctree = "\n\n" ".. toctree::\n" "   :hidden:\n\n"
+    toctree = "\n\n.. toctree::\n   :hidden:\n\n"
     contents = "\n\n"
 
     # Write individual example files

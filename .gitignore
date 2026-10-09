@@ -70,3 +70,7 @@ target/
 
 # other text editors
 .atom-build.yml
+
+# image comparison
+baseline
+figcomp
