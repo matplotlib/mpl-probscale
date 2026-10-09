@@ -1,9 +1,7 @@
+import pytest
 from matplotlib import pyplot
 
-import pytest
-
-from probscale import validate
-from probscale import algo
+from probscale import algo, validate
 
 
 def test_axes_object_invalid():

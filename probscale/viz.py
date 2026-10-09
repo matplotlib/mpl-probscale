@@ -8,7 +8,14 @@ from matplotlib.figure import Figure
 from numpy.typing import ArrayLike
 
 from . import algo, validate
-from ._typing import DistLike, FitAxis, FitResults, FloatingArray, PlotType, ProbPlotResults
+from ._typing import (
+    DistLike,
+    FitAxis,
+    FitResults,
+    FloatingArray,
+    PlotType,
+    ProbPlotResults,
+)
 from .probscale import _minimal_norm
 
 

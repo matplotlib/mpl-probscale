@@ -1,7 +1,6 @@
 import numpy
-
-import pytest
 import numpy.testing as nptest
+import pytest
 
 from probscale import algo
 
@@ -120,7 +119,7 @@ def test__bs_fit(plot_data, fitlogs, known_lo, known_hi):
     nptest.assert_allclose(yhat_hi, known_hi, rtol=0.001)
 
 
-class Test__estimate_from_fit(object):
+class Test__estimate_from_fit:
     def setup_method(self):
         self.x = numpy.arange(1, 11, 0.5)
         self.slope = 2

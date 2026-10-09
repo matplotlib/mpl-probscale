@@ -32,6 +32,7 @@ dependencies = [
 [dependency-groups]
 dev = [
     "docopt>=0.6.2",
+    "pre-commit>=4.6.2",
     "pytest>=9.1.1",
     "pytest-mpl>=0.19.0",
     "ruff>=0.16.10",
@@ -60,6 +61,9 @@ include = ["probscale*"]
 markers = [
     "mpl_image_compare",
 ]
+
+[tool.ruff.format]
+exclude = ["docs/**/*.py", "*.ipynb"]
 
 [tool.ty.src]
 include = ["probscale"]

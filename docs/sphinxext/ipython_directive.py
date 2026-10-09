@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-"""
+r"""
 Sphinx directive to support embedded IPython code.
 
 This directive allows pasting of entire interactive IPython sessions, prompts
@@ -98,40 +97,38 @@ Authors
 - VáclavŠmilauer <eudoxos-AT-arcig.cz>: Prompt generalizations.
 - Skipper Seabold, refactoring, cleanups, pure python addition
 """
-from __future__ import print_function
-from __future__ import unicode_literals
 
 # -----------------------------------------------------------------------------
 # Imports
 # -----------------------------------------------------------------------------
 
 # Stdlib
+import ast
 import os
 import re
 import sys
 import tempfile
-import ast
-from pandas.compat import zip, range, map, lmap, u, cStringIO as StringIO
 import warnings
+
+from pandas.compat import cStringIO as StringIO
+from pandas.compat import range
 
 # To keep compatibility with various python versions
 try:
     from hashlib import md5
 except ImportError:
-    from md5 import md5
+    pass
 
 # Third-party
-import sphinx
 from docutils.parsers.rst import directives
-from docutils import nodes
-from sphinx.util.compat import Directive
-
-# Our own
-from traitlets.config import Config
 from IPython import InteractiveShell
 from IPython.core.profiledir import ProfileDir
 from IPython.utils import io
 from IPython.utils.py3compat import PY3
+from sphinx.util.compat import Directive
+
+# Our own
+from traitlets.config import Config
 
 if PY3:
     from io import StringIO
@@ -250,9 +247,9 @@ def block_parser(part, rgxin, rgxout, fmtin, fmtout):
     return block
 
 
-class DecodingStringIO(StringIO, object):
+class DecodingStringIO(StringIO):
     def __init__(self, buf="", encodings=("utf8",), *args, **kwds):
-        super(DecodingStringIO, self).__init__(buf, *args, **kwds)
+        super().__init__(buf, *args, **kwds)
         self.set_encodings(encodings)
 
     def set_encodings(self, encodings):
@@ -260,19 +257,19 @@ class DecodingStringIO(StringIO, object):
 
     def write(self, data):
         if isinstance(data, text_type):
-            return super(DecodingStringIO, self).write(data)
+            return super().write(data)
         else:
             for enc in self.encodings:
                 try:
                     data = data.decode(enc)
-                    return super(DecodingStringIO, self).write(data)
+                    return super().write(data)
                 except:
                     pass
             # default to brute utf8 if no encoding succeded
-            return super(DecodingStringIO, self).write(data.decode("utf8", "replace"))
+            return super().write(data.decode("utf8", "replace"))
 
 
-class EmbeddedSphinxShell(object):
+class EmbeddedSphinxShell:
     """An embedded IPython instance to run inside Sphinx"""
 
     def __init__(self, exec_lines=None, state=None):
@@ -760,7 +757,7 @@ class EmbeddedSphinxShell(object):
         if doctest_type in doctests:
             doctests[doctest_type](self, args, input_lines, found, submitted)
         else:
-            e = "Invalid option to @doctest: {0}".format(doctest_type)
+            e = f"Invalid option to @doctest: {doctest_type}"
             raise Exception(e)
 
 
@@ -946,8 +943,8 @@ def setup(app):
 
     app.add_directive("ipython", IPythonDirective)
     app.add_config_value("ipython_savefig_dir", None, "env")
-    app.add_config_value("ipython_rgxin", re.compile("In \[(\d+)\]:\s?(.*)\s*"), "env")
-    app.add_config_value("ipython_rgxout", re.compile("Out\[(\d+)\]:\s?(.*)\s*"), "env")
+    app.add_config_value("ipython_rgxin", re.compile(r"In \[(\d+)\]:\s?(.*)\s*"), "env")
+    app.add_config_value("ipython_rgxout", re.compile(r"Out\[(\d+)\]:\s?(.*)\s*"), "env")
     app.add_config_value("ipython_promptin", "In [%d]:", "env")
     app.add_config_value("ipython_promptout", "Out[%d]:", "env")
 

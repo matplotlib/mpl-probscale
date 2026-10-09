@@ -1,5 +1,5 @@
-import os
 import glob
+import os
 
 import nbformat
 from nbconvert import RSTExporter
@@ -18,7 +18,7 @@ def convert(nbfile):
 
     img_folder = basename + "_files"
     body_raw, images = RSTExporter().from_notebook_node(nbdata)
-    body_final = body_raw.replace(".. image:: ", ".. image:: {}/".format(img_folder))
+    body_final = body_raw.replace(".. image:: ", f".. image:: {img_folder}/")
 
     with open(basename + ".rst", "w", encoding="utf-8") as rst_out:
         rst_out.write(body_final)

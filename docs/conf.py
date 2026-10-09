@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 #
 # probscale documentation build configuration file, created by
 # sphinx-quickstart on Thu Nov 19 23:14:08 2015.
@@ -13,9 +12,8 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-import sys
 import os
-import shlex
+import sys
 
 import seaborn
 

@@ -1,10 +1,9 @@
 import numpy
-
-import pytest
 import numpy.testing as nptest
+import pytest
 
-from probscale.probscale import _minimal_norm
 from probscale import transforms
+from probscale.probscale import _minimal_norm
 
 
 def test__mask_out_of_bounds():

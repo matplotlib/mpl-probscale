@@ -1,8 +1,8 @@
 import os
 import warnings
 
-import numpy
 import matplotlib.pyplot as plt
+import numpy
 
 try:
     from scipy import stats
@@ -11,9 +11,7 @@ except ImportError:  # pragma: no cover
 
 import pytest
 
-import probscale
 from probscale.probscale import _minimal_norm
-
 
 # special toloerance for Github Action CI
 TOLERANCE = int(os.environ.get("MPL_IMGCOMP_TOLERANCE", 15))

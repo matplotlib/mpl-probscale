@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy
 from numpy.typing import ArrayLike, NDArray
 
-from ._typing import FitResults, FitAxis, FloatingArray
+from ._typing import FitAxis, FitResults, FloatingArray
 
 
 def _make_boot_index(elements: int, niter: int) -> NDArray[numpy.integer]:

@@ -128,14 +128,18 @@ The plot directive has the following configuration options:
     plot_template
         Provide a customized template for preparing restructured text.
 """
-from __future__ import absolute_import, division, print_function, unicode_literals
+
+import io
+import os
+import re
+import shutil
+import sys
+import textwrap
+import traceback
+from os.path import relpath
 
 import six
 from six.moves import xrange
-
-import sys, os, shutil, io, re, textwrap
-from os.path import relpath
-import traceback
 
 if not six.PY3:
     import cStringIO
@@ -166,7 +170,7 @@ except ImportError:
 
 
 import matplotlib
-import matplotlib.cbook as cbook
+from matplotlib import cbook
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -289,7 +293,7 @@ def setup(app):
     app.add_config_value("plot_working_directory", None, True)
     app.add_config_value("plot_template", None, True)
 
-    app.connect(str("doctree-read"), mark_plot_labels)
+    app.connect("doctree-read", mark_plot_labels)
 
 
 # ------------------------------------------------------------------------------
@@ -304,7 +308,7 @@ def contains_doctest(text):
         return False
     except SyntaxError:
         pass
-    r = re.compile(r"^\s*>>>", re.M)
+    r = re.compile(r"^\s*>>>", re.MULTILINE)
     m = r.search(text)
     return bool(m)
 
@@ -358,7 +362,7 @@ def remove_coding(text):
     """
     Remove the coding comment, which six.exec_ doesn't like.
     """
-    sub_re = re.compile("^#\s*-\*-\s*coding:\s*.*-\*-$", flags=re.MULTILINE)
+    sub_re = re.compile(r"^#\s*-\*-\s*coding:\s*.*-\*-$", flags=re.MULTILINE)
     return sub_re.sub("", text)
 
 
@@ -440,7 +444,7 @@ Exception occurred rendering plot.
 plot_context = dict()
 
 
-class ImageFile(object):
+class ImageFile:
     def __init__(self, basename, dirname):
         self.basename = basename
         self.dirname = dirname
@@ -543,7 +547,7 @@ def run_code(code, code_path, ns=None, function_name=None):
             six.exec_(code, ns)
             if function_name is not None:
                 six.exec_(function_name + "()", ns)
-        except (Exception, SystemExit) as err:
+        except (Exception, SystemExit):
             raise PlotError(traceback.format_exc())
     finally:
         os.chdir(pwd)
@@ -673,7 +677,7 @@ def render_figures(
                     figman.canvas.figure.savefig(
                         img.filename(format), dpi=dpi, bbox_inches="tight"
                     )
-                except Exception as err:
+                except Exception:
                     raise PlotError(traceback.format_exc())
                 img.formats.append(format)
 
@@ -720,7 +724,7 @@ def run(arguments, content, options, state_machine, state, lineno):
         else:
             function_name = None
 
-        with io.open(source_file_name, "r", encoding="utf-8") as fd:
+        with open(source_file_name, "r", encoding="utf-8") as fd:
             code = fd.read()
         output_base = os.path.basename(source_file_name)
     else:
@@ -877,7 +881,7 @@ def run(arguments, content, options, state_machine, state, lineno):
 
     # copy script (if necessary)
     target_name = os.path.join(dest_dir, output_base + source_ext)
-    with io.open(target_name, "w", encoding="utf-8") as f:
+    with open(target_name, "w", encoding="utf-8") as f:
         if source_file_name == rst_file:
             code_escaped = unescape_doctest(code)
         else:

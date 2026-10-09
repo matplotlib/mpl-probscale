@@ -1,6 +1,6 @@
-import numpy
 import matplotlib.lines
 import matplotlib.pyplot as plt
+import numpy
 
 try:
     from scipy import stats
@@ -12,15 +12,15 @@ try:
 except ImportError:  # pragma: no cover
     seaborn = None
 
-from probscale import viz
-from probscale.probscale import _minimal_norm
-from .helpers import seed
-
-import pytest
-import numpy.testing as nptest
-
 from unittest import mock
 
+import numpy.testing as nptest
+import pytest
+
+from probscale import viz
+from probscale.probscale import _minimal_norm
+
+from .helpers import seed
 
 TIGHT_TOLERANCE = 13
 LOOSE_TOLERANCE = 18
@@ -71,7 +71,7 @@ def plot_data():
     return data
 
 
-class Test_fit_line(object):
+class Test_fit_line:
     def setup_method(self):
         self.data = numpy.array(
             [
@@ -453,7 +453,7 @@ class Test_fit_line(object):
         nptest.assert_array_almost_equal(y_, self.known_custom_yhat)
 
 
-class Test_plot_pos(object):
+class Test_plot_pos:
     def setup_method(self):
         self.data = numpy.arange(16)
 
