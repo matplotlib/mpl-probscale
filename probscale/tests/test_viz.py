@@ -1051,7 +1051,14 @@ def test_probplot_test_results(plot_data):
 @pytest.mark.parametrize("probax", ["x", "y"])
 @pytest.mark.parametrize(
     ("N", "minval", "maxval"),
-    [(5, 10, 90), (8, 5, 95), (37, 1, 99), (101, 0.1, 99.9), (10001, 0.001, 99.999)],
+    [
+        (5, 10, 90),
+        (8, 5, 95),
+        (37, 1, 99),
+        (100, 0.1, 99.9),
+        (101, 0.1, 99.9),
+        (10001, 0.001, 99.999),
+    ],
 )
 def test__set_prob_limits_x(probax, N, minval, maxval):
     from probscale import validate

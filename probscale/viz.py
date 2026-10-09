@@ -488,10 +488,11 @@ def _set_prob_limits(ax: Axes, probax: str, N: int) -> None:
     elif N <= 10:
         minval = 5
     else:
-        minval = 10 ** (-1 * numpy.ceil(numpy.log10(N) - 2))
+        minval = 10 ** (1 - numpy.floor(numpy.log10(N)))
 
     if which in ["x", "both"]:
         ax.set_xlim(left=minval, right=100 - minval)
+
     elif which in ["y", "both"]:
         ax.set_ylim(bottom=minval, top=100 - minval)
 

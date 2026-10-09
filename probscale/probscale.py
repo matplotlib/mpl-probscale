@@ -227,6 +227,7 @@ class ProbScale(ScaleBase):
             axis.set_major_formatter(FuncFormatter(PctFormatter()))
         else:
             axis.set_major_formatter(FuncFormatter(ProbFormatter()))
+
         axis.set_minor_locator(NullLocator())
         axis.set_minor_formatter(NullFormatter())
 
