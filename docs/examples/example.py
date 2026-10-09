@@ -1,3 +1,11 @@
+"""
+Exploring matplotlib scale types
+================================
+
+Use :meth:`matplotlib.axes.Axes.set_xscale` to switch between the built-in
+matplotlib scales and the probability scales provided by this package.
+"""
+
 # %%
 from pathlib import Path
 
@@ -33,5 +41,6 @@ for scale, ax in zip(scales, axes.flat):
     ax.spines.right.set_visible(False)
     ax.spines.top.set_visible(False)
 
-outpath = Path(__file__).parent.joinpath("../img/example.png").resolve()
+outpath = Path(__file__).parent.parent.joinpath("img", "example.png").resolve()
 fig.savefig(outpath, dpi=300)
+pyplot.show()

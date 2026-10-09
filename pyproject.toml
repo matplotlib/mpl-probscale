@@ -39,6 +39,15 @@ dev = [
     "scipy>=1.17.1",
     "ty>=0.0.85",
 ]
+docs = [
+    "ipykernel>=6.29",
+    "myst-nb>=1.1",
+    "numpydoc>=1.8",
+    "pydata-sphinx-theme>=0.16",
+    "seaborn>=0.13",
+    "sphinx>=8",
+    "sphinx-gallery>=0.19",
+]
 
 [project.urls]
 Homepage = "https://github.com/matplotlib/mpl-probscale"

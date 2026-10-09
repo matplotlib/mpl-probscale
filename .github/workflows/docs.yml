@@ -1,0 +1,21 @@
+# Build the Sphinx documentation (tutorial notebooks and example gallery are
+# executed during the build by myst-nb and sphinx-gallery).
+
+name: Build docs
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+      - name: Install dependencies
+        run: uv sync --group docs
+      - name: Build documentation
+        run: uv run --group docs sphinx-build -W --keep-going -b html docs docs/_build/html

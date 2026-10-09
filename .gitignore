@@ -55,9 +55,10 @@ result_images
 
 # Sphinx documentation
 docs/_build/
+docs/auto_examples/
+docs/.jupyter_cache/
+docs/sg_execution_times.rst
 .ipynb_checkpoints
-docs/tutorial/*.rst
-docs/tutorial/*_files/
 
 # PyBuilder
 target/
