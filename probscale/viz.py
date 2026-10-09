@@ -1,30 +1,44 @@
-import copy
+from __future__ import annotations
+
+from typing import Any, TypedDict
 
 import numpy
+from matplotlib.axes import Axes
+from matplotlib.figure import Figure
+from numpy.typing import ArrayLike
 
+from . import algo, validate
+from ._typing import DistLike, FitResults, FitTransform, FloatingArray, ProbPlotResults
 from .probscale import _minimal_norm
-from . import validate
-from . import algo
+
+
+class PlotPosKwargs(TypedDict, total=False):
+    """Keyword arguments accepted by :func:`plot_pos`."""
+
+    postype: str
+    alpha: float
+    beta: float
+    exceedance: bool
 
 
 def probplot(
-    data,
-    ax=None,
-    plottype="prob",
-    dist=None,
-    probax="x",
-    problabel=None,
-    datascale="linear",
-    datalabel=None,
-    bestfit=False,
-    return_best_fit_results=False,
-    estimate_ci=False,
-    ci_kws=None,
-    pp_kws=None,
-    scatter_kws=None,
-    line_kws=None,
-    **fgkwargs
-):
+    data: ArrayLike,
+    ax: Axes | None = None,
+    plottype: str = "prob",
+    dist: DistLike | None = None,
+    probax: str = "x",
+    problabel: str | None = None,
+    datascale: str = "linear",
+    datalabel: str | None = None,
+    bestfit: bool = False,
+    return_best_fit_results: bool = False,
+    estimate_ci: bool = False,
+    ci_kws: dict[str, object] | None = None,
+    pp_kws: PlotPosKwargs | None = None,
+    scatter_kws: dict[str, Any] | None = None,
+    line_kws: dict[str, Any] | None = None,
+    **fgkwargs: str,
+) -> Figure | tuple[Figure, ProbPlotResults]:
     """
     Probability, percentile, and quantile plots.
 
@@ -176,7 +190,7 @@ def probplot(
     # default values for symbology options
     scatter_kws = validate.other_options(scatter_kws)
     line_kws = validate.other_options(line_kws)
-    pp_kws = validate.other_options(pp_kws)
+    pp_kws = {} if pp_kws is None else pp_kws
 
     # check plottype
     plottype = validate.axis_type(plottype)
@@ -249,7 +263,7 @@ def probplot(
         xhat, yhat, model = fit_line(
             x,
             y,
-            xhat=sorted(x),
+            xhat=numpy.sort(x),
             dist=dist,
             fitprobs=fitprobs,
             fitlogs=fitlogs,
@@ -259,14 +273,17 @@ def probplot(
         if estimate_ci:
             # for alpha, use half of existing or 0.5 * 0.5 = 0.25
             # for zorder, use 1 less than existing or 1 - 1 = 0
-            opts = {
+            opts: dict[str, Any] = {
                 "facecolor": line_kws.get("color", "k"),
                 "edgecolor": "None",
                 "alpha": line_kws.get("alpha", 0.5) * 0.5,
                 "zorder": line_kws.get("zorder", 1) - 1,
                 "label": "95% conf. interval",
             }
-            ax.fill_between(xhat, y1=model["yhat_hi"], y2=model["yhat_lo"], **opts)
+            yhat_hi = model["yhat_hi"]
+            yhat_lo = model["yhat_lo"]
+            if yhat_hi is not None and yhat_lo is not None:
+                ax.fill_between(xhat, y1=yhat_hi, y2=yhat_lo, **opts)
     else:
         xhat, yhat, model = (None, None, None)
 
@@ -276,13 +293,26 @@ def probplot(
 
     # return the figure and maybe results of the best-fit
     if return_best_fit_results:
-        results = dict(q=qntls, x=x, y=y, xhat=xhat, yhat=yhat, res=model)
+        results: ProbPlotResults = {
+            "q": qntls,
+            "x": x,
+            "y": y,
+            "xhat": xhat,
+            "yhat": yhat,
+            "res": model,
+        }
         return fig, results
     else:
         return fig
 
 
-def plot_pos(data, postype=None, alpha=None, beta=None, exceedance=False):
+def plot_pos(
+    data: ArrayLike,
+    postype: str | None = None,
+    alpha: float | None = None,
+    beta: float | None = None,
+    exceedance: bool = False,
+) -> tuple[FloatingArray, FloatingArray]:
     """
     Compute the plotting positions for a dataset. Heavily borrows from
     ``scipy.stats.mstats.plotting_positions``.
@@ -364,7 +394,7 @@ def plot_pos(data, postype=None, alpha=None, beta=None, exceedance=False):
 
     """
 
-    pos_params = {
+    pos_params: dict[str, tuple[float, float]] = {
         "type 4": (0, 1),
         "type 5": (0.5, 0.5),
         "type 6": (0, 0),
@@ -385,6 +415,8 @@ def plot_pos(data, postype=None, alpha=None, beta=None, exceedance=False):
     if alpha is None and beta is None:
         alpha, beta = pos_params[postype.lower()]
 
+    assert alpha is not None and beta is not None, "alpha and beta must be set"
+
     data = numpy.asarray(data, dtype=float).flatten()
     n = data.shape[0]
     pos = numpy.empty_like(data)
@@ -401,7 +433,7 @@ def plot_pos(data, postype=None, alpha=None, beta=None, exceedance=False):
     return pos[sorted_index], data[sorted_index]
 
 
-def _set_prob_limits(ax, probax, N):
+def _set_prob_limits(ax: Axes, probax: str, N: int) -> None:
     """Sets the limits of a probability axis based the number of point.
 
     Parameters
@@ -420,7 +452,7 @@ def _set_prob_limits(ax, probax, N):
 
     """
 
-    fig, ax = validate.axes_object(ax)
+    _fig, ax = validate.axes_object(ax)
     which = validate.axis_name(probax, "probability axis")
 
     if N <= 5:
@@ -437,16 +469,16 @@ def _set_prob_limits(ax, probax, N):
 
 
 def fit_line(
-    x,
-    y,
-    xhat=None,
-    fitprobs=None,
-    fitlogs=None,
-    dist=None,
-    estimate_ci=False,
-    niter=10000,
-    alpha=0.05,
-):
+    x: ArrayLike,
+    y: ArrayLike,
+    xhat: ArrayLike | None = None,
+    fitprobs: FitTransform | None = None,
+    fitlogs: FitTransform | None = None,
+    dist: DistLike | None = None,
+    estimate_ci: bool = False,
+    niter: int = 10000,
+    alpha: float = 0.05,
+) -> tuple[FloatingArray, FloatingArray, FitResults]:
     """
     Fits a line to x-y data in various forms (linear, log, prob scales).
 
@@ -499,12 +531,17 @@ def fit_line(
 
     """
 
+    x = numpy.asarray(x)
+    y = numpy.asarray(y)
+
     fitprobs = validate.fit_argument(fitprobs, "fitprobs")
     fitlogs = validate.fit_argument(fitlogs, "fitlogs")
 
     # maybe set xhat to default values
     if xhat is None:
-        xhat = copy.copy(x)
+        xhat = x.copy()
+    else:
+        xhat = numpy.asarray(xhat)
 
     # maybe set dist to default value
     if dist is None:
@@ -513,7 +550,7 @@ def fit_line(
     # maybe compute ppf of x
     if fitprobs in ["x", "both"]:
         x = dist.ppf(x / 100.0)
-        xhat = dist.ppf(numpy.array(xhat) / 100.0)
+        xhat = dist.ppf(xhat / 100.0)
 
     # maybe compute ppf of y
     if fitprobs in ["y", "both"]:
@@ -539,7 +576,7 @@ def fit_line(
     # maybe undo the ppf transform
     if fitprobs in ["y", "both"]:
         yhat = 100.0 * dist.cdf(yhat)
-        if yhat_lo is not None:
+        if yhat_lo is not None and yhat_hi is not None:
             yhat_lo = 100.0 * dist.cdf(yhat_lo)
             yhat_hi = 100.0 * dist.cdf(yhat_hi)
 

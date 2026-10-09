@@ -1,8 +1,7 @@
 from matplotlib import scale
 
-from .viz import *
 from .probscale import ProbScale
-
+from .viz import *
 
 scale.register_scale(ProbScale)
 

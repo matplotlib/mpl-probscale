@@ -1,12 +1,24 @@
-import numpy as numpy
+from typing import Self
+
+import numpy
 from matplotlib.ticker import Formatter
 
 
 class _FormatterMixin(Formatter):
     """A mpl-axes formatter mixin class"""
 
+    factor: float
+    top: float
+    offset: int
+
     @classmethod
-    def _sig_figs(cls, x, n, expthresh=5, forceint=False):
+    def _sig_figs(
+        cls: type[Self],
+        x: float | str | None,
+        n: int,
+        expthresh: int = 5,
+        forceint: bool = False,
+    ) -> str:
         """
         Formats a number with the correct number of significant digits.
 
@@ -47,10 +59,10 @@ class _FormatterMixin(Formatter):
         elif x is not None and numpy.isfinite(x):
             # check on the _sig_figs
             if n < 1:
-                raise ValueError("number of sig figs (n) must be greater " "than zero")
+                raise ValueError("number of sig figs (n) must be greater than zero")
 
             elif forceint:
-                out = "{:,.0f}".format(x)
+                out = f"{x:,.0f}"
 
             # logic to do all of the rounding
             else:
@@ -60,7 +72,7 @@ class _FormatterMixin(Formatter):
                     decimal_places = int(n - 1 - order)
 
                     if decimal_places <= 0:
-                        out = "{0:,.0f}".format(round(x, decimal_places))
+                        out = f"{round(x, decimal_places):,.0f}"
 
                     else:
                         fmt = "{0:,.%df}" % decimal_places
@@ -77,16 +89,18 @@ class _FormatterMixin(Formatter):
 
         return out
 
-    def __call__(self, x, pos=None):
+    def __call__(self, x: float, pos: int | None = None) -> str:
         if x < (10 / self.factor):
             out = self._sig_figs(x, 1)
         elif x <= (99 / self.factor):
             out = self._sig_figs(x, 2)
         else:
-            order = numpy.ceil(numpy.round(numpy.abs(numpy.log10(self.top - x)), 6))
+            order = int(
+                numpy.ceil(numpy.round(numpy.abs(numpy.log10(self.top - x)), 6))
+            )
             out = self._sig_figs(x, order + self.offset)
 
-        return "{}".format(out)
+        return f"{out}"
 
 
 class PctFormatter(_FormatterMixin):

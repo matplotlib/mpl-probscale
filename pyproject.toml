@@ -34,7 +34,9 @@ dev = [
     "docopt>=0.6.2",
     "pytest>=9.1.1",
     "pytest-mpl>=0.19.0",
+    "ruff>=0.16.10",
     "scipy>=1.17.1",
+    "ty>=0.0.85",
 ]
 
 [project.urls]
@@ -58,4 +60,8 @@ include = ["probscale*"]
 markers = [
     "mpl_image_compare",
 ]
+
+[tool.ty.src]
+include = ["probscale"]
+exclude = ["probscale/tests"]
 

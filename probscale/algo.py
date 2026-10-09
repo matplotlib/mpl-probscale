@@ -1,7 +1,12 @@
+from __future__ import annotations
+
 import numpy
+from numpy.typing import ArrayLike, NDArray
+
+from ._typing import FitResults, FitTransform, FloatingArray
 
 
-def _make_boot_index(elements, niter):
+def _make_boot_index(elements: int, niter: int) -> NDArray[numpy.integer]:
     """Generate an array of bootstrap sample sets
 
     Parameters
@@ -21,7 +26,12 @@ def _make_boot_index(elements, niter):
     return numpy.random.randint(low=0, high=elements, size=(niter, elements))
 
 
-def _fit_simple(x, y, xhat, fitlogs=None):
+def _fit_simple(
+    x: ArrayLike,
+    y: ArrayLike,
+    xhat: ArrayLike,
+    fitlogs: FitTransform | None = None,
+) -> tuple[FloatingArray, FitResults]:
     """
     Simple linear fit of x and y data using ``numpy.polyfit``.
 
@@ -45,16 +55,22 @@ def _fit_simple(x, y, xhat, fitlogs=None):
 
     """
 
+    x = numpy.asarray(x, dtype=float)
+    y = numpy.asarray(y, dtype=float)
+
     # do the best-fit
     coeffs = numpy.polyfit(x, y, 1)
 
-    results = {"slope": coeffs[0], "intercept": coeffs[1]}
+    results: FitResults = {
+        "slope": float(coeffs[0]),
+        "intercept": float(coeffs[1]),
+    }
 
     # estimate y values
     yhat = _estimate_from_fit(
         xhat,
-        coeffs[0],
-        coeffs[1],
+        results["slope"],
+        results["intercept"],
         xlog=fitlogs in ["x", "both"],
         ylog=fitlogs in ["y", "both"],
     )
@@ -62,7 +78,14 @@ def _fit_simple(x, y, xhat, fitlogs=None):
     return yhat, results
 
 
-def _bs_fit(x, y, xhat, fitlogs=None, niter=10000, alpha=0.05):
+def _bs_fit(
+    x: ArrayLike,
+    y: ArrayLike,
+    xhat: ArrayLike,
+    fitlogs: FitTransform | None = None,
+    niter: int = 10000,
+    alpha: float = 0.05,
+) -> tuple[FloatingArray, FloatingArray]:
     """
     Percentile method bootstrapping of linear fit of x and y data using
     ``numpy.polyfit``.
@@ -91,6 +114,9 @@ def _bs_fit(x, y, xhat, fitlogs=None, niter=10000, alpha=0.05):
 
     """
 
+    x = numpy.asarray(x)
+    y = numpy.asarray(y)
+
     index = _make_boot_index(len(x), niter)
     yhat_array = numpy.array(
         [_fit_simple(x[ii], y[ii], xhat, fitlogs=fitlogs)[0] for ii in index]
@@ -101,7 +127,13 @@ def _bs_fit(x, y, xhat, fitlogs=None, niter=10000, alpha=0.05):
     return yhat_lo, yhat_hi
 
 
-def _estimate_from_fit(xhat, slope, intercept, xlog=False, ylog=False):
+def _estimate_from_fit(
+    xhat: ArrayLike,
+    slope: float,
+    intercept: float,
+    xlog: bool = False,
+    ylog: bool = False,
+) -> FloatingArray:
     """Estimate the dependent variables of a linear fit given x-data
     and linear parameters.
 
