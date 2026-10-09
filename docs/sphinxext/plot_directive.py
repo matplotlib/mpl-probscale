@@ -138,12 +138,6 @@ import textwrap
 import traceback
 from os.path import relpath
 
-import six
-from six.moves import xrange
-
-if not six.PY3:
-    import cStringIO
-
 from docutils.parsers.rst import directives
 from docutils.parsers.rst.directives.images import Image
 
@@ -234,7 +228,7 @@ def mark_plot_labels(app, document):
     the "htmlonly" (or "latexonly") node to the actual figure node
     itself.
     """
-    for name, explicit in six.iteritems(document.nametypes):
+    for name, explicit in document.nametypes.items():
         if not explicit:
             continue
         labelid = document.nameids[name]
@@ -451,7 +445,7 @@ class ImageFile:
         self.formats = []
 
     def filename(self, format):
-        return os.path.join(self.dirname, "%s.%s" % (self.basename, format))
+        return os.path.join(self.dirname, f"{self.basename}.{format}")
 
     def filenames(self):
         return [self.filename(fmt) for fmt in self.formats]
@@ -481,10 +475,7 @@ def run_code(code, code_path, ns=None, function_name=None):
     # Change the working directory to the directory of the example, so
     # it can get at its data files, if any.  Add its path to sys.path
     # so it can import any helper modules sitting beside it.
-    if six.PY2:
-        pwd = os.getcwdu()
-    else:
-        pwd = os.getcwd()
+    pwd = os.getcwd()
     old_sys_path = list(sys.path)
     if setup.config.plot_working_directory is not None:
         try:
@@ -513,10 +504,7 @@ def run_code(code, code_path, ns=None, function_name=None):
 
     # Redirect stdout
     stdout = sys.stdout
-    if six.PY3:
-        sys.stdout = io.StringIO()
-    else:
-        sys.stdout = cStringIO.StringIO()
+    sys.stdout = io.StringIO()
 
     # Assign a do-nothing print function to the namespace.  There
     # doesn't seem to be any other way to provide a way to (not) print
@@ -531,22 +519,22 @@ def run_code(code, code_path, ns=None, function_name=None):
                 ns = {}
             if not ns:
                 if setup.config.plot_pre_code is None:
-                    six.exec_(
-                        six.text_type(
+                    exec(
+                        str(
                             "import numpy as np\n"
                             + "from matplotlib import pyplot as plt\n"
                         ),
                         ns,
                     )
                 else:
-                    six.exec_(six.text_type(setup.config.plot_pre_code), ns)
+                    exec(str(setup.config.plot_pre_code), ns)
             ns["print"] = _dummy_print
             if "__main__" in code:
-                six.exec_("__name__ = '__main__'", ns)
+                exec("__name__ = '__main__'", ns)
             code = remove_coding(code)
-            six.exec_(code, ns)
+            exec(code, ns)
             if function_name is not None:
-                six.exec_(function_name + "()", ns)
+                exec(function_name + "()", ns)
         except (Exception, SystemExit):
             raise PlotError(traceback.format_exc())
     finally:
@@ -586,10 +574,10 @@ def render_figures(
     default_dpi = {"png": 80, "hires.png": 200, "pdf": 200}
     formats = []
     plot_formats = config.plot_formats
-    if isinstance(plot_formats, six.string_types):
+    if isinstance(plot_formats, str):
         plot_formats = eval(plot_formats)
     for fmt in plot_formats:
-        if isinstance(fmt, six.string_types):
+        if isinstance(fmt, str):
             formats.append((fmt, default_dpi.get(fmt, 80)))
         elif type(fmt) in (tuple, list) and len(fmt) == 2:
             formats.append((str(fmt[0]), int(fmt[1])))
@@ -617,7 +605,7 @@ def render_figures(
     all_exists = True
     for i, code_piece in enumerate(code_pieces):
         images = []
-        for j in xrange(1000):
+        for j in range(1000):
             if len(code_pieces) > 1:
                 img = ImageFile("%s_%02d_%02d" % (output_base, i, j), output_dir)
             else:
@@ -724,7 +712,7 @@ def run(arguments, content, options, state_machine, state, lineno):
         else:
             function_name = None
 
-        with open(source_file_name, "r", encoding="utf-8") as fd:
+        with open(source_file_name, encoding="utf-8") as fd:
             code = fd.read()
         output_base = os.path.basename(source_file_name)
     else:
@@ -830,8 +818,8 @@ def run(arguments, content, options, state_machine, state, lineno):
             images = []
 
         opts = [
-            ":%s: %s" % (key, val)
-            for key, val in six.iteritems(options)
+            f":{key}: {val}"
+            for key, val in options.items()
             if key in ("alt", "height", "width", "scale", "align", "class")
         ]
 

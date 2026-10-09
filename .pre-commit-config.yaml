@@ -4,16 +4,12 @@ repos:
     rev: v0.16.10
     hooks:
       # Run the linter.
-      - id: ruff
+      - id: ruff-check
         args: [ --fix ]
+        files: ^probscale/
       # Run the formatter.
       - id: ruff-format
-
-  - repo: https://github.com/pycqa/isort
-    rev: 9.0.2
-    hooks:
-      - id: isort
-        language_version: python3
+        files: ^probscale/
 
   - repo: https://github.com/asottile/pyupgrade
     rev: v3.21.2

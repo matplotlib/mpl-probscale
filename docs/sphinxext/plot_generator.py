@@ -4,6 +4,7 @@ Sphinx plugin to run example scripts and create a gallery page.
 Lightly modified from the mpld3 project.
 
 """
+
 import glob
 import os
 import os.path as op
@@ -150,7 +151,7 @@ class ExampleGenerator:
         self.target_dir = target_dir
         self.thumbloc = 0.5, 0.5
         self.extract_docstring()
-        with open(filename, "r") as fid:
+        with open(filename) as fid:
             self.filetext = fid.read()
 
         outfilename = op.join(target_dir, self.rstfilename)
@@ -319,7 +320,7 @@ def main(app):
 
     banner_data = []
 
-    toctree = "\n\n" ".. toctree::\n" "   :hidden:\n\n"
+    toctree = "\n\n.. toctree::\n   :hidden:\n\n"
     contents = "\n\n"
 
     # Write individual example files

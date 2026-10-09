@@ -10,7 +10,7 @@ def convert(nbfile):
     basename, _ = os.path.splitext(nbfile)
 
     meta = {"metadata": {"path": "."}}
-    with open(nbfile, "r", encoding="utf-8") as nbf:
+    with open(nbfile, encoding="utf-8") as nbf:
         nbdata = nbformat.read(nbf, as_version=4, encoding="utf-8")
 
     runner = ExecutePreprocessor(timeout=600, kernel_name="probscale")

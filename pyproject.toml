@@ -62,8 +62,9 @@ markers = [
     "mpl_image_compare",
 ]
 
-[tool.ruff.format]
-exclude = ["docs/**/*.py", "*.ipynb"]
+[tool.ruff]
+include = ["pyproject.toml", "probscale/**/*.py"]
+
 
 [tool.ty.src]
 include = ["probscale"]

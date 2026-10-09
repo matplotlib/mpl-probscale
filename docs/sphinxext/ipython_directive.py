@@ -126,7 +126,6 @@ from IPython.core.profiledir import ProfileDir
 from IPython.utils import io
 from IPython.utils.py3compat import PY3
 from sphinx.util.compat import Directive
-
 # Our own
 from traitlets.config import Config
 
@@ -373,7 +372,7 @@ class EmbeddedSphinxShell:
             arg, val = kwarg.split("=")
             arg = arg.strip()
             val = val.strip()
-            imagerows.append("   :%s: %s" % (arg, val))
+            imagerows.append(f"   :{arg}: {val}")
 
         image_file = os.path.basename(outfile)  # only return file name
         image_directive = "\n".join(imagerows)
@@ -439,13 +438,13 @@ class EmbeddedSphinxShell:
                     else:
                         # only submit the line in non-verbatim mode
                         self.process_input_line(line, store_history=store_history)
-                    formatted_line = "%s %s" % (input_prompt, line)
+                    formatted_line = f"{input_prompt} {line}"
                 else:
                     # process a continuation line
                     if not is_verbatim:
                         self.process_input_line(line, store_history=store_history)
 
-                    formatted_line = "%s %s" % (continuation, line)
+                    formatted_line = f"{continuation} {line}"
 
                 if not is_suppress:
                     ret.append(formatted_line)
@@ -470,7 +469,7 @@ class EmbeddedSphinxShell:
         # output any exceptions raised during execution to stdout
         # unless :okexcept: has been specified.
         if not is_okexcept and "Traceback" in output:
-            s = "\nException in %s at block ending on line %s\n" % (filename, lineno)
+            s = f"\nException in {filename} at block ending on line {lineno}\n"
             s += "Specify :okexcept: as an option in the ipython:: block to suppress this message\n"
             sys.stdout.write("\n\n>>>" + ("-" * 73))
             sys.stdout.write(s)
@@ -481,7 +480,7 @@ class EmbeddedSphinxShell:
         # unless :okwarning: has been specified.
         if not is_okwarning:
             for w in ws:
-                s = "\nWarning in %s at block ending on line %s\n" % (filename, lineno)
+                s = f"\nWarning in {filename} at block ending on line {lineno}\n"
                 s += "Specify :okwarning: as an option in the ipython:: block to suppress this message\n"
                 sys.stdout.write("\n\n>>>" + ("-" * 73))
                 sys.stdout.write(s)
@@ -583,9 +582,7 @@ class EmbeddedSphinxShell:
         Saves the image file to disk.
         """
         self.ensure_pyplot()
-        command = (
-            'plt.gcf().savefig("%s", bbox_inches="tight", ' "dpi=100)" % image_file
-        )
+        command = 'plt.gcf().savefig("%s", bbox_inches="tight", dpi=100)' % image_file
 
         # print 'SAVEFIG', command  # dbg
         self.process_input_line("bookmark ipy_thisdir", store_history=False)
@@ -706,7 +703,7 @@ class EmbeddedSphinxShell:
             # deal with lines checking for multiline
             continuation = "   %s:" % "".join(["."] * (len(str(ct)) + 2))
             if not multiline:
-                modified = "%s %s" % (fmtin % ct, line_stripped)
+                modified = f"{fmtin % ct} {line_stripped}"
                 output.append(modified)
                 ct += 1
                 try:
@@ -716,7 +713,7 @@ class EmbeddedSphinxShell:
                     multiline = True
                     multiline_start = lineno
             else:  # still on a multiline
-                modified = "%s %s" % (continuation, line)
+                modified = f"{continuation} {line}"
                 output.append(modified)
 
                 # if the next line is indented, it should be part of multiline
@@ -944,7 +941,9 @@ def setup(app):
     app.add_directive("ipython", IPythonDirective)
     app.add_config_value("ipython_savefig_dir", None, "env")
     app.add_config_value("ipython_rgxin", re.compile(r"In \[(\d+)\]:\s?(.*)\s*"), "env")
-    app.add_config_value("ipython_rgxout", re.compile(r"Out\[(\d+)\]:\s?(.*)\s*"), "env")
+    app.add_config_value(
+        "ipython_rgxout", re.compile(r"Out\[(\d+)\]:\s?(.*)\s*"), "env"
+    )
     app.add_config_value("ipython_promptin", "In [%d]:", "env")
     app.add_config_value("ipython_promptout", "Out[%d]:", "env")
 

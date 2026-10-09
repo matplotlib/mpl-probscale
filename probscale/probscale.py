@@ -4,12 +4,7 @@ from typing import cast
 import numpy
 from matplotlib.axis import Axis
 from matplotlib.scale import ScaleBase
-from matplotlib.ticker import (
-    FixedLocator,
-    FuncFormatter,
-    NullFormatter,
-    NullLocator,
-)
+from matplotlib.ticker import FixedLocator, FuncFormatter, NullFormatter, NullLocator
 from matplotlib.transforms import Transform
 from numpy.typing import ArrayLike
 

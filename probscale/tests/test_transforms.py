@@ -73,7 +73,7 @@ def test_transform_has_inverse(trans):
     ],
 )
 def test_transform_dist(trans):
-    trans.dist == _minimal_norm
+    assert trans.dist == _minimal_norm
 
 
 @pytest.mark.parametrize(
