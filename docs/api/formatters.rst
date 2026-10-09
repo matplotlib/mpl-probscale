@@ -1,7 +1,5 @@
 .. _formatters_auto:
 
-   The ``formatters`` API
-
 ``formatters`` API Reference
 ============================
 

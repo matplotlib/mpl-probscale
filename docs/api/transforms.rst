@@ -1,7 +1,5 @@
 .. _transforms_auto:
 
-   The ``transforms`` API
-
 ``transforms`` API Reference
 ============================
 

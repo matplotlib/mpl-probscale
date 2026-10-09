@@ -1,7 +1,5 @@
 .. _viz_auto:
 
-   The ``viz`` API
-
 ``viz`` API Reference
 =====================
 

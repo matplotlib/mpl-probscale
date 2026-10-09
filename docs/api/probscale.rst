@@ -1,7 +1,5 @@
 .. _probscale_auto:
 
-   The ``probscale`` API
-
 ``probscale`` API Reference
 ===========================
 
