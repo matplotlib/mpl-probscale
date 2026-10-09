@@ -1,6 +1,10 @@
 """Sphinx configuration for the probscale documentation."""
 
+import os
+import subprocess
+import sys
 from importlib.metadata import version as _distribution_version
+from pathlib import Path
 
 # -- Project information -----------------------------------------------------
 
@@ -11,6 +15,20 @@ copyright = f"2015-2026 {author}"
 # The short X.Y version and the full version, including alpha/beta/rc tags.
 release = _distribution_version("probscale")
 version = ".".join(release.split(".")[:2])
+
+# -- Regenerate the quickstart image ----------------------------------------
+
+# docs/img/example.png is the static quickstart figure shown in the README
+# and index.rst; it should track the current figure code, so regenerate it on
+# every documentation build (locally and in CI alike). sphinx-gallery cannot
+# do this: it deliberately executes examples without defining ``__file__``
+# (see sphinx-gallery#166), so the example itself only writes the image when
+# run as an ordinary script, which is what happens here.
+subprocess.run(
+    [sys.executable, str(Path(__file__).parent / "examples" / "example.py")],
+    check=True,
+    env={**os.environ, "MPLBACKEND": "Agg"},
+)
 
 # -- General configuration ---------------------------------------------------
 

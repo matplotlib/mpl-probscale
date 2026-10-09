@@ -12,6 +12,8 @@ from pathlib import Path
 from matplotlib import pyplot
 from scipy import stats
 
+import probscale  # noqa: F401  # the import registers the "prob" scale
+
 beta = stats.beta(a=3, b=4)
 weibull = stats.weibull_min(c=5)
 scales = [
@@ -41,6 +43,12 @@ for scale, ax in zip(scales, axes.flat):
     ax.spines.right.set_visible(False)
     ax.spines.top.set_visible(False)
 
-outpath = Path(__file__).parent.parent.joinpath("img", "example.png").resolve()
-fig.savefig(outpath, dpi=300)
-pyplot.show()
+# %%
+# sphinx-gallery deliberately executes examples without defining ``__file__``
+# (see sphinx-gallery#166), so this block only runs when the file is executed
+# as an ordinary script — which is how docs/conf.py regenerates
+# docs/img/example.png on every documentation build. (sphinx-gallery captures
+# the figure itself, so no ``pyplot.show()`` is needed here.)
+if "__file__" in globals():
+    outpath = Path(__file__).parent.parent.joinpath("img", "example.png").resolve()
+    fig.savefig(outpath, dpi=300)
