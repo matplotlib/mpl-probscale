@@ -2,9 +2,13 @@
 
 Real probability scales for matplotlib
 
-![Coverage](https://github.com/matplotlib/mpl-probscale/workflows/Coverage%20via%20codecov/badge.svg)
-![Linter](https://github.com/matplotlib/mpl-probscale/workflows/Lint%20with%20flake8/badge.svg)
-![Tests](https://github.com/matplotlib/mpl-probscale/workflows/Image%20comparison%20tests/badge.svg)
+| CI | Badge |
+| ----- | ----- |
+| Tests | ![Tests](https://github.com/matplotlib/mpl-probscale/actions/workflows/python-runtests-all.yml/badge.svg) |
+| Formatting and Types | ![Ruff/Ty](https://github.com/matplotlib/mpl-probscale/actions/workflows/ruff_ty.yml/badge.svg) |
+| Linting | ![Linter](https://github.com/matplotlib/mpl-probscale/actions/workflows/python-runlinter.yml/badge.svg) |
+| Docs | ![Docs](https://github.com/matplotlib/mpl-probscale/actions/workflows/docs.yml/badge.svg) |
+
 
 [Sphinx Docs](http://matplotlib.org/mpl-probscale/)
 
