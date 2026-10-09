@@ -1,0 +1,60 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "probscale"
+dynamic = ["version"]
+description = "mpl-probscale: Probability scales for matplotlib"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { file = "LICENSE" }
+authors = [
+    { name = "Paul Hobson (Herrera Environmental Consultants)", email = "phobson@herrerainc.com" },
+]
+keywords = ["matplotlib", "probability", "scale", "plotting"]
+classifiers = [
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Intended Audience :: Science/Research",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
+dependencies = [
+    "numpy",
+    "matplotlib",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest",
+    "pytest-mpl",
+    "docopt",
+    "scipy",
+]
+
+[project.urls]
+Homepage = "https://github.com/matplotlib/mpl-probscale"
+Download = "https://github.com/matplotlib/mpl-probscale/archive/master.zip"
+
+[tool.setuptools.dynamic]
+version = { attr = "probscale.__version__" }
+
+[tool.setuptools]
+zip-safe = false
+
+[tool.setuptools.packages.find]
+include = ["probscale*"]
+
+[tool.setuptools.package-data]
+"probscale.tests.baseline_images.test_probscale" = ["*.png"]
+"probscale.tests.baseline_images.test_viz" = ["*.png"]
+
+[tool.pytest.ini_options]
+markers = [
+    "mpl_image_compare",
+]

@@ -1,0 +1,21 @@
+name: Lint and type check
+
+on: [push, pull_request]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: python -m pip install -e . ruff ty
+      - name: Check formatting and lint with Ruff
+        run: |
+          ruff check .
+          ruff format --check .
+      - name: Check types with ty
+        run: ty check
