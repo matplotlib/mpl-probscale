@@ -6,13 +6,26 @@ from matplotlib import pyplot
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 
-from ._typing import BestFitEstimator, FitTransform
+from ._typing import BestFitEstimator, FitAxis
 from .algo import _bs_fit
 
 
 def axes_object(ax: Axes | None) -> tuple[Figure, Axes]:
-    """Checks if a value if an Axes. If None, a new one is created.
+    """Check if a value is an Axes. If None, a new one is created.
+
     Both the figure and axes are returned (in that order).
+
+    Parameters
+    ----------
+    ax : matplotlib.axes.Axes or None
+        The Axes to validate.
+
+    Returns
+    -------
+    fig : matplotlib.figure.Figure
+        The figure containing the axes.
+    ax : matplotlib.axes.Axes
+        The axes (newly created if ``None`` was provided).
 
     """
 
@@ -33,6 +46,18 @@ def axis_name(axis: str, axname: str) -> str:
     Checks that an axis name is in ``{'x', 'y'}``. Raises an error on
     an invalid value. Returns the lower case version of valid values.
 
+    Parameters
+    ----------
+    axis : str
+        The axis name to validate.
+    axname : str
+        The name of the axis used in error messages.
+
+    Returns
+    -------
+    axis : str
+        The lower case, validated axis name.
+
     """
 
     valid_args = ["x", "y"]
@@ -43,11 +68,23 @@ def axis_name(axis: str, axname: str) -> str:
     return axis.lower()
 
 
-def fit_argument(arg: str | None, argname: str) -> FitTransform | None:
+def fit_argument(arg: str | None, argname: str) -> FitAxis | None:
     """
-    Checks that an axis options is in ``{'x', y', 'both', None}``.
+    Checks that an axis option is in ``{'x', 'y', 'both', None}``.
     Raises an error on an invalid value. Returns the lower case version
     of valid values.
+
+    Parameters
+    ----------
+    arg : str or None
+        The value to validate.
+    argname : str
+        The name of the argument used in error messages.
+
+    Returns
+    -------
+    arg : str or None
+        The lower case, validated value. Returns ``None`` unchanged.
 
     """
 
@@ -58,7 +95,7 @@ def fit_argument(arg: str | None, argname: str) -> FitTransform | None:
     elif arg is not None:
         arg = arg.lower()
 
-    return cast(FitTransform | None, arg)
+    return cast(FitAxis | None, arg)
 
 
 def axis_type(axtype: str) -> str:
@@ -72,6 +109,16 @@ def axis_type(axtype: str) -> str:
     Raises an error on an invalid value. Returns the lower case version
     of valid values.
 
+    Parameters
+    ----------
+    axtype : str
+        The plot type to validate.
+
+    Returns
+    -------
+    axtype : str
+        The lower case, validated plot type.
+
     """
 
     if axtype.lower() not in ["pp", "qq", "prob"]:
@@ -83,6 +130,16 @@ def axis_label(label: str | None) -> str:
     """
     Replaces None with an empty string for axis labels.
 
+    Parameters
+    ----------
+    label : str or None
+        The axis label.
+
+    Returns
+    -------
+    label : str
+        The axis label, or an empty string if ``None`` was provided.
+
     """
 
     return "" if label is None else label
@@ -92,12 +149,38 @@ def other_options(options: dict[str, Any] | None) -> dict[str, Any]:
     """
     Replaces None with an empty dict for plotting options.
 
+    Parameters
+    ----------
+    options : dict or None
+        Keyword arguments for a plotting function.
+
+    Returns
+    -------
+    options : dict
+        The keyword arguments, or an empty dict if ``None`` was
+        provided.
+
     """
 
     return {} if options is None else options.copy()
 
 
 def estimator(value: str) -> BestFitEstimator:
+    """Return the estimator function used to compute confidence bands
+    around a best-fit line.
+
+    Parameters
+    ----------
+    value : str
+        The type of estimator to return. Valid values are 'fit' or
+        'values'; residual-based estimators are not yet implemented.
+
+    Returns
+    -------
+    estimator : callable
+        The bootstrap estimator function.
+
+    """
     value = value.lower()
     if value in ["res", "resid", "resids", "residual", "residuals"]:
         msg = "Bootstrapping the residuals is not ready yet"

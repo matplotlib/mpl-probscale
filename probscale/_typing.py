@@ -3,16 +3,19 @@
 from __future__ import annotations
 
 from collections.abc import Callable
-from typing import Literal, Protocol, TypedDict
+from typing import Literal, Protocol, TypeAlias, TypedDict
 
 import numpy
 from numpy.typing import ArrayLike, NDArray
 
 #: The axes on which a probability/quantile transform is applied.
-FitTransform = Literal["x", "y", "both"]
+FitAxis: TypeAlias = Literal["x", "y", "both"]
 
 #: A one-dimensional array of floating point values.
-FloatingArray = NDArray[numpy.floating]
+FloatingArray: TypeAlias = NDArray[numpy.floating]
+
+
+PlotType: TypeAlias = Literal["prob", "pp", "qq"]
 
 
 class DistLike(Protocol):
@@ -56,6 +59,6 @@ class ProbPlotResults(TypedDict):
 
 #: A function that estimates a best-fit line with a percentile bootstrap.
 BestFitEstimator = Callable[
-    [ArrayLike, ArrayLike, ArrayLike, FitTransform | None],
+    [ArrayLike, ArrayLike, ArrayLike, FitAxis | None],
     tuple[FloatingArray, FloatingArray],
 ]

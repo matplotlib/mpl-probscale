@@ -19,32 +19,35 @@ class _FormatterMixin(Formatter):
         expthresh: int = 5,
         forceint: bool = False,
     ) -> str:
-        """
-        Formats a number with the correct number of significant digits.
+        """Format a number with the correct number of significant digits.
 
         Parameters
         ----------
-        x : int or float
-            The number you want to format.
+        x : int, float, or str
+            The number you want to format. Strings are converted to
+            floating point values before formatting. None, NaN, and
+            infinite values return 'NA'.
         n : int
             The number of significant figures it should have.
         expthresh : int, optional (default = 5)
-            The absolute value of the order of magnitude at which numbers
-            are formatted in exponential notation.
+            The absolute value of the order of magnitude at which
+            numbers are formatted in exponential notation.
         forceint : bool, optional (default is False)
-            If true, simply returns int(x)
+            If True, the formatted value is rounded to an integer.
 
         Returns
         -------
         formatted : str
-            The formatted number as a string
+            The formatted number as a string.
 
         Examples
         --------
-        >>> _sig_figs(1247.15, 3)
-        '1250'
-        >>> _sig_figs(1247.15, 7)
-        '1247.150'
+        >>> from probscale.formatters import PctFormatter
+        >>> fmt = PctFormatter()
+        >>> fmt._sig_figs(1247.15, 3)
+        '1,250'
+        >>> fmt._sig_figs(1247.15, 7)
+        '1,247.150'
 
         """
 
@@ -75,12 +78,12 @@ class _FormatterMixin(Formatter):
                         out = f"{round(x, decimal_places):,.0f}"
 
                     else:
-                        fmt = "{0:,.%df}" % decimal_places
+                        fmt = "{0:,.%df}" % decimal_places  # noqa: UP031
                         out = fmt.format(x)
 
                 else:
                     decimal_places = n - 1
-                    fmt = "{0:.%de}" % decimal_places
+                    fmt = "{0:.%de}" % decimal_places  # noqa: UP031
                     out = fmt.format(x)
 
         # with NAs and INFs, just return 'NA'
@@ -90,6 +93,21 @@ class _FormatterMixin(Formatter):
         return out
 
     def __call__(self, x: float, pos: int | None = None) -> str:
+        """Format the value of a tick label.
+
+        Parameters
+        ----------
+        x : float
+            The value to format.
+        pos : int, optional
+            The tick position (unused).
+
+        Returns
+        -------
+        formatted : str
+            The formatted tick label.
+
+        """
         if x < (10 / self.factor):
             out = self._sig_figs(x, 1)
         elif x <= (99 / self.factor):

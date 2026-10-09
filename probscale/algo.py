@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy
 from numpy.typing import ArrayLike, NDArray
 
-from ._typing import FitResults, FitTransform, FloatingArray
+from ._typing import FitResults, FitAxis, FloatingArray
 
 
 def _make_boot_index(elements: int, niter: int) -> NDArray[numpy.integer]:
@@ -14,7 +14,7 @@ def _make_boot_index(elements: int, niter: int) -> NDArray[numpy.integer]:
     elements : int
         The number of rows in the original dataset.
     niter : int
-        Number of iteration for the bootstrapping.
+        Number of bootstrap iterations to perform.
 
     Returns
     -------
@@ -30,7 +30,7 @@ def _fit_simple(
     x: ArrayLike,
     y: ArrayLike,
     xhat: ArrayLike,
-    fitlogs: FitTransform | None = None,
+    fitlogs: FitAxis | None = None,
 ) -> tuple[FloatingArray, FitResults]:
     """
     Simple linear fit of x and y data using ``numpy.polyfit``.
@@ -38,18 +38,22 @@ def _fit_simple(
     Parameters
     ----------
     x, y : array-like
-    fitlogs : str, optional.
+        Independent and dependent data, respectively.
+    xhat : array-like
+        The values of the independent variable at which to estimate the
+        dependent variable.
+    fitlogs : str, optional
         Defines which data should be log-transformed. Valid values are
-        'x', 'y', or 'both'.
+        'x', 'y', or 'both'. If None, no transforms are applied.
 
     Returns
     -------
-    xhat, yhat : array-like
-        Estimates of x and y based on the linear fit
+    yhat : numpy array
+        Estimates of y based on the linear fit.
     results : dict
-        Dictionary of the fit coefficients
+        Dictionary of the fit coefficients (slope and intercept).
 
-    See also
+    See Also
     --------
     numpy.polyfit
 
@@ -82,7 +86,7 @@ def _bs_fit(
     x: ArrayLike,
     y: ArrayLike,
     xhat: ArrayLike,
-    fitlogs: FitTransform | None = None,
+    fitlogs: FitAxis | None = None,
     niter: int = 10000,
     alpha: float = 0.05,
 ) -> tuple[FloatingArray, FloatingArray]:
@@ -93,22 +97,24 @@ def _bs_fit(
     Parameters
     ----------
     x, y : array-like
-    fitlogs : str, optional.
+        Independent and dependent data, respectively.
+    xhat : array-like
+        The values of the independent variable at which to estimate the
+        dependent variable.
+    fitlogs : str, optional
         Defines which data should be log-transformed. Valid values are
         'x', 'y', or 'both'.
     niter : int, optional (default is 10000)
-        Number of bootstrap iterations to use
+        Number of bootstrap iterations to use.
     alpha : float, optional
         Confidence level of the estimate.
 
     Returns
     -------
-    xhat, yhat : array-like
-        Estimates of x and y based on the linear fit
-    results : dict
-        Dictionary of the fit coefficients
+    yhat_lo, yhat_hi : numpy array
+        Lower and upper confidence limits of the estimated y-values.
 
-    See also
+    See Also
     --------
     numpy.polyfit
 

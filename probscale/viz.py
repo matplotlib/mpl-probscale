@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, TypedDict
+from typing import Any, Literal, TypedDict
 
 import numpy
 from matplotlib.axes import Axes
@@ -8,7 +8,7 @@ from matplotlib.figure import Figure
 from numpy.typing import ArrayLike
 
 from . import algo, validate
-from ._typing import DistLike, FitResults, FitTransform, FloatingArray, ProbPlotResults
+from ._typing import DistLike, FitAxis, FitResults, FloatingArray, PlotType, ProbPlotResults
 from .probscale import _minimal_norm
 
 
@@ -24,9 +24,9 @@ class PlotPosKwargs(TypedDict, total=False):
 def probplot(
     data: ArrayLike,
     ax: Axes | None = None,
-    plottype: str = "prob",
+    plottype: PlotType = "prob",
     dist: DistLike | None = None,
-    probax: str = "x",
+    probax: Literal["x", "y"] = "x",
     problabel: str | None = None,
     datascale: str = "linear",
     datalabel: str | None = None,
@@ -60,8 +60,10 @@ def probplot(
 
 
     dist : scipy distribution, optional
-        A distribution to compute the scale's tick positions. If not
-        specified, a standard normal distribution will be used.
+        A distribution-like object with ``ppf`` and ``cdf`` methods used
+        to compute the scale's tick positions and quantiles. If not
+        specified, a minimal implementation of the standard normal
+        distribution will be used.
 
     probax : string, optional (default = 'x')
         The axis ('x' or 'y') that will serve as the probability (or
@@ -71,7 +73,7 @@ def probplot(
         Axis labels for the probability/quantile and data axes
         respectively.
 
-    datascale : string, optional (default = 'log')
+    datascale : string, optional (default = 'linear')
         Scale for the other axis that is not the probability (or
         quantile) axis.
 
@@ -87,8 +89,8 @@ def probplot(
         using a percentile bootstrap.
 
     ci_kws : dict, optional
-        Dictionary of keyword arguments passed directly to
-        ``viz.fit_line`` when computing the best-fit line.
+        Reserved for a future version. It is not currently used by
+        ``probplot``.
 
     pp_kws : dict, optional
         Dictionary of keyword arguments passed directly to
@@ -123,19 +125,33 @@ def probplot(
            only be used by seaborn when operating within a
            ``FacetGrid``.
 
+    marker : string, optional
+        A directly-specified matplotlib marker for the data series. This
+        argument is made available for compatibility for the seaborn
+        package and is not recommended for general use. Instead the data
+        series marker should be specified within ``scatter_kws``.
+
+        .. note::
+           Users should not specify this parameter. It is intended to
+           only be used by seaborn when operating within a
+           ``FacetGrid``.
+
 
     Returns
     -------
     fig : matplotlib.Figure
         The figure on which the plot was drawn.
-
-    result : dict of linear fit results, optional
-        Keys are:
+    results : dict, optional
+        A dictionary of the best-fit results, returned only when
+        ``return_best_fit_results`` is True. Keys are:
 
            - q : array of quantiles
-           - x, y : arrays of data passed to function
-           - xhat, yhat : arrays of modeled data plotted in best-fit line
-           - res : array of coefficients of the best-fit line.
+           - x, y : arrays of data passed to the function
+           - xhat, yhat : arrays of modeled data used to draw the
+             best-fit line
+           - res : dict of the best-fit coefficients, including slope,
+             intercept, and, when ``estimate_ci`` is True, the lower and
+             upper confidence limits of the estimated y-values.
 
     See also
     --------
@@ -355,7 +371,7 @@ def plot_pos(
             Nearly unbiased quantiles for normally distributed data.
             This is the default value.
        "gringorten" (alpha=0.44, beta=0.44)
-            Used for Gumble distributions.
+            Used for Gumbel distributions.
 
     Parameters
     ----------
@@ -363,13 +379,15 @@ def plot_pos(
         The values whose plotting positions need to be computed.
 
     postype : string, optional (default: "cunnane")
+        The name or alias of a pre-defined plotting position scheme, as
+        listed above.
 
     alpha, beta : float, optional
-        Custom plotting position parameters is the options available
-        through the `postype` parameter are insufficient.
+        Custom plotting position parameters to use when the options
+        available through the ``postype`` parameter are insufficient.
 
     exceedance : bool, optional (default: False)
-        Toggles "exceedance" vs "non-exceedance" probabilily plots.
+        Toggles "exceedance" vs "non-exceedance" probability plots.
         By default, non-exceedance plots are drawn where the plot
         generally slopes from the lower left to the upper right,
         and show the probability that a new observation will be
@@ -379,11 +397,13 @@ def plot_pos(
 
     Returns
     -------
-    plot_pos : numpy.array
-        The computed plotting positions, sorted.
+    pos : numpy array
+        The computed plotting positions, sorted in ascending order.
+        When ``exceedance`` is True, they are sorted in descending
+        order.
 
-    data_sorted : numpy.array
-        The original data values, sorted.
+    data_sorted : numpy array
+        The original data values, sorted in ascending order.
 
     References
     ----------
@@ -434,17 +454,18 @@ def plot_pos(
 
 
 def _set_prob_limits(ax: Axes, probax: str, N: int) -> None:
-    """Sets the limits of a probability axis based the number of point.
+    """Set the limits of a probability axis based on the number of
+    points in the dataset.
 
     Parameters
     ----------
-    ax : matplotlib Axes
+    ax : matplotlib.axes.Axes
         The Axes object that will be modified.
+    probax : string
+        The axis whose limits will be set. Valid values are 'x', 'y',
+        or 'both'.
     N : int
-        Maximum number of points for the series plotted on the Axes.
-    which : string
-        The axis whose ticklabels will be rotated. Valid values are 'x',
-        'y', or 'both'.
+        The number of points in the series plotted on the Axes.
 
     Returns
     -------
@@ -472,8 +493,8 @@ def fit_line(
     x: ArrayLike,
     y: ArrayLike,
     xhat: ArrayLike | None = None,
-    fitprobs: FitTransform | None = None,
-    fitlogs: FitTransform | None = None,
+    fitprobs: FitAxis | None = None,
+    fitlogs: FitAxis | None = None,
     dist: DistLike | None = None,
     estimate_ci: bool = False,
     niter: int = 10000,
@@ -488,18 +509,17 @@ def fit_line(
         Independent and dependent data, respectively.
 
     xhat : array-like, optional
-        The values at which ``yhat`` should should be estimated. If
-        not provided, falls back to the sorted values of ``x``.
+        The values at which ``yhat`` should be estimated. If not
+        provided, a copy of ``x`` is used.
 
-    fitprobs, fitlogs : str, optional.
-        Defines how data should be transformed. Valid values are
-        'x', 'y', or 'both'. If using ``fitprobs``, variables should
-        be expressed as a percentage, i.e.,
-        for a probability transform, data will be transformed with
-        ``lambda x: dist.ppf(x / 100.)``.
+    fitprobs, fitlogs : str, optional
+        Defines how data should be transformed. Valid values are 'x',
+        'y', 'both', or None. If using ``fitprobs``, variables should
+        be expressed as a percentage, e.g., for a probability transform,
+        data will be transformed with ``lambda x: dist.ppf(x / 100.)``.
         For a log transform, ``lambda x: numpy.log(x)``.
         Take care to not pass the same value to both ``fitlogs`` and
-        ``figprobs`` as both transforms will be applied.
+        ``fitprobs`` as both transforms will be applied.
 
     dist : distribution, optional
         A fully-spec'd scipy.stats distribution-like object
@@ -508,8 +528,8 @@ def fit_line(
         ``scipy.stats.norm``.
 
     estimate_ci : bool, optional (False)
-        Estimate and draw a confidence band around the best-fit line
-        using a percentile bootstrap.
+        Estimate a confidence band around the best-fit line using a
+        percentile bootstrap.
 
     niter : int, optional (default = 10000)
         Number of bootstrap iterations if ``estimate_ci`` is provided.
@@ -526,8 +546,8 @@ def fit_line(
 
           - slope
           - intercept
-          - yhat_lo (lower confidence interval of the estimated y-vals)
-          - yhat_hi (upper confidence interval of the estimated y-vals)
+          - yhat_lo, yhat_hi: lower and upper confidence limits of the
+            estimated y-values (None when ``estimate_ci`` is False).
 
     """
 

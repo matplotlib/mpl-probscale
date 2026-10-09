@@ -13,10 +13,20 @@ BoundsHandler = Callable[[ArrayLike], FloatingArray]
 
 
 def _mask_out_of_bounds(a: ArrayLike) -> FloatingArray:
-    """
-    Return a Numpy array where all values outside ]0, 1[ are
-    replaced with NaNs. If all values are inside ]0, 1[, the original
-    array is returned.
+    """Return a Numpy array where all values outside ]0, 1[ are
+    replaced with NaNs.
+
+    Parameters
+    ----------
+    a : array-like
+        The input values.
+
+    Returns
+    -------
+    a : numpy array
+        The input values with values outside ]0, 1[ replaced with NaN.
+        If all values are inside ]0, 1[, the original array is returned.
+
     """
     a = numpy.array(a, float)
     mask = (a <= 0.0) | (a >= 1.0)
@@ -26,10 +36,20 @@ def _mask_out_of_bounds(a: ArrayLike) -> FloatingArray:
 
 
 def _clip_out_of_bounds(a: ArrayLike) -> FloatingArray:
-    """
-    Return a Numpy array where all values outside ]0, 1[ are
-    replaced with eps or 1 - eps. If all values are inside ]0, 1[
-    the original array is returned. (eps = 1e-300)
+    """Return a Numpy array where all values outside ]0, 1[ are
+    replaced with eps or 1 - eps (eps = 1e-300).
+
+    Parameters
+    ----------
+    a : array-like
+        The input values.
+
+    Returns
+    -------
+    a : numpy array
+        The input values with values <= 0 replaced by 1e-300 and values
+        >= 1 replaced by 1 - 1e-300.
+
     """
     a = numpy.array(a, float)
     a[a <= 0.0] = 1e-300
@@ -77,7 +97,7 @@ class ProbTransform(_ProbTransformMixin):
     Parameters
     ----------
     dist : scipy.stats distribution
-        The distribution whose ``cdf`` and ``pdf`` methods will set the
+        The distribution whose ``ppf`` and ``cdf`` methods will set the
         scale of the axis.
     as_pct : bool, optional (True)
         Toggles the formatting of the probabilities associated with the
@@ -110,7 +130,7 @@ class QuantileTransform(_ProbTransformMixin):
     Parameters
     ----------
     dist : scipy.stats distribution
-        The distribution whose ``cdf`` and ``pdf`` methods will set the
+        The distribution whose ``ppf`` and ``cdf`` methods will set the
         scale of the axis.
     as_pct : bool, optional (True)
         Toggles the formatting of the probabilities associated with the
