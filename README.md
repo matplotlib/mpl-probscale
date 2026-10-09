@@ -70,7 +70,7 @@ outpath = Path(__file__).parent.joinpath("../img/example.png").resolve()
 fig.savefig(outpath, dpi=300)
 ```
 
-![Alt text](https://raw.githubusercontent.com/matplotlib/mpl-probscale/master/docs/img/example.png "Example axes")
+![Alt text](docs/img/example.png "Example axes")
 
 ## Testing
 
