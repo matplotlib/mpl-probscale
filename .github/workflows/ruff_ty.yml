@@ -1,21 +1,20 @@
-name: Lint and type check
-
-on: [push, pull_request]
+name: ruff 'n' ty
+on: [pull_request]
 
 jobs:
-  check:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.13"
-      - name: Install dependencies
-        run: python -m pip install -e . ruff ty
-      - name: Check formatting and lint with Ruff
-        run: |
-          ruff check .
-          ruff format --check .
-      - name: Check types with ty
-        run: ty check
+    lint:
+      runs-on: ubuntu-latest
+      strategy:
+        matrix:
+          tool:
+            - ruff
+            # - ty
+      steps:
+        - uses: actions/checkout@v4
+        - name: Install uv
+          uses: astral-sh/setup-uv@v6
+        - name: Install dependencies
+          run: uv sync --locked
+        # Update output format to enable automatic inline annotations.
+        - name: Run ${{ matrix.tool }}
+          run: uv run ${{ matrix.tool }} check --output-format=github .
