@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>A closer look at probability plots &#8212; probscale 0.2.6.dev0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=18bd87630a240e9c25be" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=18bd87630a240e9c25be" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=c83e6b79" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=18bd87630a240e9c25be"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
+
+    <script src="../_static/documentation_options.js?v=e667247f"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/sg-tags.js?v=d80f6fa4"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'tutorial/closer_look_at_viz';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Using different formulations of plotting positions" href="closer_look_at_plot_pos.html" />
+    <link rel="prev" title="Getting started with mpl-probscale" href="getting_started.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.2" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">mpl-probscale</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="getting_started.html">
+    Getting started with mpl-probscale
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="#" aria-current="page">
+    A closer look at probability plots
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="closer_look_at_plot_pos.html">
+    Using different formulations of plotting positions
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../auto_examples/index.html">
+    Example Gallery
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../api.html">
+    API and Source Reference
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../readme.html">
+    mpl-probscale
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../installation.html">
+    Installation
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../authors.html">
+    Credits
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../contributing.html">
+    Contributing
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/matplotlib/mpl-probscale" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button type="button" class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="getting_started.html">
+    Getting started with mpl-probscale
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="#" aria-current="page">
+    A closer look at probability plots
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="closer_look_at_plot_pos.html">
+    Using different formulations of plotting positions
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../auto_examples/index.html">
+    Example Gallery
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../api.html">
+    API and Source Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../readme.html">
+    mpl-probscale
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../installation.html">
+    Installation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../authors.html">
+    Credits
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../contributing.html">
+    Contributing
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/matplotlib/mpl-probscale" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button type="button" id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar">
+  <svg class="pst-icon" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"></div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">A closer look at probability plots</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="a-closer-look-at-probability-plots">
+<h1>A closer look at probability plots<a class="headerlink" href="#a-closer-look-at-probability-plots" title="Link to this heading">#</a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">probscale.probplot</span></code> function let’s you do a couple of things. They are:</p>
+<ol class="arabic simple">
+<li><p>Creating percentile, quantile, or probability plots.</p></li>
+<li><p>Placing your probability scale either axis.</p></li>
+<li><p>Specifying an arbitrary distribution for your probability scale.</p></li>
+<li><p>Drawing a best-fit line line in linear-probability or log-probability space.</p></li>
+<li><p>Computing the plotting positions of your data anyway you want.</p></li>
+<li><p>Using probability axes on seaborn <code class="docutils literal notranslate"><span class="pre">FacetGrids</span></code></p></li>
+</ol>
+<p>We’ll go over all of these options in this tutorial.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+
+<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">"ignore"</span><span class="p">)</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyplot</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">probscale</span>
+
+<span class="n">clear_bkgd</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"axes.facecolor"</span><span class="p">:</span> <span class="s2">"none"</span><span class="p">,</span> <span class="s2">"figure.facecolor"</span><span class="p">:</span> <span class="s2">"none"</span><span class="p">}</span>
+<span class="n">seaborn</span><span class="o">.</span><span class="n">set_theme</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s2">"ticks"</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="s2">"talk"</span><span class="p">,</span> <span class="n">color_codes</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">rc</span><span class="o">=</span><span class="n">clear_bkgd</span><span class="p">)</span>
+
+<span class="c1"># load up some example data from the seaborn package</span>
+<span class="n">tips</span> <span class="o">=</span> <span class="n">seaborn</span><span class="o">.</span><span class="n">load_dataset</span><span class="p">(</span><span class="s2">"tips"</span><span class="p">)</span>
+<span class="n">iris</span> <span class="o">=</span> <span class="n">seaborn</span><span class="o">.</span><span class="n">load_dataset</span><span class="p">(</span><span class="s2">"iris"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="different-plot-types">
+<h2>Different plot types<a class="headerlink" href="#different-plot-types" title="Link to this heading">#</a></h2>
+<p>In general, there are three plot types:</p>
+<ol class="arabic simple">
+<li><p>Percentile, a.k.a. P-P plots</p></li>
+<li><p>Quantile, a.k.a. Q-Q plots</p></li>
+<li><p>Probability, a.k.a. Prob Plots</p></li>
+</ol>
+<section id="percentile-plots">
+<h3>Percentile plots<a class="headerlink" href="#percentile-plots" title="Link to this heading">#</a></h3>
+<p>Percentile plots are the simplest plots.
+You simply plot the data against their plotting positions.
+The plotting positions are shown on a linear scale, but the data can be scaled as appropriate.</p>
+<p>If you were doing that from scratch, it would look like this:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">position</span><span class="p">,</span> <span class="n">bill</span> <span class="o">=</span> <span class="n">probscale</span><span class="o">.</span><span class="n">plot_pos</span><span class="p">(</span><span class="n">tips</span><span class="p">[</span><span class="s2">"total_bill"</span><span class="p">])</span>
+<span class="n">position</span> <span class="o">*=</span> <span class="mi">100</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">pyplot</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="n">bill</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">"."</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">"none"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Bill amount"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Percentile"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Total Bill (USD)"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s2">"log"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">bottom</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">seaborn</span><span class="o">.</span><span class="n">despine</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/ab13270f99e2e3c2cc3492f898eebf3a2a33f803f87e3c525c543cf8a144bb49.png" src="../_images/ab13270f99e2e3c2cc3492f898eebf3a2a33f803f87e3c525c543cf8a144bb49.png" />
+</div>
+</div>
+<p>Using the <code class="docutils literal notranslate"><span class="pre">probplot</span></code> function with <code class="docutils literal notranslate"><span class="pre">plottype='pp'</span></code>, it becomes:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">pyplot</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">probscale</span><span class="o">.</span><span class="n">probplot</span><span class="p">(</span>
+    <span class="n">tips</span><span class="p">[</span><span class="s2">"total_bill"</span><span class="p">],</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+    <span class="n">plottype</span><span class="o">=</span><span class="s2">"pp"</span><span class="p">,</span>
+    <span class="n">datascale</span><span class="o">=</span><span class="s2">"log"</span><span class="p">,</span>
+    <span class="n">problabel</span><span class="o">=</span><span class="s2">"Percentile"</span><span class="p">,</span>
+    <span class="n">datalabel</span><span class="o">=</span><span class="s2">"Total Bill (USD)"</span><span class="p">,</span>
+    <span class="n">scatter_kws</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">marker</span><span class="o">=</span><span class="s2">"."</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">"none"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Bill Amount"</span><span class="p">),</span>
+<span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">bottom</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">seaborn</span><span class="o">.</span><span class="n">despine</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/59a2efba6bea5032be5a1de7d72689e3cc5f6f561a43d84ec8bf6984ddacab2c.png" src="../_images/59a2efba6bea5032be5a1de7d72689e3cc5f6f561a43d84ec8bf6984ddacab2c.png" />
+</div>
+</div>
+</section>
+<section id="quantile-plots">
+<h3>Quantile plots<a class="headerlink" href="#quantile-plots" title="Link to this heading">#</a></h3>
+<p>Quantile plots are similar to probability plots.
+The main differences is that plotting positions are converted into quantiles or $Z$-scores based on a probability distribution.
+The default distribution is the standard-normal distribution.
+Using a different distribution is covered further down.</p>
+<p>Usings the same dataset as a above let’s make a quantile plot. Like above, we’ll do it from scratch and then using <code class="docutils literal notranslate"><span class="pre">probplot</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">stats</span>
+
+<span class="n">position</span><span class="p">,</span> <span class="n">bill</span> <span class="o">=</span> <span class="n">probscale</span><span class="o">.</span><span class="n">plot_pos</span><span class="p">(</span><span class="n">tips</span><span class="p">[</span><span class="s2">"total_bill"</span><span class="p">])</span>
+<span class="n">quantile</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="n">position</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">pyplot</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">quantile</span><span class="p">,</span> <span class="n">bill</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">"."</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">"none"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Bill amount"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Normal Quantiles"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Total Bill (USD)"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s2">"log"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">bottom</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">seaborn</span><span class="o">.</span><span class="n">despine</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/bd017d29f71fd1b31002af2f6efed2d09b282ecc3878b1e46c3a735262758293.png" src="../_images/bd017d29f71fd1b31002af2f6efed2d09b282ecc3878b1e46c3a735262758293.png" />
+</div>
+</div>
+<p>Using <code class="docutils literal notranslate"><span class="pre">probplot</span></code>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">pyplot</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">probscale</span><span class="o">.</span><span class="n">probplot</span><span class="p">(</span>
+    <span class="n">tips</span><span class="p">[</span><span class="s2">"total_bill"</span><span class="p">],</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+    <span class="n">plottype</span><span class="o">=</span><span class="s2">"qq"</span><span class="p">,</span>
+    <span class="n">datascale</span><span class="o">=</span><span class="s2">"log"</span><span class="p">,</span>
+    <span class="n">problabel</span><span class="o">=</span><span class="s2">"Standard Normal Quantiles"</span><span class="p">,</span>
+    <span class="n">datalabel</span><span class="o">=</span><span class="s2">"Total Bill (USD)"</span><span class="p">,</span>
+    <span class="n">scatter_kws</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">marker</span><span class="o">=</span><span class="s2">"."</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">"none"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Bill Amount"</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">bottom</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">seaborn</span><span class="o">.</span><span class="n">despine</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/0db3fe25460912098a1f3cf0ec47f552617625132dc5995153fb7ffd26f81023.png" src="../_images/0db3fe25460912098a1f3cf0ec47f552617625132dc5995153fb7ffd26f81023.png" />
+</div>
+</div>
+<p>You’ll notice that the shape of the data is straighter on the Q-Q plot than the P-P plot.
+This is due to the transformation that takes place when converting the plotting positions to a distribution’s quantiles.
+The plot below hopefully illustrates this more clearly.
+Additionally, we’ll show how use the <code class="docutils literal notranslate"><span class="pre">probax</span></code> option to flip the plot so that the P-P/Q-Q/Probability axis is on the y-scale.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">pyplot</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">markers</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">marker</span><span class="o">=</span><span class="s2">"."</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">"none"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Bill Amount"</span><span class="p">)</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">probscale</span><span class="o">.</span><span class="n">probplot</span><span class="p">(</span>
+    <span class="n">tips</span><span class="p">[</span><span class="s2">"total_bill"</span><span class="p">],</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">,</span>
+    <span class="n">plottype</span><span class="o">=</span><span class="s2">"pp"</span><span class="p">,</span>
+    <span class="n">probax</span><span class="o">=</span><span class="s2">"y"</span><span class="p">,</span>
+    <span class="n">datascale</span><span class="o">=</span><span class="s2">"log"</span><span class="p">,</span>
+    <span class="n">problabel</span><span class="o">=</span><span class="s2">"Percentiles"</span><span class="p">,</span>
+    <span class="n">datalabel</span><span class="o">=</span><span class="s2">"Total Bill (USD)"</span><span class="p">,</span>
+    <span class="n">scatter_kws</span><span class="o">=</span><span class="n">markers</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">probscale</span><span class="o">.</span><span class="n">probplot</span><span class="p">(</span>
+    <span class="n">tips</span><span class="p">[</span><span class="s2">"total_bill"</span><span class="p">],</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">,</span>
+    <span class="n">plottype</span><span class="o">=</span><span class="s2">"qq"</span><span class="p">,</span>
+    <span class="n">probax</span><span class="o">=</span><span class="s2">"y"</span><span class="p">,</span>
+    <span class="n">datascale</span><span class="o">=</span><span class="s2">"log"</span><span class="p">,</span>
+    <span class="n">problabel</span><span class="o">=</span><span class="s2">"Standard Normal Quantiles"</span><span class="p">,</span>
+    <span class="n">datalabel</span><span class="o">=</span><span class="s2">"Total Bill (USD)"</span><span class="p">,</span>
+    <span class="n">scatter_kws</span><span class="o">=</span><span class="n">markers</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">seaborn</span><span class="o">.</span><span class="n">despine</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/5dbc13df1b0898bac348426d9576f433a4e8cdb70ea085ff5b31350090e40ea3.png" src="../_images/5dbc13df1b0898bac348426d9576f433a4e8cdb70ea085ff5b31350090e40ea3.png" />
+</div>
+</div>
+<p>In these case of P-P plots and simple Q-Q plots, the <code class="docutils literal notranslate"><span class="pre">probplot</span></code> function doesn’t offer much convenience compared to writing raw matplotlib commands.
+However, this changes when you start making probability plots and using more advanced options.</p>
+</section>
+<section id="probability-plots">
+<h3>Probability plots<a class="headerlink" href="#probability-plots" title="Link to this heading">#</a></h3>
+<p>Visually, the curve of plots on probability and quantile scales should be the same.
+The difference is that the axis ticks are placed and labeled based on non-exceedance probabilities rather than the more abstract quantiles of the distribution.</p>
+<p>Unsurprisingly, a picture explains this much better.
+Let’s build off of the previous plot:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">,</span> <span class="n">ax3</span><span class="p">)</span> <span class="o">=</span> <span class="n">pyplot</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">common_opts</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+    <span class="n">probax</span><span class="o">=</span><span class="s2">"y"</span><span class="p">,</span>
+    <span class="n">datascale</span><span class="o">=</span><span class="s2">"log"</span><span class="p">,</span>
+    <span class="n">datalabel</span><span class="o">=</span><span class="s2">"Total Bill (USD)"</span><span class="p">,</span>
+    <span class="n">scatter_kws</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">marker</span><span class="o">=</span><span class="s2">"."</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">"none"</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">probscale</span><span class="o">.</span><span class="n">probplot</span><span class="p">(</span>
+    <span class="n">tips</span><span class="p">[</span><span class="s2">"total_bill"</span><span class="p">],</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">,</span> <span class="n">plottype</span><span class="o">=</span><span class="s2">"pp"</span><span class="p">,</span> <span class="n">problabel</span><span class="o">=</span><span class="s2">"Percentiles"</span><span class="p">,</span> <span class="o">**</span><span class="n">common_opts</span>
+<span class="p">)</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">probscale</span><span class="o">.</span><span class="n">probplot</span><span class="p">(</span>
+    <span class="n">tips</span><span class="p">[</span><span class="s2">"total_bill"</span><span class="p">],</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">,</span>
+    <span class="n">plottype</span><span class="o">=</span><span class="s2">"qq"</span><span class="p">,</span>
+    <span class="n">problabel</span><span class="o">=</span><span class="s2">"Standard Normal Quantiles"</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">common_opts</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">probscale</span><span class="o">.</span><span class="n">probplot</span><span class="p">(</span>
+    <span class="n">tips</span><span class="p">[</span><span class="s2">"total_bill"</span><span class="p">],</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">ax3</span><span class="p">,</span>
+    <span class="n">plottype</span><span class="o">=</span><span class="s2">"prob"</span><span class="p">,</span>
+    <span class="n">problabel</span><span class="o">=</span><span class="s2">"Standard Normal Probabilities"</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">common_opts</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">ax3</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">ax3</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">bottom</span><span class="o">=</span><span class="mf">0.13</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mf">99.87</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">seaborn</span><span class="o">.</span><span class="n">despine</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/ac40f668c2f500d87a4913aa6162976c72d3422eb63304cdd32c4e06dd1a5080.png" src="../_images/ac40f668c2f500d87a4913aa6162976c72d3422eb63304cdd32c4e06dd1a5080.png" />
+</div>
+</div>
+<p>Visually, shapes of the curves on the right-most plots are identical.
+The difference is that the y-axis ticks and labels are more “human” readable.</p>
+<p>In other words, the probability (right) axis gives us the ease of finding e.g. the 75th percentile found on percentile (left) axis, and illustrates how well the data fit a given distribution like the quantile (middle) axes.</p>
+</section>
+</section>
+<section id="using-different-distributions-for-your-scales">
+<h2>Using different distributions for your scales<a class="headerlink" href="#using-different-distributions-for-your-scales" title="Link to this heading">#</a></h2>
+<p>When using quantile or probability scales, you can pass a distribution from the <code class="docutils literal notranslate"><span class="pre">scipy.stats</span></code> module to the <code class="docutils literal notranslate"><span class="pre">probplot</span></code> function. When a distribution is not provided to the <code class="docutils literal notranslate"><span class="pre">dist</span></code> parameter, a standard normal distribution is used.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">common_opts</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+    <span class="n">plottype</span><span class="o">=</span><span class="s2">"prob"</span><span class="p">,</span>
+    <span class="n">probax</span><span class="o">=</span><span class="s2">"y"</span><span class="p">,</span>
+    <span class="n">datascale</span><span class="o">=</span><span class="s2">"log"</span><span class="p">,</span>
+    <span class="n">datalabel</span><span class="o">=</span><span class="s2">"Total Bill (USD)"</span><span class="p">,</span>
+    <span class="n">scatter_kws</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">marker</span><span class="o">=</span><span class="s2">"+"</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">"none"</span><span class="p">,</span> <span class="n">mew</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="n">alpha</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">alpha</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">beta</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">beta</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">,</span> <span class="n">ax3</span><span class="p">)</span> <span class="o">=</span> <span class="n">pyplot</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">probscale</span><span class="o">.</span><span class="n">probplot</span><span class="p">(</span>
+    <span class="n">tips</span><span class="p">[</span><span class="s2">"total_bill"</span><span class="p">],</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">,</span>
+    <span class="n">dist</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span>
+    <span class="n">problabel</span><span class="o">=</span><span class="s2">"Alpha(10) Probabilities"</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">common_opts</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">probscale</span><span class="o">.</span><span class="n">probplot</span><span class="p">(</span>
+    <span class="n">tips</span><span class="p">[</span><span class="s2">"total_bill"</span><span class="p">],</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">,</span>
+    <span class="n">dist</span><span class="o">=</span><span class="n">beta</span><span class="p">,</span>
+    <span class="n">problabel</span><span class="o">=</span><span class="s2">"Beta(6, 1) Probabilities"</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">common_opts</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">probscale</span><span class="o">.</span><span class="n">probplot</span><span class="p">(</span>
+    <span class="n">tips</span><span class="p">[</span><span class="s2">"total_bill"</span><span class="p">],</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">ax3</span><span class="p">,</span>
+    <span class="n">dist</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">problabel</span><span class="o">=</span><span class="s2">"Standard Normal Probabilities"</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">common_opts</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">ax3</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="p">[</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">,</span> <span class="n">ax3</span><span class="p">]:</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">bottom</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mf">99.8</span><span class="p">)</span>
+<span class="n">seaborn</span><span class="o">.</span><span class="n">despine</span><span class="p">()</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/4e939249756e7afc8dfcc27a1eeb9d68183113cd5b7f8a6890e87d52c2c6c200.png" src="../_images/4e939249756e7afc8dfcc27a1eeb9d68183113cd5b7f8a6890e87d52c2c6c200.png" />
+</div>
+</div>
+<p>This can also be done for QQ scales:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">common_opts</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+    <span class="n">plottype</span><span class="o">=</span><span class="s2">"qq"</span><span class="p">,</span>
+    <span class="n">probax</span><span class="o">=</span><span class="s2">"y"</span><span class="p">,</span>
+    <span class="n">datascale</span><span class="o">=</span><span class="s2">"log"</span><span class="p">,</span>
+    <span class="n">datalabel</span><span class="o">=</span><span class="s2">"Total Bill (USD)"</span><span class="p">,</span>
+    <span class="n">scatter_kws</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">marker</span><span class="o">=</span><span class="s2">"+"</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">"none"</span><span class="p">,</span> <span class="n">mew</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="n">alpha</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">alpha</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">beta</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">beta</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">,</span> <span class="n">ax3</span><span class="p">)</span> <span class="o">=</span> <span class="n">pyplot</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">probscale</span><span class="o">.</span><span class="n">probplot</span><span class="p">(</span>
+    <span class="n">tips</span><span class="p">[</span><span class="s2">"total_bill"</span><span class="p">],</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">,</span>
+    <span class="n">dist</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span>
+    <span class="n">problabel</span><span class="o">=</span><span class="s2">"Alpha(10) Quantiles"</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">common_opts</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">probscale</span><span class="o">.</span><span class="n">probplot</span><span class="p">(</span>
+    <span class="n">tips</span><span class="p">[</span><span class="s2">"total_bill"</span><span class="p">],</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">,</span>
+    <span class="n">dist</span><span class="o">=</span><span class="n">beta</span><span class="p">,</span>
+    <span class="n">problabel</span><span class="o">=</span><span class="s2">"Beta(6, 3) Quantiles"</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">common_opts</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">probscale</span><span class="o">.</span><span class="n">probplot</span><span class="p">(</span>
+    <span class="n">tips</span><span class="p">[</span><span class="s2">"total_bill"</span><span class="p">],</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">ax3</span><span class="p">,</span>
+    <span class="n">dist</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">problabel</span><span class="o">=</span><span class="s2">"Standard Normal Quantiles"</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">common_opts</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">seaborn</span><span class="o">.</span><span class="n">despine</span><span class="p">()</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/ce6f00ca5401bcd1344971f110409aa80e1095299e8a30e44bd5df38104ac6bf.png" src="../_images/ce6f00ca5401bcd1344971f110409aa80e1095299e8a30e44bd5df38104ac6bf.png" />
+</div>
+</div>
+<p>Using a specific distribution with a quantile scale can give us an idea of how well the data fit that distribution.
+For instance, let’s say we have a hunch that the values of the <code class="docutils literal notranslate"><span class="pre">total_bill</span></code> column in our dataset are normally distributed and their mean and standard deviation are 19.8 and 8.9, respectively.
+We could investigate that by create a <code class="docutils literal notranslate"><span class="pre">scipy.stat.norm</span></code> distribution with those parameters and use that distribution in the Q-Q plot.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">equality_line</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">limits</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">numpy</span><span class="o">.</span><span class="n">min</span><span class="p">([</span><span class="n">ax</span><span class="o">.</span><span class="n">get_xlim</span><span class="p">(),</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()]),</span>
+        <span class="n">numpy</span><span class="o">.</span><span class="n">max</span><span class="p">([</span><span class="n">ax</span><span class="o">.</span><span class="n">get_xlim</span><span class="p">(),</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()]),</span>
+    <span class="p">]</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">limits</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">limits</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">limits</span><span class="p">,</span> <span class="n">limits</span><span class="p">,</span> <span class="s2">"k-"</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
+
+
+<span class="n">norm</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">21</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">pyplot</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">"equal"</span><span class="p">)</span>
+
+<span class="n">common_opts</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+    <span class="n">plottype</span><span class="o">=</span><span class="s2">"qq"</span><span class="p">,</span>
+    <span class="n">probax</span><span class="o">=</span><span class="s2">"x"</span><span class="p">,</span>
+    <span class="n">problabel</span><span class="o">=</span><span class="s2">"Theoretical Quantiles"</span><span class="p">,</span>
+    <span class="n">datalabel</span><span class="o">=</span><span class="s2">"Empirical Quantiles"</span><span class="p">,</span>
+    <span class="n">scatter_kws</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">"Bill amounts"</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">probscale</span><span class="o">.</span><span class="n">probplot</span><span class="p">(</span><span class="n">tips</span><span class="p">[</span><span class="s2">"total_bill"</span><span class="p">],</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">dist</span><span class="o">=</span><span class="n">norm</span><span class="p">,</span> <span class="o">**</span><span class="n">common_opts</span><span class="p">)</span>
+
+<span class="n">equality_line</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Guessed Normal Distribution"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">"lower right"</span><span class="p">)</span>
+<span class="n">seaborn</span><span class="o">.</span><span class="n">despine</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/c01415053092e42b4322f0321cacadedecd581617f10ab1cc6206e7e6143dee7.png" src="../_images/c01415053092e42b4322f0321cacadedecd581617f10ab1cc6206e7e6143dee7.png" />
+</div>
+</div>
+<p>Hmm.
+That doesn’t look too good.
+Let’s use scipy’s fitting functionality to try out a lognormal distribution.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lognorm_params</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">lognorm</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">tips</span><span class="p">[</span><span class="s2">"total_bill"</span><span class="p">],</span> <span class="n">floc</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">lognorm</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">lognorm</span><span class="p">(</span><span class="o">*</span><span class="n">lognorm_params</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">pyplot</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">"equal"</span><span class="p">)</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">probscale</span><span class="o">.</span><span class="n">probplot</span><span class="p">(</span><span class="n">tips</span><span class="p">[</span><span class="s2">"total_bill"</span><span class="p">],</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">dist</span><span class="o">=</span><span class="n">lognorm</span><span class="p">,</span> <span class="o">**</span><span class="n">common_opts</span><span class="p">)</span>
+
+<span class="n">equality_line</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Fit Lognormal Distribution"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">"lower right"</span><span class="p">)</span>
+<span class="n">seaborn</span><span class="o">.</span><span class="n">despine</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/fdfccfacd6b2e5f39395152b61d3cf7988c58b81dec8204a2ba36636c7b1be9a.png" src="../_images/fdfccfacd6b2e5f39395152b61d3cf7988c58b81dec8204a2ba36636c7b1be9a.png" />
+</div>
+</div>
+<p>That’s a little bit better.</p>
+<p>Finding the best distribution is left as an exercise to the reader.</p>
+</section>
+<section id="best-fit-lines">
+<h2>Best-fit lines<a class="headerlink" href="#best-fit-lines" title="Link to this heading">#</a></h2>
+<p>Adding a best-fit line to a probability plot can provide insight as to whether or not a dataset can be characterized by a distribution.</p>
+<p>This is simply done with the <code class="docutils literal notranslate"><span class="pre">bestfit=True</span></code> option in <code class="docutils literal notranslate"><span class="pre">probplot</span></code>.
+Behind the scenes, <code class="docutils literal notranslate"><span class="pre">probplot</span></code> transforms both the x- and y-data of fed to the regression based on the plot type and scale of the data axis (controlled via <code class="docutils literal notranslate"><span class="pre">datascale</span></code>).</p>
+<p>Visual attributes of the line can be controled with the <code class="docutils literal notranslate"><span class="pre">line_kws</span></code> parameter.
+If you want label the best-fit line, that is where you specify its label.</p>
+<section id="simple-examples">
+<h3>Simple examples<a class="headerlink" href="#simple-examples" title="Link to this heading">#</a></h3>
+<p>The most trivial case is a P-P plot with a linear data axis</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">pyplot</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">probscale</span><span class="o">.</span><span class="n">probplot</span><span class="p">(</span>
+    <span class="n">tips</span><span class="p">[</span><span class="s2">"total_bill"</span><span class="p">],</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+    <span class="n">plottype</span><span class="o">=</span><span class="s2">"pp"</span><span class="p">,</span>
+    <span class="n">bestfit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">problabel</span><span class="o">=</span><span class="s2">"Percentile"</span><span class="p">,</span>
+    <span class="n">datalabel</span><span class="o">=</span><span class="s2">"Total Bill (USD)"</span><span class="p">,</span>
+    <span class="n">scatter_kws</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">"Bill Amount"</span><span class="p">),</span>
+    <span class="n">line_kws</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">"Best-fit line"</span><span class="p">),</span>
+<span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">"upper left"</span><span class="p">)</span>
+<span class="n">seaborn</span><span class="o">.</span><span class="n">despine</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/9f62af906655e6319d276050434cb9a1f85a1448e7a5d2cda83483b57dc04c6b.png" src="../_images/9f62af906655e6319d276050434cb9a1f85a1448e7a5d2cda83483b57dc04c6b.png" />
+</div>
+</div>
+<p>The least trivial case is a probability plot with a log-scaled data axes.</p>
+<p>As suggested by the section on quantile plots with custom distributions, using a normal probability scale with a lognormal data scale provides a decent fit (visually speaking).</p>
+<p>Note that you still put the probability scale on either the x- or y-axis.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">pyplot</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">probscale</span><span class="o">.</span><span class="n">probplot</span><span class="p">(</span>
+    <span class="n">tips</span><span class="p">[</span><span class="s2">"total_bill"</span><span class="p">],</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+    <span class="n">plottype</span><span class="o">=</span><span class="s2">"prob"</span><span class="p">,</span>
+    <span class="n">probax</span><span class="o">=</span><span class="s2">"y"</span><span class="p">,</span>
+    <span class="n">bestfit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">datascale</span><span class="o">=</span><span class="s2">"log"</span><span class="p">,</span>
+    <span class="n">problabel</span><span class="o">=</span><span class="s2">"Probabilities"</span><span class="p">,</span>
+    <span class="n">datalabel</span><span class="o">=</span><span class="s2">"Total Bill (USD)"</span><span class="p">,</span>
+    <span class="n">scatter_kws</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">"Bill Amount"</span><span class="p">),</span>
+    <span class="n">line_kws</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">"Best-fit line"</span><span class="p">),</span>
+<span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">"upper left"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">bottom</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mf">99.9</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">seaborn</span><span class="o">.</span><span class="n">despine</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/4c1b9b5c4945df54719cc45ca5774723be4430d49baed3a08f27b02f7c1c2d85.png" src="../_images/4c1b9b5c4945df54719cc45ca5774723be4430d49baed3a08f27b02f7c1c2d85.png" />
+</div>
+</div>
+</section>
+<section id="bootstrapped-confidence-intervals">
+<h3>Bootstrapped confidence intervals<a class="headerlink" href="#bootstrapped-confidence-intervals" title="Link to this heading">#</a></h3>
+<p>Regardless of the scales of the plot (linear, log, or prob), you can add bootstrapped confidence intervals around the best-fit line.
+Simply use the <code class="docutils literal notranslate"><span class="pre">estimate_ci=True</span></code> option along with <code class="docutils literal notranslate"><span class="pre">bestfit=True</span></code>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">N</span> <span class="o">=</span> <span class="mi">15</span>
+<span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">N</span><span class="p">)</span> <span class="o">+</span> <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">N</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">pyplot</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">probscale</span><span class="o">.</span><span class="n">probplot</span><span class="p">(</span>
+    <span class="n">x</span><span class="p">,</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+    <span class="n">bestfit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">estimate_ci</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">line_kws</span><span class="o">=</span><span class="p">{</span><span class="s2">"label"</span><span class="p">:</span> <span class="s2">"BF Line"</span><span class="p">,</span> <span class="s2">"color"</span><span class="p">:</span> <span class="s2">"b"</span><span class="p">},</span>
+    <span class="n">scatter_kws</span><span class="o">=</span><span class="p">{</span><span class="s2">"label"</span><span class="p">:</span> <span class="s2">"Observations"</span><span class="p">},</span>
+    <span class="n">problabel</span><span class="o">=</span><span class="s2">"Probability (%)"</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">"lower right"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">bottom</span><span class="o">=-</span><span class="mi">2</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">seaborn</span><span class="o">.</span><span class="n">despine</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/575225c8a2e33e738835c8605296192612d14bdce6116f3c8e9e093be9b8e9a8.png" src="../_images/575225c8a2e33e738835c8605296192612d14bdce6116f3c8e9e093be9b8e9a8.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="tuning-the-plotting-positions">
+<h2>Tuning the plotting positions<a class="headerlink" href="#tuning-the-plotting-positions" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">common_opts</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+    <span class="n">plottype</span><span class="o">=</span><span class="s2">"prob"</span><span class="p">,</span>
+    <span class="n">probax</span><span class="o">=</span><span class="s2">"x"</span><span class="p">,</span>
+    <span class="n">datalabel</span><span class="o">=</span><span class="s2">"Data"</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">,</span> <span class="n">ax3</span><span class="p">)</span> <span class="o">=</span> <span class="n">pyplot</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span>
+    <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="n">nrows</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">probscale</span><span class="o">.</span><span class="n">probplot</span><span class="p">(</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">,</span> <span class="n">problabel</span><span class="o">=</span><span class="s2">"Cunnane (default) plotting positions"</span><span class="p">,</span> <span class="o">**</span><span class="n">common_opts</span>
+<span class="p">)</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">probscale</span><span class="o">.</span><span class="n">probplot</span><span class="p">(</span>
+    <span class="n">x</span><span class="p">,</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">,</span>
+    <span class="n">problabel</span><span class="o">=</span><span class="s2">"Weibull plotting positions"</span><span class="p">,</span>
+    <span class="n">pp_kws</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">postype</span><span class="o">=</span><span class="s2">"weibull"</span><span class="p">),</span>
+    <span class="o">**</span><span class="n">common_opts</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">probscale</span><span class="o">.</span><span class="n">probplot</span><span class="p">(</span>
+    <span class="n">x</span><span class="p">,</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">ax3</span><span class="p">,</span>
+    <span class="n">problabel</span><span class="o">=</span><span class="s2">"Custom plotting positions"</span><span class="p">,</span>
+    <span class="n">pp_kws</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mf">0.1</span><span class="p">),</span>
+    <span class="o">**</span><span class="n">common_opts</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mi">99</span><span class="p">)</span>
+<span class="n">seaborn</span><span class="o">.</span><span class="n">despine</span><span class="p">()</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/0c6ba3e9a4e08bf95e680871c791f36cdabaef29b7e034d10de834a69945c97e.png" src="../_images/0c6ba3e9a4e08bf95e680871c791f36cdabaef29b7e034d10de834a69945c97e.png" />
+</div>
+</div>
+</section>
+<section id="controlling-the-aesthetics-of-the-plot-elements">
+<h2>Controlling the aesthetics of the plot elements<a class="headerlink" href="#controlling-the-aesthetics-of-the-plot-elements" title="Link to this heading">#</a></h2>
+<p>As it has been hinted in the examples above, the <code class="docutils literal notranslate"><span class="pre">probplot</span></code> function takes two dictionaries to customize the data series and the best-fit line (<code class="docutils literal notranslate"><span class="pre">scatter_kws</span></code> and <code class="docutils literal notranslate"><span class="pre">line_kws</span></code>, respectively.
+These dictionaries are passed directly to the <code class="docutils literal notranslate"><span class="pre">plot</span></code> method of current axes.</p>
+<p>By default, the data series assumes that <code class="docutils literal notranslate"><span class="pre">linestyle='none'</span></code> and <code class="docutils literal notranslate"><span class="pre">marker='o'</span></code>.
+These can be overwritten through <code class="docutils literal notranslate"><span class="pre">scatter_kws</span></code></p>
+<p>Revisiting the previous example, we can customize it like so:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scatter_options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+    <span class="n">marker</span><span class="o">=</span><span class="s2">"^"</span><span class="p">,</span>
+    <span class="n">markerfacecolor</span><span class="o">=</span><span class="s2">"none"</span><span class="p">,</span>
+    <span class="n">markeredgecolor</span><span class="o">=</span><span class="s2">"firebrick"</span><span class="p">,</span>
+    <span class="n">markeredgewidth</span><span class="o">=</span><span class="mf">1.25</span><span class="p">,</span>
+    <span class="n">linestyle</span><span class="o">=</span><span class="s2">"none"</span><span class="p">,</span>
+    <span class="n">alpha</span><span class="o">=</span><span class="mf">0.35</span><span class="p">,</span>
+    <span class="n">zorder</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="n">label</span><span class="o">=</span><span class="s2">"Meal Cost ($)"</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">line_options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+    <span class="n">dashes</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+    <span class="n">color</span><span class="o">=</span><span class="s2">"0.25"</span><span class="p">,</span>
+    <span class="n">linewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+    <span class="n">zorder</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">label</span><span class="o">=</span><span class="s2">"Best-fit line"</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">pyplot</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">probscale</span><span class="o">.</span><span class="n">probplot</span><span class="p">(</span>
+    <span class="n">tips</span><span class="p">[</span><span class="s2">"total_bill"</span><span class="p">],</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+    <span class="n">plottype</span><span class="o">=</span><span class="s2">"prob"</span><span class="p">,</span>
+    <span class="n">probax</span><span class="o">=</span><span class="s2">"y"</span><span class="p">,</span>
+    <span class="n">bestfit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">datascale</span><span class="o">=</span><span class="s2">"log"</span><span class="p">,</span>
+    <span class="n">problabel</span><span class="o">=</span><span class="s2">"Probabilities"</span><span class="p">,</span>
+    <span class="n">datalabel</span><span class="o">=</span><span class="s2">"Total Bill (USD)"</span><span class="p">,</span>
+    <span class="n">scatter_kws</span><span class="o">=</span><span class="n">scatter_options</span><span class="p">,</span>
+    <span class="n">line_kws</span><span class="o">=</span><span class="n">line_options</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">"upper left"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">bottom</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mf">99.9</span><span class="p">)</span>
+<span class="n">seaborn</span><span class="o">.</span><span class="n">despine</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/4ede775ae5b561445a6556885b35f022f31281b7fb888f39a8774172a951279f.png" src="../_images/4ede775ae5b561445a6556885b35f022f31281b7fb888f39a8774172a951279f.png" />
+</div>
+</div>
+</section>
+<section id="mapping-probability-plots-to-seaborn-facetgrids">
+<h2>Mapping probability plots to seaborn <a class="reference external" href="http://stanford.edu/~mwaskom/software/seaborn/tutorial/axis_grids.html#subsetting-data-with-facetgrid">FacetGrids</a><a class="headerlink" href="#mapping-probability-plots-to-seaborn-facetgrids" title="Link to this heading">#</a></h2>
+<p>In general, <code class="docutils literal notranslate"><span class="pre">probplot</span></code> was written with <code class="docutils literal notranslate"><span class="pre">FacetGrids</span></code> in mind.
+All you need to do is specify the data column and other options in the call to <code class="docutils literal notranslate"><span class="pre">FacetGrid.map</span></code>.</p>
+<p>Unfortunately the labels don’t work out exactly like I want, but it’s a work in progress.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fg</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">seaborn</span><span class="o">.</span><span class="n">FacetGrid</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">iris</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">"species"</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">probscale</span><span class="o">.</span><span class="n">probplot</span><span class="p">,</span> <span class="s2">"sepal_length"</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">set_axis_labels</span><span class="p">(</span><span class="n">x_var</span><span class="o">=</span><span class="s2">"Probability"</span><span class="p">,</span> <span class="n">y_var</span><span class="o">=</span><span class="s2">"Sepal Length"</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">add_legend</span><span class="p">()</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/ecca934ff71b7d2e47401bf383e91d3ea6e9db64a555e432683302d2c75aea76.png" src="../_images/ecca934ff71b7d2e47401bf383e91d3ea6e9db64a555e432683302d2c75aea76.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fg</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">seaborn</span><span class="o">.</span><span class="n">FacetGrid</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">iris</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">"species"</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">probscale</span><span class="o">.</span><span class="n">probplot</span><span class="p">,</span> <span class="s2">"petal_length"</span><span class="p">,</span> <span class="n">plottype</span><span class="o">=</span><span class="s2">"qq"</span><span class="p">,</span> <span class="n">probax</span><span class="o">=</span><span class="s2">"y"</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">set_ylabels</span><span class="p">(</span><span class="s2">"Quantiles"</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">add_legend</span><span class="p">()</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/2d75f3b3da3163a9db954fea3a9d76b49aa160dde1a639bf243256b5a8f49ebb.png" src="../_images/2d75f3b3da3163a9db954fea3a9d76b49aa160dde1a639bf243256b5a8f49ebb.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fg</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">seaborn</span><span class="o">.</span><span class="n">FacetGrid</span><span class="p">(</span>
+        <span class="n">data</span><span class="o">=</span><span class="n">tips</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">"sex"</span><span class="p">,</span> <span class="n">row</span><span class="o">=</span><span class="s2">"smoker"</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="s2">"time"</span><span class="p">,</span> <span class="n">margin_titles</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">4</span>
+    <span class="p">)</span>
+    <span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">probscale</span><span class="o">.</span><span class="n">probplot</span><span class="p">,</span> <span class="s2">"total_bill"</span><span class="p">,</span> <span class="n">probax</span><span class="o">=</span><span class="s2">"y"</span><span class="p">,</span> <span class="n">bestfit</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">set_ylabels</span><span class="p">(</span><span class="s2">"Probability"</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">add_legend</span><span class="p">()</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/c3e02e7ac250853eb3ebe026e842093735f590a2ef2b31a6c45f4dd7b4291dd6.png" src="../_images/c3e02e7ac250853eb3ebe026e842093735f590a2ef2b31a6c45f4dd7b4291dd6.png" />
+</div>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="getting_started.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Getting started with <code class="docutils literal notranslate"><span class="pre">mpl-probscale</span></code></p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="closer_look_at_plot_pos.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Using different formulations of plotting positions</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#different-plot-types">Different plot types</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#percentile-plots">Percentile plots</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quantile-plots">Quantile plots</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#probability-plots">Probability plots</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#using-different-distributions-for-your-scales">Using different distributions for your scales</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#best-fit-lines">Best-fit lines</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#simple-examples">Simple examples</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bootstrapped-confidence-intervals">Bootstrapped confidence intervals</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tuning-the-plotting-positions">Tuning the plotting positions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#controlling-the-aesthetics-of-the-plot-elements">Controlling the aesthetics of the plot elements</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mapping-probability-plots-to-seaborn-facetgrids">Mapping probability plots to seaborn FacetGrids</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../_sources/tutorial/closer_look_at_viz.ipynb.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2015-2026 Paul Hobson (Herrera Environmental Consultants).
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.23.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
