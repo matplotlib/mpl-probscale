@@ -38,7 +38,7 @@ jobs:
       group: gh-pages-deploy
       cancel-in-progress: false
     steps:
-      - uses: actions/download-artifact@v7
+      - uses: actions/download-artifact@v8
         with:
           name: probscale-docs
           path: html
