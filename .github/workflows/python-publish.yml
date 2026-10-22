@@ -13,6 +13,10 @@ jobs:
   deploy:
 
     runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      contents: read
+      id-token: write
 
     steps:
     - uses: actions/checkout@v7
@@ -23,7 +27,4 @@ jobs:
     - name: Build
       run: uv build
     - name: Publish
-      env:
-        UV_PUBLISH_USERNAME: ${{ secrets.PMH_PYPI_USER }}
-        UV_PUBLISH_PASSWORD: ${{ secrets.PMH_PYPI_PASS }}
-      run: uv publish
+      run: uv publish --trusted-publishing always
