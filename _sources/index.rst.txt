@@ -54,6 +54,7 @@ Examples
    :maxdepth: 2
 
    auto_examples/index
+   altair/index
 
 API Reference
 -------------
