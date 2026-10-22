@@ -49,6 +49,7 @@ docs = [
     "sphinx>=8",
     "sphinx-gallery>=0.19",
 ]
+extra = []
 
 [project.urls]
 Homepage = "https://github.com/matplotlib/mpl-probscale"
