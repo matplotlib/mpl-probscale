@@ -37,7 +37,10 @@ fig, axes = pyplot.subplots(nrows=N, figsize=(9, N - 1), constrained_layout=True
 for scale, ax in zip(scales, axes.flat):
     ax.set_xscale(**scale["scale"])
     ax.text(0.0, 0.1, scale["label"] + " →", transform=ax.transAxes)
-    ax.set_xlim(left=0.5, right=99.5)
+
+    factor = 100 if scale["scale"]["value"] == "logit" else 1
+    ax.set_xlim(left=0.5 / factor, right=99.5 / factor)
+
     ax.set_yticks([])
     ax.spines.left.set_visible(False)
     ax.spines.right.set_visible(False)
