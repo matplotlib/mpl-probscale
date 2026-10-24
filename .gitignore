@@ -59,6 +59,7 @@ docs/auto_examples/
 docs/.jupyter_cache/
 docs/sg_execution_times.rst
 .ipynb_checkpoints
+great-docs/
 
 # PyBuilder
 target/

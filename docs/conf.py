@@ -83,6 +83,9 @@ intersphinx_mapping = {
 
 # -- myst-nb (tutorial notebooks) --------------------------------------------
 
+myst_enable_extensions = ["colon_fence", "deflist", "dollarmath"]
+myst_heading_anchors = 3
+
 nb_execution_mode = "auto"
 nb_execution_timeout = 600
 nb_execution_raise_on_error = True
