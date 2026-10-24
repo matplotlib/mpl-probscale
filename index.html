@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>mpl-probscale: Real probability scales for matplotlib &#8212; probscale 0.3.0 documentation</title>
+    <title>mpl-probscale &#8212; probscale 0.3.0 documentation</title>
   
   
   
@@ -51,7 +51,7 @@
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Getting started with mpl-probscale" href="tutorial/getting_started.html" />
+    <link rel="next" title="Installation" href="installation.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
@@ -138,22 +138,29 @@
   <ul class="bd-navbar-elements navbar-nav">
     
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="installation.html">
+    Installation
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="tutorial/getting_started.html">
-    Getting started with mpl-probscale
+    Getting Started
   </a>
 </li>
 
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="tutorial/closer_look_at_viz.html">
-    A closer look at probability plots
+    Probability Plots in Depth
   </a>
 </li>
 
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="tutorial/closer_look_at_plot_pos.html">
-    Using different formulations of plotting positions
+    Plotting Positions
   </a>
 </li>
 
@@ -161,13 +168,6 @@
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="auto_examples/index.html">
     Example Gallery
-  </a>
-</li>
-
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="altair/index.html">
-    Probability plots in Altair / Vega-Lite
   </a>
 </li>
 
@@ -180,22 +180,15 @@
                 <ul id="pst-nav-more-links" class="dropdown-menu">
                     
 <li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="altair/index.html">
+    Probability plots in Altair / Vega-Lite
+  </a>
+</li>
+
+
+<li class=" ">
   <a class="nav-link dropdown-item nav-internal" href="api.html">
-    API and Source Reference
-  </a>
-</li>
-
-
-<li class=" ">
-  <a class="nav-link dropdown-item nav-internal" href="readme.html">
-    mpl-probscale
-  </a>
-</li>
-
-
-<li class=" ">
-  <a class="nav-link dropdown-item nav-internal" href="installation.html">
-    Installation
+    API Reference
   </a>
 </li>
 
@@ -314,22 +307,29 @@
   <ul class="bd-navbar-elements navbar-nav">
     
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="installation.html">
+    Installation
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="tutorial/getting_started.html">
-    Getting started with mpl-probscale
+    Getting Started
   </a>
 </li>
 
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="tutorial/closer_look_at_viz.html">
-    A closer look at probability plots
+    Probability Plots in Depth
   </a>
 </li>
 
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="tutorial/closer_look_at_plot_pos.html">
-    Using different formulations of plotting positions
+    Plotting Positions
   </a>
 </li>
 
@@ -350,21 +350,7 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="api.html">
-    API and Source Reference
-  </a>
-</li>
-
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="readme.html">
-    mpl-probscale
-  </a>
-</li>
-
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="installation.html">
-    Installation
+    API Reference
   </a>
 </li>
 
@@ -454,45 +440,134 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="mpl-probscale-real-probability-scales-for-matplotlib">
-<h1>mpl-probscale: Real probability scales for matplotlib<a class="headerlink" href="#mpl-probscale-real-probability-scales-for-matplotlib" title="Link to this heading">#</a></h1>
-<a class="reference external image-reference" href="https://github.com/matplotlib/mpl-probscale/actions/workflows/python-runtests-all.yml"><img alt="https://github.com/matplotlib/mpl-probscale/actions/workflows/python-runtests-all.yml/badge.svg" src="https://github.com/matplotlib/mpl-probscale/actions/workflows/python-runtests-all.yml/badge.svg" />
-</a>
-<a class="reference external image-reference" href="https://github.com/matplotlib/mpl-probscale/actions/workflows/ruff_ty.yml"><img alt="https://github.com/matplotlib/mpl-probscale/actions/workflows/ruff_ty.yml/badge.svg" src="https://github.com/matplotlib/mpl-probscale/actions/workflows/ruff_ty.yml/badge.svg" />
-</a>
+  <section class="tex2jax_ignore mathjax_ignore" id="mpl-probscale">
+<h1>mpl-probscale<a class="headerlink" href="#mpl-probscale" title="Link to this heading">#</a></h1>
+<p>Real probability scales for matplotlib</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>CI</p></th>
+<th class="head"><p>Badge</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Tests</p></td>
+<td><p><img alt="Tests" src="https://github.com/matplotlib/mpl-probscale/actions/workflows/python-runtests-all.yml/badge.svg" /></p></td>
+</tr>
+<tr class="row-odd"><td><p>Formatting and Types</p></td>
+<td><p><img alt="Ruff/Ty" src="https://github.com/matplotlib/mpl-probscale/actions/workflows/ruff_ty.yml/badge.svg" /></p></td>
+</tr>
+<tr class="row-even"><td><p>Linting</p></td>
+<td><p><img alt="Linter" src="https://github.com/matplotlib/mpl-probscale/actions/workflows/python-runlinter.yml/badge.svg" /></p></td>
+</tr>
+<tr class="row-odd"><td><p>Docs</p></td>
+<td><p><img alt="Docs" src="https://github.com/matplotlib/mpl-probscale/actions/workflows/docs.yml/badge.svg" /></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><a class="reference external" href="http://matplotlib.org/mpl-probscale/">Sphinx Docs</a></p>
 <section id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Link to this heading">#</a></h2>
-<p>Install the latest release with <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">probscale</span></code> (also available on
-conda-forge as <code class="docutils literal notranslate"><span class="pre">mpl-probscale</span></code>). See the <a class="reference internal" href="installation.html"><span class="doc">Installation</span></a> page for
-details.</p>
+<section id="official-releases">
+<h3>Official releases<a class="headerlink" href="#official-releases" title="Link to this heading">#</a></h3>
+<p>Official releases are available through the conda-forge channel or pip</p>
+<p><code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">install</span> <span class="pre">mpl-probscale</span> <span class="pre">--channel=conda-forge</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">probscale</span></code></p>
 </section>
-<section id="quickstart">
-<h2>Quickstart<a class="headerlink" href="#quickstart" title="Link to this heading">#</a></h2>
-<p>Simply importing <code class="docutils literal notranslate"><span class="pre">probscale</span></code> lets you use probability scales in your
-matplotlib figures:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">probscale</span>
-
-<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">99.5</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xscale</span><span class="p">(</span><span class="s2">"prob"</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mf">1e-2</span><span class="p">,</span> <span class="mf">1e2</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s2">"log"</span><span class="p">)</span>
+<section id="development-builds">
+<h3>Development builds<a class="headerlink" href="#development-builds" title="Link to this heading">#</a></h3>
+<p>This is a pure-python package, so building from source is easy on all platforms:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:matplotlib/mpl-probscale.git
+<span class="nb">cd</span><span class="w"> </span>mpl-probscale
+pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
 </pre></div>
 </div>
-<img alt="_images/example.png" src="_images/example.png" />
 </section>
-<section id="tutorials">
-<h2>Tutorials<a class="headerlink" href="#tutorials" title="Link to this heading">#</a></h2>
+</section>
+<section id="quick-start">
+<h2>Quick start<a class="headerlink" href="#quick-start" title="Link to this heading">#</a></h2>
+<p>Simply importing <code class="docutils literal notranslate"><span class="pre">probscale</span></code> lets you use probability scales in your matplotlib figures:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyplot</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">stats</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">probscale</span>  <span class="c1"># nothing else needed</span>
+
+<span class="n">beta</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">beta</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">weibull</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">weibull_min</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">scales</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span><span class="s2">"scale"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"value"</span><span class="p">:</span> <span class="s2">"linear"</span><span class="p">},</span> <span class="s2">"label"</span><span class="p">:</span> <span class="s2">"Linear (built-in)"</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">"scale"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"value"</span><span class="p">:</span> <span class="s2">"log"</span><span class="p">,</span> <span class="s2">"base"</span><span class="p">:</span> <span class="mi">10</span><span class="p">},</span> <span class="s2">"label"</span><span class="p">:</span> <span class="s2">"Log. Base 10 (built-in)"</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">"scale"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"value"</span><span class="p">:</span> <span class="s2">"log"</span><span class="p">,</span> <span class="s2">"base"</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span> <span class="s2">"label"</span><span class="p">:</span> <span class="s2">"Log. Base 2 (built-in)"</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">"scale"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"value"</span><span class="p">:</span> <span class="s2">"logit"</span><span class="p">},</span> <span class="s2">"label"</span><span class="p">:</span> <span class="s2">"Logit (built-in)"</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">"scale"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"value"</span><span class="p">:</span> <span class="s2">"prob"</span><span class="p">},</span> <span class="s2">"label"</span><span class="p">:</span> <span class="s2">"Standard Normal Probability (this package)"</span><span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s2">"scale"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"value"</span><span class="p">:</span> <span class="s2">"prob"</span><span class="p">,</span> <span class="s2">"dist"</span><span class="p">:</span> <span class="n">weibull</span><span class="p">},</span>
+        <span class="s2">"label"</span><span class="p">:</span> <span class="s2">"Weibull probability scale, c=5 (this package)"</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s2">"scale"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"value"</span><span class="p">:</span> <span class="s2">"prob"</span><span class="p">,</span> <span class="s2">"dist"</span><span class="p">:</span> <span class="n">beta</span><span class="p">},</span>
+        <span class="s2">"label"</span><span class="p">:</span> <span class="s2">"Beta probability scale, α=3 &amp; β=4 (this package)"</span><span class="p">,</span>
+    <span class="p">},</span>
+<span class="p">]</span>
+
+<span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">scales</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">pyplot</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="n">N</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="n">constrained_layout</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">scale</span><span class="p">,</span> <span class="n">ax</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">scales</span><span class="p">,</span> <span class="n">axes</span><span class="o">.</span><span class="n">flat</span><span class="p">):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xscale</span><span class="p">(</span><span class="o">**</span><span class="n">scale</span><span class="p">[</span><span class="s2">"scale"</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">scale</span><span class="p">[</span><span class="s2">"label"</span><span class="p">]</span> <span class="o">+</span> <span class="s2">" →"</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">ax</span><span class="o">.</span><span class="n">transAxes</span><span class="p">)</span>
+
+    <span class="n">factor</span> <span class="o">=</span> <span class="mi">100</span> <span class="k">if</span> <span class="n">scale</span><span class="p">[</span><span class="s2">"scale"</span><span class="p">][</span><span class="s2">"value"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"logit"</span> <span class="k">else</span> <span class="mi">1</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mf">0.5</span> <span class="o">/</span> <span class="n">factor</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mf">99.5</span> <span class="o">/</span> <span class="n">factor</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="o">.</span><span class="n">top</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">outpath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">"../img/example.png"</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">outpath</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><img alt="Alt text" src="https://raw.githubusercontent.com/matplotlib/mpl-probscale/main/docs/img/example.png" /></p>
+</section>
+<section id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Link to this heading">#</a></h2>
+<p>Testing is generally done via <code class="docutils literal notranslate"><span class="pre">pytest</span></code>.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>--mpl<span class="w"> </span>--doctest-glob<span class="o">=</span><span class="s2">"probscale/*.py"</span>
+</pre></div>
+</div>
+<section id="image-comparison-tests">
+<h3>Image comparison tests<a class="headerlink" href="#image-comparison-tests" title="Link to this heading">#</a></h3>
+<p>Run the image comparison tests with:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>--mpl<span class="w"> </span>--mpl-generate-summary<span class="o">=</span>html<span class="w"> </span>--mpl-results-path<span class="o">=</span>figcomp
+</pre></div>
+</div>
+<p>That will generate a <code class="docutils literal notranslate"><span class="pre">figcomp</span></code> folder with the results and an HTML file you can open up to view all of the failures.</p>
+<p>If the failures are all reasonable, general new baseline images for those tests with:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>--mpl-generate-path<span class="o">=</span>baseline
+</pre></div>
+</div>
+<p>…and copy everything over to the right directory.</p>
+</section>
+</section>
+<section id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Link to this heading">#</a></h2>
 <div class="toctree-wrapper compound">
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="tutorial/getting_started.html">Getting started with <code class="docutils literal notranslate"><span class="pre">mpl-probscale</span></code></a><ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#stable-release">Stable release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#from-sources">From sources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/getting_started.html">Getting Started</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="tutorial/getting_started.html#installation">Installation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tutorial/getting_started.html#background">Background</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tutorial/getting_started.html#ready-made-probability-plots">Ready-made probability plots</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial/closer_look_at_viz.html">A closer look at probability plots</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/closer_look_at_viz.html">Probability Plots in Depth</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="tutorial/closer_look_at_viz.html#overview">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tutorial/closer_look_at_viz.html#different-plot-types">Different plot types</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tutorial/closer_look_at_viz.html#using-different-distributions-for-your-scales">Using different distributions for your scales</a></li>
@@ -502,28 +577,14 @@ matplotlib figures:</p>
 <li class="toctree-l2"><a class="reference internal" href="tutorial/closer_look_at_viz.html#mapping-probability-plots-to-seaborn-facetgrids">Mapping probability plots to seaborn FacetGrids</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial/closer_look_at_plot_pos.html">Using different formulations of plotting positions</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/closer_look_at_plot_pos.html">Plotting Positions</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="tutorial/closer_look_at_plot_pos.html#computing-plotting-positions">Computing plotting positions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tutorial/closer_look_at_plot_pos.html#normal-vs-weibull-scales-and-cunnane-vs-weibull-plotting-positions">Normal vs Weibull scales and Cunnane vs Weibull plotting positions</a></li>
 </ul>
 </li>
-</ul>
-</div>
-</section>
-<section id="examples">
-<h2>Examples<a class="headerlink" href="#examples" title="Link to this heading">#</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
 <li class="toctree-l1"><a class="reference internal" href="auto_examples/index.html">Example Gallery</a></li>
 <li class="toctree-l1"><a class="reference internal" href="altair/index.html">Probability plots in Altair / Vega-Lite</a></li>
-</ul>
-</div>
-</section>
-<section id="api-reference">
-<h2>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading">#</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="api.html">API and Source Reference</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="api/viz.html"><code class="docutils literal notranslate"><span class="pre">viz</span></code> API Reference</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/probscale.html"><code class="docutils literal notranslate"><span class="pre">probscale</span></code> API Reference</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/formatters.html"><code class="docutils literal notranslate"><span class="pre">formatters</span></code> API Reference</a></li>
@@ -533,13 +594,7 @@ matplotlib figures:</p>
 </li>
 </ul>
 </div>
-</section>
-<section id="testing">
-<h2>Testing<a class="headerlink" href="#testing" title="Link to this heading">#</a></h2>
-<p>Run the test suite (including the image comparison tests) from the repository
-root:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>--mpl
-</pre></div>
+<div class="toctree-wrapper compound">
 </div>
 </section>
 <section id="indices-and-tables">
@@ -549,8 +604,6 @@ root:</p>
 <li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
 <li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
 </ul>
-<div class="toctree-wrapper compound">
-</div>
 </section>
 </section>
 
@@ -565,11 +618,11 @@ root:</p>
                   
 <div class="prev-next-area">
     <a class="right-next"
-       href="tutorial/getting_started.html"
+       href="installation.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Getting started with <code class="docutils literal notranslate"><span class="pre">mpl-probscale</span></code></p>
+        <p class="prev-next-title">Installation</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -592,12 +645,19 @@ root:</p>
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quickstart">Quickstart</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tutorials">Tutorials</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#examples">Examples</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#api-reference">API Reference</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing">Testing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#official-releases">Official releases</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#development-builds">Development builds</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-start">Quick start</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#testing">Testing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#image-comparison-tests">Image comparison tests</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#documentation">Documentation</a><ul class="nav section-nav flex-column">
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#indices-and-tables">Indices and tables</a></li>
 </ul>
   </nav></div>
@@ -605,7 +665,7 @@ root:</p>
   <div class="sidebar-secondary-item">
 
   <div class="tocsection sourcelink">
-    <a href="_sources/index.rst.txt">
+    <a href="_sources/index.md.txt">
       <i class="fa-solid fa-file-lines"></i> Show Source
     </a>
   </div>

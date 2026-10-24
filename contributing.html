@@ -138,22 +138,29 @@
   <ul class="bd-navbar-elements navbar-nav">
     
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="installation.html">
+    Installation
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="tutorial/getting_started.html">
-    Getting started with mpl-probscale
+    Getting Started
   </a>
 </li>
 
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="tutorial/closer_look_at_viz.html">
-    A closer look at probability plots
+    Probability Plots in Depth
   </a>
 </li>
 
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="tutorial/closer_look_at_plot_pos.html">
-    Using different formulations of plotting positions
+    Plotting Positions
   </a>
 </li>
 
@@ -161,13 +168,6 @@
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="auto_examples/index.html">
     Example Gallery
-  </a>
-</li>
-
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="altair/index.html">
-    Probability plots in Altair / Vega-Lite
   </a>
 </li>
 
@@ -180,22 +180,15 @@
                 <ul id="pst-nav-more-links" class="dropdown-menu">
                     
 <li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="altair/index.html">
+    Probability plots in Altair / Vega-Lite
+  </a>
+</li>
+
+
+<li class=" ">
   <a class="nav-link dropdown-item nav-internal" href="api.html">
-    API and Source Reference
-  </a>
-</li>
-
-
-<li class=" ">
-  <a class="nav-link dropdown-item nav-internal" href="readme.html">
-    mpl-probscale
-  </a>
-</li>
-
-
-<li class=" ">
-  <a class="nav-link dropdown-item nav-internal" href="installation.html">
-    Installation
+    API Reference
   </a>
 </li>
 
@@ -312,22 +305,29 @@
   <ul class="bd-navbar-elements navbar-nav">
     
 <li class="nav-item ">
+  <a class="nav-link nav-internal" href="installation.html">
+    Installation
+  </a>
+</li>
+
+
+<li class="nav-item ">
   <a class="nav-link nav-internal" href="tutorial/getting_started.html">
-    Getting started with mpl-probscale
+    Getting Started
   </a>
 </li>
 
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="tutorial/closer_look_at_viz.html">
-    A closer look at probability plots
+    Probability Plots in Depth
   </a>
 </li>
 
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="tutorial/closer_look_at_plot_pos.html">
-    Using different formulations of plotting positions
+    Plotting Positions
   </a>
 </li>
 
@@ -348,21 +348,7 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="api.html">
-    API and Source Reference
-  </a>
-</li>
-
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="readme.html">
-    mpl-probscale
-  </a>
-</li>
-
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="installation.html">
-    Installation
+    API Reference
   </a>
 </li>
 
@@ -493,7 +479,7 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="contributing">
+  <section class="tex2jax_ignore mathjax_ignore" id="contributing">
 <h1>Contributing<a class="headerlink" href="#contributing" title="Link to this heading">#</a></h1>
 <p>Contributions are welcome, and they are greatly appreciated! Every
 little bit helps, and credit will always be given.</p>
@@ -528,7 +514,8 @@ articles, and such.</p>
 </section>
 <section id="submit-feedback">
 <h3>Submit Feedback<a class="headerlink" href="#submit-feedback" title="Link to this heading">#</a></h3>
-<p>The best way to send feedback is to file an issue at <a class="github reference external" href="https://github.com/matplotlib/mpl-probscale/issues">matplotlib/mpl-probscale#issues</a>.</p>
+<p>The best way to send feedback is to file an issue at
+<a class="github reference external" href="https://github.com/matplotlib/mpl-probscale/issues">matplotlib/mpl-probscale#issues</a>.</p>
 <p>If you are proposing a feature:</p>
 <ul class="simple">
 <li><p>Explain in detail how it would work.</p></li>
@@ -540,43 +527,42 @@ are welcome :)</p></li>
 </section>
 <section id="get-started">
 <h2>Get Started!<a class="headerlink" href="#get-started" title="Link to this heading">#</a></h2>
-<p>Ready to contribute? Here’s how to set up <cite>probscale</cite> for local development.</p>
+<p>Ready to contribute? Here’s how to set up <code class="docutils literal notranslate"><span class="pre">probscale</span></code> for local development.</p>
 <ol class="arabic">
-<li><p>Fork the <cite>probscale</cite> repo on GitHub.</p></li>
+<li><p>Fork the <code class="docutils literal notranslate"><span class="pre">probscale</span></code> repo on GitHub.</p></li>
 <li><p>Clone your fork locally:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:your_name_here/probscale.git
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:your_name_here/probscale.git
 </pre></div>
 </div>
 </li>
-<li><p>Install your local copy into a conda environment. Assuming you have conda installed, this is how you set up your fork for local development:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>conda<span class="w"> </span>config<span class="w"> </span>--add<span class="w"> </span>channels<span class="w"> </span>conda-forge
-$<span class="w"> </span>conda<span class="w"> </span>create<span class="w"> </span>--name<span class="o">=</span>probscale<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.5<span class="w"> </span>numpy<span class="w"> </span>matplotlib<span class="w"> </span>pytest<span class="w"> </span>pytest-cov<span class="w"> </span>pytest-pep8<span class="w"> </span>pytest-mpl
-$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>probscale/
-$<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+<li><p>Install your local copy into a virtual environment with
+<a class="reference external" href="https://docs.astral.sh/uv/">uv</a>:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span><span class="nb">cd</span><span class="w"> </span>probscale/
+<span class="gp">$ </span>uv<span class="w"> </span>sync
 </pre></div>
 </div>
 </li>
 <li><p>Create a branch for local development:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>name-of-your-bugfix-or-feature
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>name-of-your-bugfix-or-feature
 </pre></div>
 </div>
 <p>Now you can make your changes locally.</p>
 </li>
-<li><p>When you’re done making changes, check that your changes pass flake8 and the tests, including testing other Python versions with tox:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>--mpl<span class="w"> </span>--pep8<span class="w"> </span>--cov
+<li><p>When you’re done making changes, check that your changes pass the tests:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>--mpl
 </pre></div>
 </div>
 </li>
 <li><p>Commit your changes and push your branch to GitHub:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>add<span class="w"> </span>&lt;files<span class="w"> </span>you<span class="w"> </span>want<span class="w"> </span>to<span class="w"> </span>stage&gt;
-$<span class="w"> </span>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"Your detailed description of your changes."</span>
-$<span class="w"> </span>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>name-of-your-bugfix-or-feature
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>git<span class="w"> </span>add<span class="w"> </span>&lt;files<span class="w"> </span>you<span class="w"> </span>want<span class="w"> </span>to<span class="w"> </span>stage&gt;
+<span class="gp">$ </span>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"Your detailed description of your changes."</span>
+<span class="gp">$ </span>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>name-of-your-bugfix-or-feature
 </pre></div>
 </div>
 </li>
 <li><p>Submit a pull request through the GitHub website.</p></li>
 </ol>
-<p>Matplotlib has good info on working with <a class="reference external" href="http://matplotlib.org/devel/coding_guide.html`">source code</a> using <a class="reference external" href="http://matplotlib.org/devel/gitwash/development_workflow.html">git and GitHub</a>.</p>
+<p>Matplotlib has good info on working with <a class="reference external" href="https://matplotlib.org/devdocs/devel/coding_guide.html">source code</a> using <a class="reference external" href="https://matplotlib.org/devdocs/devel/development_workflow.html">git and GitHub</a>.</p>
 </section>
 <section id="pull-request-guidelines">
 <h2>Pull Request Guidelines<a class="headerlink" href="#pull-request-guidelines" title="Link to this heading">#</a></h2>
@@ -585,19 +571,18 @@ $<span class="w"> </span>git<span class="w"> </span>push<span class="w"> </span>
 <li><p>The pull request should include tests.</p></li>
 <li><p>If the pull request adds functionality, the docs should be updated. Put
 your new functionality into a function with a docstring, and add the
-feature to the list in README.rst.</p></li>
-<li><p>The pull request should work for Python 3.11 and higher. Check
-<a class="reference external" href="https://travis-ci.org/matplotlib/mpl-probscale/pull_requests">https://travis-ci.org/matplotlib/mpl-probscale/pull_requests</a>
-and make sure that the tests pass for all supported Python versions.</p></li>
+feature to the list in the README.</p></li>
+<li><p>The pull request should work for Python 3.11 and higher. Check the
+GitHub Actions results and make sure that the tests pass for all
+supported Python versions.</p></li>
 </ol>
 </section>
 <section id="tips">
 <h2>Tips<a class="headerlink" href="#tips" title="Link to this heading">#</a></h2>
 <p>To run a subset of tests:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>py.test<span class="w"> </span>tests.test_probscale
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>probscale/tests/test_probscale.py
 </pre></div>
 </div>
-<p>After this, hitting ctrl+b in either text editor will run the test suite.</p>
 </section>
 </section>
 
@@ -656,7 +641,7 @@ and make sure that the tests pass for all supported Python versions.</p></li>
   <div class="sidebar-secondary-item">
 
   <div class="tocsection sourcelink">
-    <a href="_sources/contributing.rst.txt">
+    <a href="_sources/contributing.md.txt">
       <i class="fa-solid fa-file-lines"></i> Show Source
     </a>
   </div>

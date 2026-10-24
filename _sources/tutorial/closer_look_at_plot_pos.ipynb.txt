@@ -4,7 +4,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "# Using different formulations of plotting positions\n",
+    "# Plotting Positions\n",
     "\n",
     "## Computing plotting positions\n",
     "\n",
